@@ -8,6 +8,9 @@ set(CMAKE_DEPENDS_LANGUAGES
 
 # The set of dependency files which are needed:
 set(CMAKE_DEPENDS_DEPENDENCY_FILES
+  "/mnt/c/Users/timti/OneDrive - yncréa/C++/ProjetC-/MainWindow.cpp" "CMakeFiles/ProjetC_.dir/MainWindow.cpp.o" "gcc" "CMakeFiles/ProjetC_.dir/MainWindow.cpp.o.d"
+  "/mnt/c/Users/timti/OneDrive - yncréa/C++/ProjetC-/MyScene.cpp" "CMakeFiles/ProjetC_.dir/MyScene.cpp.o" "gcc" "CMakeFiles/ProjetC_.dir/MyScene.cpp.o.d"
+  "/mnt/c/Users/timti/OneDrive - yncréa/C++/ProjetC-/cmake-build-debug/ProjetC__autogen/mocs_compilation.cpp" "CMakeFiles/ProjetC_.dir/ProjetC__autogen/mocs_compilation.cpp.o" "gcc" "CMakeFiles/ProjetC_.dir/ProjetC__autogen/mocs_compilation.cpp.o.d"
   "/mnt/c/Users/timti/OneDrive - yncréa/C++/ProjetC-/main.cpp" "CMakeFiles/ProjetC_.dir/main.cpp.o" "gcc" "CMakeFiles/ProjetC_.dir/main.cpp.o.d"
   )
 

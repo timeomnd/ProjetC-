@@ -129,6 +129,91 @@ ProjetC_/fast:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/ProjetC_.dir/build.make CMakeFiles/ProjetC_.dir/build
 .PHONY : ProjetC_/fast
 
+#=============================================================================
+# Target rules for targets named ProjetC__autogen
+
+# Build rule for target.
+ProjetC__autogen: cmake_check_build_system
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 ProjetC__autogen
+.PHONY : ProjetC__autogen
+
+# fast build rule for target.
+ProjetC__autogen/fast:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/ProjetC__autogen.dir/build.make CMakeFiles/ProjetC__autogen.dir/build
+.PHONY : ProjetC__autogen/fast
+
+MainWindow.o: MainWindow.cpp.o
+.PHONY : MainWindow.o
+
+# target to build an object file
+MainWindow.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/ProjetC_.dir/build.make CMakeFiles/ProjetC_.dir/MainWindow.cpp.o
+.PHONY : MainWindow.cpp.o
+
+MainWindow.i: MainWindow.cpp.i
+.PHONY : MainWindow.i
+
+# target to preprocess a source file
+MainWindow.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/ProjetC_.dir/build.make CMakeFiles/ProjetC_.dir/MainWindow.cpp.i
+.PHONY : MainWindow.cpp.i
+
+MainWindow.s: MainWindow.cpp.s
+.PHONY : MainWindow.s
+
+# target to generate assembly for a file
+MainWindow.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/ProjetC_.dir/build.make CMakeFiles/ProjetC_.dir/MainWindow.cpp.s
+.PHONY : MainWindow.cpp.s
+
+MyScene.o: MyScene.cpp.o
+.PHONY : MyScene.o
+
+# target to build an object file
+MyScene.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/ProjetC_.dir/build.make CMakeFiles/ProjetC_.dir/MyScene.cpp.o
+.PHONY : MyScene.cpp.o
+
+MyScene.i: MyScene.cpp.i
+.PHONY : MyScene.i
+
+# target to preprocess a source file
+MyScene.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/ProjetC_.dir/build.make CMakeFiles/ProjetC_.dir/MyScene.cpp.i
+.PHONY : MyScene.cpp.i
+
+MyScene.s: MyScene.cpp.s
+.PHONY : MyScene.s
+
+# target to generate assembly for a file
+MyScene.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/ProjetC_.dir/build.make CMakeFiles/ProjetC_.dir/MyScene.cpp.s
+.PHONY : MyScene.cpp.s
+
+ProjetC__autogen/mocs_compilation.o: ProjetC__autogen/mocs_compilation.cpp.o
+.PHONY : ProjetC__autogen/mocs_compilation.o
+
+# target to build an object file
+ProjetC__autogen/mocs_compilation.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/ProjetC_.dir/build.make CMakeFiles/ProjetC_.dir/ProjetC__autogen/mocs_compilation.cpp.o
+.PHONY : ProjetC__autogen/mocs_compilation.cpp.o
+
+ProjetC__autogen/mocs_compilation.i: ProjetC__autogen/mocs_compilation.cpp.i
+.PHONY : ProjetC__autogen/mocs_compilation.i
+
+# target to preprocess a source file
+ProjetC__autogen/mocs_compilation.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/ProjetC_.dir/build.make CMakeFiles/ProjetC_.dir/ProjetC__autogen/mocs_compilation.cpp.i
+.PHONY : ProjetC__autogen/mocs_compilation.cpp.i
+
+ProjetC__autogen/mocs_compilation.s: ProjetC__autogen/mocs_compilation.cpp.s
+.PHONY : ProjetC__autogen/mocs_compilation.s
+
+# target to generate assembly for a file
+ProjetC__autogen/mocs_compilation.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/ProjetC_.dir/build.make CMakeFiles/ProjetC_.dir/ProjetC__autogen/mocs_compilation.cpp.s
+.PHONY : ProjetC__autogen/mocs_compilation.cpp.s
+
 main.o: main.cpp.o
 .PHONY : main.o
 
@@ -161,7 +246,17 @@ help:
 	@echo "... depend"
 	@echo "... edit_cache"
 	@echo "... rebuild_cache"
+	@echo "... ProjetC__autogen"
 	@echo "... ProjetC_"
+	@echo "... MainWindow.o"
+	@echo "... MainWindow.i"
+	@echo "... MainWindow.s"
+	@echo "... MyScene.o"
+	@echo "... MyScene.i"
+	@echo "... MyScene.s"
+	@echo "... ProjetC__autogen/mocs_compilation.o"
+	@echo "... ProjetC__autogen/mocs_compilation.i"
+	@echo "... ProjetC__autogen/mocs_compilation.s"
 	@echo "... main.o"
 	@echo "... main.i"
 	@echo "... main.s"

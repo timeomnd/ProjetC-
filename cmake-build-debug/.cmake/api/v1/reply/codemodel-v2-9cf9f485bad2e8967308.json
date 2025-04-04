@@ -9,13 +9,14 @@
 					"jsonFile" : "directory-.-Debug-f5ebdc15457944623624.json",
 					"minimumCMakeVersion" : 
 					{
-						"string" : "3.25"
+						"string" : "3.16"
 					},
 					"projectIndex" : 0,
 					"source" : ".",
 					"targetIndexes" : 
 					[
-						0
+						0,
+						1
 					]
 				}
 			],
@@ -30,7 +31,8 @@
 					"name" : "ProjetC_",
 					"targetIndexes" : 
 					[
-						0
+						0,
+						1
 					]
 				}
 			],
@@ -39,8 +41,15 @@
 				{
 					"directoryIndex" : 0,
 					"id" : "ProjetC_::@6890427a1f51a3e7e1df",
-					"jsonFile" : "target-ProjetC_-Debug-ae21222d931a306cd19a.json",
+					"jsonFile" : "target-ProjetC_-Debug-ccc5e62e409c58c33ecb.json",
 					"name" : "ProjetC_",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 0,
+					"id" : "ProjetC__autogen::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-ProjetC__autogen-Debug-788991d2dba0f20d7b06.json",
+					"name" : "ProjetC__autogen",
 					"projectIndex" : 0
 				}
 			]
