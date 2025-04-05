@@ -11,3 +11,4 @@ ProjetC-
 ProjetC-.pro
 .qmake.stash
 cmake-build-debug
+CMakeLists.txt
