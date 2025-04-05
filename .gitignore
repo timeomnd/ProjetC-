@@ -10,3 +10,4 @@ MyScene.o
 ProjetC-
 ProjetC-.pro
 .qmake.stash
+cmake-build-debug
