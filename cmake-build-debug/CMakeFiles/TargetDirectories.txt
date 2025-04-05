@@ -1,4 +1,0 @@
-/mnt/c/Users/timti/OneDrive - yncréa/C++/ProjetC-/cmake-build-debug/CMakeFiles/ProjetC_.dir
-/mnt/c/Users/timti/OneDrive - yncréa/C++/ProjetC-/cmake-build-debug/CMakeFiles/edit_cache.dir
-/mnt/c/Users/timti/OneDrive - yncréa/C++/ProjetC-/cmake-build-debug/CMakeFiles/rebuild_cache.dir
-/mnt/c/Users/timti/OneDrive - yncréa/C++/ProjetC-/cmake-build-debug/CMakeFiles/ProjetC__autogen.dir

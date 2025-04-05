@@ -1,0 +1,12 @@
+main.o
+MainWindow.o
+Makefile
+moc_MainWindow.cpp
+moc_MainWindow.o
+moc_MyScene.cpp
+moc_MyScene.o
+moc_predefs.h
+MyScene.o
+ProjetC-
+ProjetC-.pro
+.qmake.stash
