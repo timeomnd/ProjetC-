@@ -7,8 +7,11 @@
 #include <QMenuBar>
 #include <QAction>
 #include <QMessageBox>
-
+#include <QProcess>
+#include <QCoreApplication>
 #include "MyScene.h"
+#include <QPushButton>
+#include <QToolBar>
 
 class MainWindow : public QMainWindow {
     Q_OBJECT
@@ -17,14 +20,15 @@ private :
     MyScene* mainScene;
     QGraphicsView* mainView;
     QMenu* helpMenu;
-
-
+    QPushButton* restartGame;
+    QToolBar* toolbar;
 public:
     MainWindow(QWidget* parent = nullptr);
     virtual ~MainWindow();
 
     public slots:
         void slot_aboutMenu();
+        void slot_restartGame();
 };
 
 
