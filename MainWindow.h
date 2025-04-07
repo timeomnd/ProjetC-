@@ -12,7 +12,9 @@
 #include "MyScene.h"
 #include <QPushButton>
 #include <QToolBar>
-
+#include <QVBoxLayout>
+#include <QFont>
+#include <QFontDatabase>
 class MainWindow : public QMainWindow {
     Q_OBJECT
 
@@ -22,6 +24,8 @@ private :
     QMenu* helpMenu;
     QPushButton* restartGame;
     QToolBar* toolbar;
+    QPushButton* Play;
+    QVBoxLayout* mainLayout;
 public:
     MainWindow(QWidget* parent = nullptr);
     virtual ~MainWindow();

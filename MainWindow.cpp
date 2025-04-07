@@ -4,7 +4,6 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent)
 {
 
     this->mainScene = new MyScene;
-
     this->mainView = new QGraphicsView;
     this->mainView->setScene(mainScene);
 
@@ -19,11 +18,22 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent)
     helpMenu->addAction(actionHelp);
 
     //bouton restart
-    QPushButton* restartButton = new QPushButton(tr("Restart"));
+    restartGame = new QPushButton(tr("Restart"));
     QToolBar* toolbar = addToolBar(tr("Toolbar"));
-    toolbar->addWidget(restartButton);
-    connect(restartButton, &QPushButton::clicked, this, &MainWindow::slot_restartGame);
+    toolbar->addWidget(restartGame);
+    connect(restartGame, &QPushButton::clicked, this, &MainWindow::slot_restartGame);
 
+
+    //Création du bouton play
+    mainLayout = new QVBoxLayout(mainView);
+    mainView->setLayout(mainLayout);
+
+    QFont fontPlay("C:/Users/timti/OneDrive - yncréa/C++/ProjetC-/assets/Creepster-Regular.ttf", 20, QFont::Bold);  // Le chemin relatif vers le fichier
+    Play = new QPushButton(tr("Play"));
+    Play->setFont(fontPlay);
+    Play->setFixedSize(800,100);
+    mainLayout->setAlignment(Qt::AlignCenter);
+    mainLayout->addWidget(Play);
 }
 
 MainWindow::~MainWindow(){
