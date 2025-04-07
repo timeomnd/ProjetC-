@@ -19,7 +19,7 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent)
     helpMenu->addAction(actionHelp);
 
     //bouton restart
-    QPushButton* restartButton = new QPushButton(tr("Redémarrer"));
+    QPushButton* restartButton = new QPushButton(tr("Restart"));
     QToolBar* toolbar = addToolBar(tr("Toolbar"));
     toolbar->addWidget(restartButton);
     connect(restartButton, &QPushButton::clicked, this, &MainWindow::slot_restartGame);
