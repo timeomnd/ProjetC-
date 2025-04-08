@@ -33,7 +33,6 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent)
         qDebug() << "Échec du chargement de la police";
     } else {
         QString family = QFontDatabase::applicationFontFamilies(id).at(0); //récupère la première famille retourner par la fonction applicationFontFamilies trouvé grâce a l'id
-        qDebug() << "Nom de la police chargée:" << family;
 
         // Et maintenant on utilise le nom de famille retourné
         QFont fontPlay(family, 20, QFont::Bold);
