@@ -1,4 +1,4 @@
-#include "MainWindow.h"
+#include "MainWindow.hpp"
 
 MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent)
 {
@@ -39,6 +39,7 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent)
         Play = new QPushButton(tr("Play"));
         Play->setFont(fontPlay);
         Play->setFixedSize(800,100);
+        connect(Play, &QPushButton::clicked, this, &MainWindow::slot_launchGame);
         mainLayout->setAlignment(Qt::AlignCenter);
         mainLayout->addWidget(Play);
     }
@@ -60,4 +61,11 @@ void MainWindow::slot_aboutMenu(){
     msgBox.setText("A small QT/C++ projet...");
     msgBox.setModal(true); // on souhaite que la fenetre soit modale i.e qu'on ne puisse plus cliquer ailleurs
     msgBox.exec();
+}
+void MainWindow::slot_launchGame() {
+    delete Play;
+    Play = nullptr;
+    scene = new MyScene(this);
+    view = new QGraphicsView(scene);
+    setCentralWidget(view);
 }

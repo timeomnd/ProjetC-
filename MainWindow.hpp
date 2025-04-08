@@ -9,7 +9,7 @@
 #include <QMessageBox>
 #include <QProcess>
 #include <QCoreApplication>
-#include "MyScene.h"
+#include "MyScene.hpp"
 #include <QPushButton>
 #include <QToolBar>
 #include <QVBoxLayout>
@@ -28,6 +28,8 @@ private :
     QToolBar* toolbar;
     QPushButton* Play;
     QVBoxLayout* mainLayout;
+    QGraphicsView* view;
+    MyScene* scene;
 public:
     MainWindow(QWidget* parent = nullptr);
     virtual ~MainWindow();
@@ -35,6 +37,8 @@ public:
     public slots:
         void slot_aboutMenu();
         void slot_restartGame();
+    private slots:
+        void slot_launchGame();
 };
 
 
