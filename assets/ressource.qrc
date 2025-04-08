@@ -1,1 +1,5 @@
-
+<RCC>
+    <qresource prefix="/assets">
+        <file>Creepster-Regular.ttf</file>
+    </qresource>
+</RCC>

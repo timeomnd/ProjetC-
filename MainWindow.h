@@ -15,6 +15,8 @@
 #include <QVBoxLayout>
 #include <QFont>
 #include <QFontDatabase>
+#include <QDebug>
+#include <QFile>
 class MainWindow : public QMainWindow {
     Q_OBJECT
 

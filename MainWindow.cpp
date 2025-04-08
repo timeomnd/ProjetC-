@@ -28,12 +28,21 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent)
     mainLayout = new QVBoxLayout(mainView);
     mainView->setLayout(mainLayout);
 
-    QFont fontPlay("C:/Users/timti/OneDrive - yncréa/C++/ProjetC-/assets/Creepster-Regular.ttf", 20, QFont::Bold);  // Le chemin relatif vers le fichier
-    Play = new QPushButton(tr("Play"));
-    Play->setFont(fontPlay);
-    Play->setFixedSize(800,100);
-    mainLayout->setAlignment(Qt::AlignCenter);
-    mainLayout->addWidget(Play);
+    int id = QFontDatabase::addApplicationFont(":/assets/Creepster-Regular.ttf"); // récupère l'id du fichier font
+    if (id == -1) {
+        qDebug() << "Échec du chargement de la police";
+    } else {
+        QString family = QFontDatabase::applicationFontFamilies(id).at(0); //récupère la première famille retourner par la fonction applicationFontFamilies trouvé grâce a l'id
+        qDebug() << "Nom de la police chargée:" << family;
+
+        // Et maintenant on utilise le nom de famille retourné
+        QFont fontPlay(family, 20, QFont::Bold);
+        Play = new QPushButton(tr("Play"));
+        Play->setFont(fontPlay);
+        Play->setFixedSize(800,100);
+        mainLayout->setAlignment(Qt::AlignCenter);
+        mainLayout->addWidget(Play);
+    }
 }
 
 MainWindow::~MainWindow(){
