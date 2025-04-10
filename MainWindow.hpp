@@ -19,6 +19,8 @@
 #include <QFile>
 #include <QPalette>
 #include <QPixmap>
+#include <iostream>
+#include <vector>
 class MainWindow : public QMainWindow {
     Q_OBJECT
 
@@ -30,6 +32,8 @@ private :
     QToolBar* toolbar;
     QPushButton* Play;
     QVBoxLayout* mainLayout;
+protected:
+    void resizeEvent(QResizeEvent *event) override;
 public:
     MainWindow(QWidget* parent = nullptr);
     virtual ~MainWindow();
