@@ -6,10 +6,11 @@
 #include <QGraphicsPixmapItem>
 #define SIZEMAP 100 // Mur, sol , escalier = 16x16px ou 32x32px personnage = 32x32px ou 48x48px
 
-class Map {
+
+class Map : public QObject {
     Q_OBJECT
 public:
-    Map(QGraphicsScene* scene);
+    Map(QGraphicsScene* scene, QObject* parent);
     void loadFloor(int level);
 private:
     QGraphicsScene* scene;
