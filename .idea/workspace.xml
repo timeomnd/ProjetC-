@@ -7,7 +7,6 @@
     <option name="/Default/RiderDebugger/RiderRestoreDecompile/RestoreDecompileSetting/@EntryValue" value="false" type="bool" />
     <option name="/Default/Housekeeping/GlobalSettingsUpgraded/IsUpgraded/@EntryValue" value="true" type="bool" />
     <option name="/Default/Housekeeping/FeatureSuggestion/FeatureSuggestionManager/DisabledSuggesters/=SwitchToGoToActionSuggester/@EntryIndexedValue" value="true" type="bool" />
-    <option name="/Default/Housekeeping/FeatureSuggestion/FeatureSuggestionManager/DisabledSuggesters/=SwitchToGoToActionSuggester/@EntryIndexRemoved" />
   </component>
   <component name="CMakePresetLoader">{
   &quot;useNewFormat&quot;: true
@@ -36,19 +35,18 @@
       <change beforePath="$PROJECT_DIR$/.idea/vcs.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Boss.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Boss.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Boss.h" beforeDir="false" afterPath="$PROJECT_DIR$/Boss.hpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Boss.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/Boss.hpp" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Item.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Item.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Item.h" beforeDir="false" afterPath="$PROJECT_DIR$/Item.hpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Item.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/Item.hpp" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/MainWindow.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/MainWindow.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/MainWindow.h" beforeDir="false" afterPath="$PROJECT_DIR$/MainWindow.hpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/MainWindow.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/MainWindow.hpp" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Monster.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Monster.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Monster.h" beforeDir="false" afterPath="$PROJECT_DIR$/Monster.hpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Monster.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/Monster.hpp" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/MyScene.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/MyScene.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/MyScene.h" beforeDir="false" afterPath="$PROJECT_DIR$/MyScene.hpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/MyScene.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/MyScene.hpp" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Player.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Player.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Player.h" beforeDir="false" afterPath="$PROJECT_DIR$/Player.hpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Player.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/Player.hpp" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/assets/ressource.qrc" beforeDir="false" afterPath="$PROJECT_DIR$/assets/ressource.qrc" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/main.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/main.cpp" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -122,11 +120,6 @@
         <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
       </method>
     </configuration>
-    <configuration default="true" type="CMakeRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" EMULATE_TERMINAL="false" PASS_PARENT_ENVS_2="true">
-      <method v="2">
-        <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
-      </method>
-    </configuration>
   </component>
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="TaskManager">
@@ -147,7 +140,8 @@
       <workItem from="1744024815490" duration="3020000" />
       <workItem from="1744028475540" duration="5484000" />
       <workItem from="1744109554195" duration="3254000" />
-      <workItem from="1744124856742" duration="1885000" />
+      <workItem from="1744124856742" duration="2066000" />
+      <workItem from="1744280415318" duration="1000" />
     </task>
     <servers />
   </component>
