@@ -1,7 +1,7 @@
 #ifndef MYSCENE_H
 #define MYSCENE_H
 #include <QGraphicsScene>
-
+#include "Map.hpp"
 
 class MyScene : public QGraphicsScene {
     Q_OBJECT
@@ -9,7 +9,8 @@ class MyScene : public QGraphicsScene {
 public:
     MyScene(QObject* parent = nullptr);
     virtual ~MyScene();
-
+private:
+    Map* map;
 };
 
 
