@@ -2,14 +2,35 @@
 
 MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent)
 {
-
+    //création de la scène et d'une view
     this->mainScene = new MyScene;
     this->mainView = new QGraphicsView;
     this->mainView->setScene(mainScene);
-
     this->setCentralWidget(mainView);
     this->setWindowTitle("Nom du jeu");
     this->resize(400, 800);
+    QPixmap backgroundPixmap(":/assets/backgroundMenu.png");
+
+    if (!backgroundPixmap.isNull()) {
+        QSize viewSize = mainView->viewport()->size();
+
+
+        QPixmap stretchedBackground = backgroundPixmap.scaled(
+            viewSize,
+            Qt::IgnoreAspectRatio,
+            Qt::SmoothTransformation
+        );
+
+
+        QBrush brush(stretchedBackground);
+        brush.setStyle(Qt::SolidPattern);
+
+
+        mainScene->setSceneRect(0, 0, viewSize.width(), viewSize.height());
+        mainScene->setBackgroundBrush(brush);
+    } else {
+        qDebug() << "Erreur : image de fond introuvable.";
+    }
 
     //bouton action
     helpMenu = menuBar()->addMenu(tr("&Help"));
@@ -42,6 +63,7 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent)
         connect(Play, &QPushButton::clicked, this, &MainWindow::slot_launchGame);
         mainLayout->setAlignment(Qt::AlignCenter);
         mainLayout->addWidget(Play);
+
     }
 }
 
@@ -65,7 +87,7 @@ void MainWindow::slot_aboutMenu(){
 void MainWindow::slot_launchGame() {
     delete Play;
     Play = nullptr;
-    scene = new MyScene(this);
-    view = new QGraphicsView(scene);
-    setCentralWidget(view);
+    mainScene = new MyScene(this);
+    mainView = new QGraphicsView(mainScene);
+    setCentralWidget(mainView);
 }

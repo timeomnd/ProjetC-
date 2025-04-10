@@ -17,6 +17,8 @@
 #include <QFontDatabase>
 #include <QDebug>
 #include <QFile>
+#include <QPalette>
+#include <QPixmap>
 class MainWindow : public QMainWindow {
     Q_OBJECT
 
@@ -28,8 +30,6 @@ private :
     QToolBar* toolbar;
     QPushButton* Play;
     QVBoxLayout* mainLayout;
-    QGraphicsView* view;
-    MyScene* scene;
 public:
     MainWindow(QWidget* parent = nullptr);
     virtual ~MainWindow();

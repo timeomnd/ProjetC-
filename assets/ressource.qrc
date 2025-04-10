@@ -1,5 +1,6 @@
 <RCC>
     <qresource prefix="/assets">
         <file>Creepster-Regular.ttf</file>
+        <file>backgroundMenu.png</file>
     </qresource>
 </RCC>
