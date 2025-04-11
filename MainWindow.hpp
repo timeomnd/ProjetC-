@@ -21,6 +21,8 @@
 #include <QPixmap>
 #include <iostream>
 #include <vector>
+#include <QtMultimedia>
+
 
 class MainWindow : public QMainWindow {
     Q_OBJECT
@@ -29,10 +31,13 @@ private :
     MyScene* mainScene;
     QGraphicsView* mainView;
     QMenu* helpMenu;
+    QAction* actionHelp;
     QPushButton* restartGame;
     QToolBar* toolbar;
     QPushButton* Play;
     QVBoxLayout* mainLayout;
+    QMediaPlayer* media;
+    QAudioOutput* audioOutput;
 protected:
     void resizeEvent(QResizeEvent *event) override;
 public:

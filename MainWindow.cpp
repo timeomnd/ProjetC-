@@ -32,7 +32,7 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent)
 
     //bouton action
     helpMenu = menuBar()->addMenu(tr("&Help"));
-    QAction* actionHelp = new QAction(tr("&About"), this);
+    actionHelp = new QAction(tr("&About"), this);
     connect(actionHelp, SIGNAL(triggered()), this, SLOT(slot_aboutMenu()));
     helpMenu->addAction(actionHelp);
 
@@ -57,7 +57,7 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent)
         Play = new QPushButton(tr("Enter the Cursed ISEN"));
         Play->setFont(fontPlay);
         Play->setFixedSize(800,100);
-        QPalette palette = Play->palette();
+        QPalette palette;
         palette.setColor(QPalette::ButtonText, QColor("#8B0000")); // Changer la couleur du texte en orange
         Play->setPalette(palette);
         connect(Play, &QPushButton::clicked, this, &MainWindow::slot_launchGame);
@@ -65,6 +65,14 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent)
         mainLayout->addWidget(Play);
 
     }
+    media = new QMediaPlayer(this);
+    audioOutput = new QAudioOutput(this);
+
+    media->setAudioOutput(audioOutput);
+    media->setSource(QUrl("qrc:/assets/GameMusic.wav"));
+    audioOutput->setVolume(0.2);
+    media->setLoops(QMediaPlayer::Infinite);
+    media->play();
 }
 
 MainWindow::~MainWindow(){
