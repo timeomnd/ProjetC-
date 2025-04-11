@@ -21,6 +21,7 @@
 #include <QPixmap>
 #include <iostream>
 #include <vector>
+
 class MainWindow : public QMainWindow {
     Q_OBJECT
 
