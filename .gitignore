@@ -1,6 +1,8 @@
 main.o
 MainWindow.o
 Makefile
+moc_Player.cpp
+moc_Map.cpp
 moc_MainWindow.cpp
 moc_MainWindow.o
 moc_MyScene.cpp
