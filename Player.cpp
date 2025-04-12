@@ -1,20 +1,29 @@
 #include "Player.hpp"
 #include <QGraphicsScene>
-#include <QPixmap>
+#include <QDebug>
 
-Player::Player(QGraphicsItem* parent): QGraphicsPixmapItem(parent), speed(5), dx(0), dy(0) {
+Player::Player(QGraphicsItem* parent)
+    : QGraphicsPixmapItem(parent), speed(5), dx(0), dy(0) {
     
-    QPixmap sprite(":/assets/nils.png");
-    if (!sprite.isNull()) {
-        setPixmap(sprite);
-    } else {
-        qWarning("Erreur : le sprite du joueur est introuvable !");
-    }
-        
+    // Chargement des sprites
+    spriteUp = QPixmap(":/assets/nils_rear.png");
+    spriteDown = QPixmap(":/assets/nils_front.png");
+    spriteLeft = QPixmap(":/assets/nils_left.png");
+    spriteRight = QPixmap(":/assets/nils_right.png");
 
+    // Vérification des sprites
+    if (spriteUp.isNull() || spriteDown.isNull() || spriteLeft.isNull() || spriteRight.isNull()) {
+        qWarning("Erreur : un ou plusieurs sprites sont introuvables !");
+    }
+
+    // Sprite initial (face avant)
+    setPixmap(spriteDown);
+
+    // Configuration des événements clavier
     setFlag(QGraphicsItem::ItemIsFocusable);
     setFocus();
 
+    // Timer pour le mouvement
     movementTimer = new QTimer(this);
     connect(movementTimer, &QTimer::timeout, this, &Player::updatePosition);
     movementTimer->start(16); // ~60 FPS
@@ -22,21 +31,40 @@ Player::Player(QGraphicsItem* parent): QGraphicsPixmapItem(parent), speed(5), dx
 
 void Player::keyPressEvent(QKeyEvent* event) {
     switch (event->key()) {
-        case Qt::Key_Left:
+        case Qt::Key_Q:
             dx = -speed;
             dy = 0;
+            setPixmap(spriteLeft); // Sprite gauche
             break;
-        case Qt::Key_Right:
+        case Qt::Key_D:
             dx = speed;
             dy = 0;
+            setPixmap(spriteRight); // Sprite droite
             break;
-        case Qt::Key_Up:
+        case Qt::Key_Z:
             dy = -speed;
             dx = 0;
+            setPixmap(spriteUp); // Sprite haut
             break;
-        case Qt::Key_Down:
+        case Qt::Key_S:
             dy = speed;
             dx = 0;
+            setPixmap(spriteDown); // Sprite bas
+            break;
+        default:
+            break;
+    }
+}
+
+void Player::keyReleaseEvent(QKeyEvent* event) {
+    switch (event->key()) {
+        case Qt::Key_Q:
+        case Qt::Key_D:
+            dx = 0; // Arrêt du mouvement horizontal
+            break;
+        case Qt::Key_Z:
+        case Qt::Key_S:
+            dy = 0; // Arrêt du mouvement vertical
             break;
         default:
             break;

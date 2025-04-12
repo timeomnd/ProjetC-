@@ -1,4 +1,5 @@
 #include "MainWindow.hpp"
+#include "Player.hpp"
 
 MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent)
 {
@@ -8,7 +9,7 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent)
     this->mainView->setScene(mainScene);
     this->setCentralWidget(mainView);
     this->setWindowTitle("The Cursed ISEN");
-    this->resize(400, 800);
+    this->resize(1200, 800);
     QPalette palette;
     this->setPalette(QColorConstants::Svg::black);
     QPixmap backgroundPixmap(":/assets/backgroundMenu.png");
@@ -101,6 +102,15 @@ void MainWindow::slot_launchGame() {
     mainScene = new MyScene(this);
     mainView = new QGraphicsView(mainScene);
     setCentralWidget(mainView);
+
+    // Ajout du joueur à la scène
+    Player *player = new Player();
+    mainScene->addItem(player); // Ajoute le joueur à la scène
+    player->setPos(mainView->width()/2, mainView->height()/2); // Position initiale
+
+    // Assure que la vue transmet les événements clavier
+    mainView->setFocusPolicy(Qt::StrongFocus);
+    mainView->setFocus();
 }
 void MainWindow::resizeEvent(QResizeEvent *event){ //fonction déjà définie que on redéfini pour que ce soit dynamique
 
