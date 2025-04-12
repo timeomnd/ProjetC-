@@ -66,12 +66,15 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent)
 
     }
     media = new QMediaPlayer(this);
-    audioOutput = new QAudioOutput(this); 
+    audioOutput = new QAudioOutput(this);
+
+    audioOutput->setVolume(0.2);
     media->setAudioOutput(audioOutput);
     media->setSource(QUrl("qrc:/assets/GameMusic.wav"));
-    audioOutput->setVolume(0.2);
+
     media->setLoops(QMediaPlayer::Infinite);
     media->play();
+
 }
 
 MainWindow::~MainWindow(){
@@ -94,6 +97,7 @@ void MainWindow::slot_aboutMenu(){
 void MainWindow::slot_launchGame() {
     delete Play;
     Play = nullptr;
+    media->stop();
     mainScene = new MyScene(this);
     mainView = new QGraphicsView(mainScene);
     setCentralWidget(mainView);

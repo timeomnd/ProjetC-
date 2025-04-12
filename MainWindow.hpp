@@ -23,6 +23,9 @@
 #include <vector>
 #include <QMediaPlayer>
 #include <QAudioOutput>
+#include <QAudioFormat>
+#include <QAudioDevice>
+#include <QMediaDevices>
 
 
 
