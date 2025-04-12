@@ -1,34 +1,29 @@
-//
-// Created by timti on 07/04/2025.
-//
+#ifndef PLAYER_HPP
+#define PLAYER_HPP
 
-#ifndef PLAYER_H
-#define PLAYER_H
+#include <QGraphicsPixmapItem>
+#include <QObject>
+#include <QKeyEvent>
+#include <QTimer>
 
-#endif //PLAYER_H
+class Player : public QObject, public QGraphicsPixmapItem {
+    Q_OBJECT
 
-struct position
-{
-    int x, y;
+public:
+    Player(QGraphicsItem* parent = nullptr);
+
+    void keyPressEvent(QKeyEvent* event) override;
+    void setSpeed(int s);
+    int getSpeed() const;
+
+private slots:
+    void updatePosition();
+
+private:
+    int speed;
+    int dx;
+    int dy;
+    QTimer* movementTimer;
 };
 
-class Player{
-
-    private : 
-        position pos;
-        float orientation;
-        int pv;
-    
-    public :
-
-        void setPosition(position NewPos){};
-        void setPosition(position NewPos, float NewOrientation){};
-        void setPv(int NewPv){};
-
-        position getPosition(){};
-        float getOrientation(){};
-        int getPv(){};
-
-
-
-};
+#endif // PLAYER_HPP

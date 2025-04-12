@@ -21,7 +21,10 @@
 #include <QPixmap>
 #include <iostream>
 #include <vector>
-#include <QtMultimedia>
+#include <QMediaPlayer>
+#include <QAudioOutput>
+
+
 
 
 class MainWindow : public QMainWindow {

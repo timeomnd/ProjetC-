@@ -3,5 +3,6 @@
         <file>Creepster-Regular.ttf</file>
         <file>backgroundMenu.png</file>
         <file>GameMusic.wav</file>
+        <file>nils.png</file>
     </qresource>
 </RCC>

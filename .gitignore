@@ -13,3 +13,13 @@ ProjetC-.pro
 cmake-build-debug
 CMakeLists.txt
 .idea
+assets/ressource.qrc
+Player.o
+Monster.o
+Map.o
+Item.o
+Boss.o
+assets/ressource.qrc
+qrc_ressource.o
+moc_Player.o
+moc_Map.o
