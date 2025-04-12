@@ -1,1 +1,7 @@
-
+<RCC>
+    <qresource prefix="/assets">
+        <file>Creepster-Regular.ttf</file>
+        <file>backgroundMenu.png</file>
+        <file>GameMusic.wav</file>
+    </qresource>
+</RCC>
