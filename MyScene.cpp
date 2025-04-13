@@ -36,10 +36,18 @@ void MyScene::spawnMonster() {
         // Pas trouvé de position éloignée donc position de secours dans le coin de la map
         spawnPos = QPointF(0, 0);
     }
+    int random = QRandomGenerator::global()->bounded(1, 3); // entier entre a inclus et b exclus
+    if (random == 1) {
+        BigMonster* monster = new BigMonster(this);
+        monster->setPos(spawnPos);
+        addItem(monster);
+    }
+    else if (random == 2) {
+        SmallMonster* monster = new SmallMonster(this);
+        monster->setPos(spawnPos);
+        addItem(monster);
+    }
 
-    Monster* monster = new Monster(this);
-    monster->setPos(spawnPos);
-    addItem(monster);
 }
 
 MyScene::MyScene(QObject* parent) : QGraphicsScene(parent) {

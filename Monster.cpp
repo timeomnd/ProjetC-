@@ -10,7 +10,7 @@ Monster::Monster(QObject* parent)
 
     timer = new QTimer(this);
     connect(timer, &QTimer::timeout, this, &Monster::move);
-    timer->start(50);           // Déplacement toutes les 50 ms
+    timer->start(50);           // Déplacement toutes les 50 ms (pas encore codé)
 }
 
 int Monster::getSpeed() const {
