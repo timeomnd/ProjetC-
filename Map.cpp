@@ -10,10 +10,7 @@ void Map:: putWall(QGraphicsScene* scene) {
     for (int i = 0; i<SIZEMAP; i++) {
         for (int j = 0; j < SIZEMAP; j++) {
             if (pos_Wall[i][j]==1){
-                // Calcul des coordonnées isométriques
-                int x_iso = (j - i) * 32 / 2;  // x' = (x - y) * (32 / 2) : x_iso est calculé en prenant la différence entre les indices (j - i), puis en multipliant par la moitié de la taille de la tuile pour obtenir la projection horizontale.
-                int y_iso = (i + j) * 32 / 4;  // y' = (x + y) * (32 / 4) : y_iso est calculé en prenant la somme des indices (i + j), puis en multipliant par un quart de la taille de la tuile pour obtenir la projection verticale.
-                QGraphicsRectItem* wall = new QGraphicsRectItem(x_iso, y_iso, 32, 32);
+                QGraphicsRectItem* wall = new QGraphicsRectItem(j, i, 32, 32);
                 QPen pen;
                 pen.setColor(Qt::black);
                 pen.setWidth(2);  // Épaisseur du contour noir
@@ -47,11 +44,8 @@ void Map::putFloor(QGraphicsScene* scene) {
     for (int i = 0; i < SIZEMAP; i++) {
         for (int j = 0; j < SIZEMAP; j++) {
             if (pos_floor[i][j] == 1) {
-                // Calcul des coordonnées isométriques
-                int x_iso = (j - i) * 32 / 2;
-                int y_iso = (i + j) * 32 / 4;
 
-                QGraphicsRectItem* floor = new QGraphicsRectItem(x_iso, y_iso, 32, 32);
+                QGraphicsRectItem* floor = new QGraphicsRectItem(j, i, 32, 32);
                 floor->setBrush(QColor("#cc0000"));
                 floor->setPen(Qt::NoPen);
                 scene->addItem(floor);

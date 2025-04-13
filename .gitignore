@@ -25,3 +25,4 @@ assets/ressource.qrc
 qrc_ressource.o
 moc_Player.o
 moc_Map.o
+Tiled
