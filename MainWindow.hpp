@@ -46,6 +46,7 @@ private :
     QAudioOutput* audioOutput;
 protected:
     void resizeEvent(QResizeEvent *event) override;
+    bool launchGame;
 public:
     MainWindow(QWidget* parent = nullptr);
     virtual ~MainWindow();

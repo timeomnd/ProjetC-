@@ -4,8 +4,8 @@
 MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent)
 {
     //création de la scène et d'une view
-    this->mainScene = new MyScene;
     this->mainView = new QGraphicsView;
+    this->mainScene = new MyScene(this);
     this->mainView->setScene(mainScene);
     this->setCentralWidget(mainView);
     this->setWindowTitle("The Cursed ISEN");
@@ -14,21 +14,14 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent)
     this->setPalette(QColorConstants::Svg::black);
     QPixmap backgroundPixmap(":/assets/backgroundMenu.png");
 
-    if (!backgroundPixmap.isNull()) {
+    if (!backgroundPixmap.isNull() && !launchGame) {
         QSize viewSize = mainView->viewport()->size();
-        QPixmap scaledBackground = backgroundPixmap.scaled(
-            viewSize,
-            Qt::IgnoreAspectRatio,
-            Qt::SmoothTransformation
-        );
-
+        QPixmap scaledBackground = backgroundPixmap.scaled(viewSize,Qt::IgnoreAspectRatio,Qt::SmoothTransformation);
         QBrush brush(scaledBackground);
-        brush.setStyle(Qt::TexturePattern); // évite les répétitions
+        brush.setStyle(Qt::TexturePattern); // Pour éviter la répétition
 
         mainScene->setSceneRect(0, 0, viewSize.width(), viewSize.height());
         mainScene->setBackgroundBrush(brush);
-    } else {
-        qDebug() << "l'image n'est pas chargé";
     }
 
     //bouton action
@@ -99,24 +92,20 @@ void MainWindow::slot_launchGame() {
     delete Play;
     Play = nullptr;
     media->stop();
-    mainScene = new MyScene(this);
-    mainView = new QGraphicsView(mainScene);
+    mainView = new QGraphicsView();
+    mainScene = new MyScene(mainView, this);
+    mainView->setScene(mainScene);
     setCentralWidget(mainView);
-
-    // Ajout du joueur à la scène
-    Player *player = new Player();
-    mainScene->addItem(player); // Ajoute le joueur à la scène
-    player->setPos(mainView->width()/2, mainView->height()/2); // Position initiale
-
     // Assure que la vue transmet les événements clavier
     mainView->setFocusPolicy(Qt::StrongFocus);
     mainView->setFocus();
+    launchGame = true; //permet d'éviter que le background se remette avec la fonction resize alors que la game est lancée
 }
 void MainWindow::resizeEvent(QResizeEvent *event){ //fonction déjà définie que on redéfini pour que ce soit dynamique
 
     QPixmap backgroundPixmap(":/assets/backgroundMenu.png");
 
-    if (!backgroundPixmap.isNull()) {
+    if (!backgroundPixmap.isNull() && !launchGame) {
         QSize viewSize = mainView->viewport()->size();
         QPixmap scaledBackground = backgroundPixmap.scaled(viewSize,Qt::IgnoreAspectRatio,Qt::SmoothTransformation);
         QBrush brush(scaledBackground);
