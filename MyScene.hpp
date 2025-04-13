@@ -1,8 +1,12 @@
 #ifndef MYSCENE_H
 #define MYSCENE_H
 #include <QGraphicsScene>
+#include <QRandomGenerator>
+#include <QGraphicsView>
 #include "Map.hpp"
 #include "Player.hpp"
+#include "Monster.hpp"
+#include <QPointF>
 class MyScene : public QGraphicsScene {
     Q_OBJECT
 
@@ -13,6 +17,9 @@ public:
 private:
     Map* map;
     Player* player;
+    QTimer* spawnTimer;
+    private slots:
+    void spawnMonster();
 };
 
 
