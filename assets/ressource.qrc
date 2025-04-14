@@ -7,5 +7,7 @@
         <file>nils_left.png</file>
         <file>nils_right.png</file>
         <file>nils_rear.png</file>
+        <file>BigMonster.png</file>
+        <file>SmallMonster.png</file>
     </qresource>
 </RCC>

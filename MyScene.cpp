@@ -38,12 +38,12 @@ void MyScene::spawnMonster() {
     }
     int random = QRandomGenerator::global()->bounded(1, 3); // entier entre a inclus et b exclus
     if (random == 1) {
-        BigMonster* monster = new BigMonster(this);
+        BigMonster* monster = new BigMonster(player, this);
         monster->setPos(spawnPos);
         addItem(monster);
     }
     else if (random == 2) {
-        SmallMonster* monster = new SmallMonster(this);
+        SmallMonster* monster = new SmallMonster(player, this);
         monster->setPos(spawnPos);
         addItem(monster);
     }

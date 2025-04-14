@@ -9,21 +9,21 @@
 #include <QPixmap>
 #include <QGraphicsRectItem>
 #include <QBrush>
+#include <QLineF>
 
 
 
-// =============== Classe de base : MONSTER ===============
-class Monster : public QObject, public QGraphicsRectItem {
+class Monster : public QObject, public QGraphicsPixmapItem {
     Q_OBJECT
 
 public:
-    Monster(QObject* parent = nullptr);
+    Monster(Player* myPlayer, QObject* parent = nullptr);
 
-    // Getters
+
     int getSpeed() const;
     int getHP() const;
 
-    // Setters
+
     void setSpeed(int s);
     void setHP(int h);
 
@@ -31,21 +31,23 @@ public:
         virtual void move();
 
 protected:
+    Player* player; //pointeur vers le joueur
     QTimer* timer;
+    QPixmap sprite;
     int speed;
     int HP;
 };
 
-// =============== BigMonster ====================
+
 class BigMonster : public Monster {
 public:
-    BigMonster(QObject* parent = nullptr);
+    BigMonster(Player* myPlayer, QObject* parent = nullptr);
 };
 
-// =============== SmallMonster ====================
+
 class SmallMonster : public Monster {
 public:
-    SmallMonster(QObject* parent = nullptr);
+    SmallMonster(Player* myPlayer, QObject* parent = nullptr);
 };
 
 #endif //MONSTER_H
