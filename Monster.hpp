@@ -12,7 +12,6 @@
 #include <QLineF>
 
 
-
 class Monster : public QObject, public QGraphicsPixmapItem {
     Q_OBJECT
 

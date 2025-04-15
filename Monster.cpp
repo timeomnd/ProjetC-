@@ -8,6 +8,8 @@ Monster::Monster(Player* myPlayer, QObject* parent)
     timer = new QTimer(this);
     connect(timer, &QTimer::timeout, this, &Monster::move);
     timer->start(50);//déplacement toute les 50ms
+    healthTimer = new QTimer(this);
+    connect(healthTimer, &QTimer::timeout, this, &Monster::attack);
 }
 
 int Monster::getSpeed() const {
@@ -51,7 +53,8 @@ void Monster::attack() {
         return;
     }
     if (this->collidesWithItem(player)) {
-        player->
+        player->setHP(player->getHP() - damage);
+
     }
 }
 BigMonster::BigMonster(Player* myPlayer, QObject* parent)
