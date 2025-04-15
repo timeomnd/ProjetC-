@@ -30,5 +30,4 @@ qrc_ressource.cpp
 moc_Monster.o
 moc_Monster.cpp
 qrc_ressource.cpp
-Boss.o
-Item.o
+
