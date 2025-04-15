@@ -53,23 +53,17 @@ OBJECTS_DIR   = ./
 ####### Files
 
 SOURCES       = Boss.cpp \
-		Item.cpp \
 		main.cpp \
 		MainWindow.cpp \
-		Map.cpp \
-		Monster.cpp \
 		MyScene.cpp \
-		Player.cpp qrc_ressource.cpp \
-		moc_MainWindow.cpp \
+		Player.cpp \
+		qrc_ressource.cpp moc_MainWindow.cpp \
 		moc_Map.cpp \
 		moc_MyScene.cpp \
 		moc_Player.cpp
 OBJECTS       = Boss.o \
-		Item.o \
 		main.o \
 		MainWindow.o \
-		Map.o \
-		Monster.o \
 		MyScene.o \
 		Player.o \
 		qrc_ressource.o \
@@ -149,16 +143,13 @@ DIST          = /usr/lib/x86_64-linux-gnu/qt6/mkspecs/features/spec_pre.prf \
 		Item.hpp \
 		MainWindow.hpp \
 		Map.hpp \
-		Monster.hpp \
 		MyScene.hpp \
 		Player.hpp Boss.cpp \
-		Item.cpp \
 		main.cpp \
 		MainWindow.cpp \
-		Map.cpp \
-		Monster.cpp \
 		MyScene.cpp \
-		Player.cpp
+		Player.cpp \
+		qrc_ressource.cpp
 QMAKE_TARGET  = ProjetC-
 DESTDIR       = 
 TARGET        = ProjetC-
@@ -239,7 +230,6 @@ Makefile: ProjetC-.pro /usr/lib/x86_64-linux-gnu/qt6/mkspecs/linux-g++/qmake.con
 		/usr/lib/x86_64-linux-gnu/qt6/mkspecs/features/yacc.prf \
 		/usr/lib/x86_64-linux-gnu/qt6/mkspecs/features/lex.prf \
 		ProjetC-.pro \
-		assets/ressource.qrc \
 		/usr/lib/x86_64-linux-gnu/libQt6Widgets.prl \
 		/usr/lib/x86_64-linux-gnu/libQt6Multimedia.prl \
 		/usr/lib/x86_64-linux-gnu/libQt6Gui.prl \
@@ -315,7 +305,6 @@ Makefile: ProjetC-.pro /usr/lib/x86_64-linux-gnu/qt6/mkspecs/linux-g++/qmake.con
 /usr/lib/x86_64-linux-gnu/qt6/mkspecs/features/yacc.prf:
 /usr/lib/x86_64-linux-gnu/qt6/mkspecs/features/lex.prf:
 ProjetC-.pro:
-assets/ressource.qrc:
 /usr/lib/x86_64-linux-gnu/libQt6Widgets.prl:
 /usr/lib/x86_64-linux-gnu/libQt6Multimedia.prl:
 /usr/lib/x86_64-linux-gnu/libQt6Gui.prl:
@@ -335,10 +324,9 @@ dist: distdir FORCE
 distdir: FORCE
 	@test -d $(DISTDIR) || mkdir -p $(DISTDIR)
 	$(COPY_FILE) --parents $(DIST) $(DISTDIR)/
-	$(COPY_FILE) --parents assets/ressource.qrc $(DISTDIR)/
 	$(COPY_FILE) --parents /usr/lib/x86_64-linux-gnu/qt6/mkspecs/features/data/dummy.cpp $(DISTDIR)/
-	$(COPY_FILE) --parents Boss.hpp Item.hpp MainWindow.hpp Map.hpp Monster.hpp MyScene.hpp Player.hpp $(DISTDIR)/
-	$(COPY_FILE) --parents Boss.cpp Item.cpp main.cpp MainWindow.cpp Map.cpp Monster.cpp MyScene.cpp Player.cpp $(DISTDIR)/
+	$(COPY_FILE) --parents Boss.hpp Item.hpp MainWindow.hpp Map.hpp MyScene.hpp Player.hpp $(DISTDIR)/
+	$(COPY_FILE) --parents Boss.cpp main.cpp MainWindow.cpp MyScene.cpp Player.cpp qrc_ressource.cpp $(DISTDIR)/
 
 
 clean: compiler_clean 
@@ -362,20 +350,8 @@ check: first
 
 benchmark: first
 
-compiler_rcc_make_all: qrc_ressource.cpp
+compiler_rcc_make_all:
 compiler_rcc_clean:
-	-$(DEL_FILE) qrc_ressource.cpp
-qrc_ressource.cpp: assets/ressource.qrc \
-		/usr/lib/qt6/libexec/rcc \
-		assets/nils_right.png \
-		assets/nils_rear.png \
-		assets/Creepster-Regular.ttf \
-		assets/nils_front.png \
-		assets/backgroundMenu.png \
-		assets/nils_left.png \
-		assets/GameMusic.wav
-	/usr/lib/qt6/libexec/rcc -name ressource assets/ressource.qrc -o qrc_ressource.cpp
-
 compiler_moc_predefs_make_all: moc_predefs.h
 compiler_moc_predefs_clean:
 	-$(DEL_FILE) moc_predefs.h
@@ -387,7 +363,6 @@ compiler_moc_header_clean:
 	-$(DEL_FILE) moc_MainWindow.cpp moc_Map.cpp moc_MyScene.cpp moc_Player.cpp
 moc_MainWindow.cpp: MainWindow.hpp \
 		MyScene.hpp \
-		Map.hpp \
 		Player.hpp \
 		moc_predefs.h \
 		/usr/lib/qt6/libexec/moc
@@ -399,7 +374,6 @@ moc_Map.cpp: Map.hpp \
 	/usr/lib/qt6/libexec/moc $(DEFINES) --include /mnt/c/Users/Administrator/Desktop/projet/ProjetC-/moc_predefs.h -I/usr/lib/x86_64-linux-gnu/qt6/mkspecs/linux-g++ -I/mnt/c/Users/Administrator/Desktop/projet/ProjetC- -I/mnt/c/Users/Administrator/Desktop/projet/ProjetC- -I/usr/include/x86_64-linux-gnu/qt6 -I/usr/include/x86_64-linux-gnu/qt6/QtWidgets -I/usr/include/x86_64-linux-gnu/qt6/QtMultimedia -I/usr/include/x86_64-linux-gnu/qt6/QtGui -I/usr/include/x86_64-linux-gnu/qt6/QtNetwork -I/usr/include/x86_64-linux-gnu/qt6/QtCore -I/usr/include/c++/12 -I/usr/include/x86_64-linux-gnu/c++/12 -I/usr/include/c++/12/backward -I/usr/lib/gcc/x86_64-linux-gnu/12/include -I/usr/local/include -I/usr/include/x86_64-linux-gnu -I/usr/include Map.hpp -o moc_Map.cpp
 
 moc_MyScene.cpp: MyScene.hpp \
-		Map.hpp \
 		Player.hpp \
 		moc_predefs.h \
 		/usr/lib/qt6/libexec/moc
@@ -422,36 +396,24 @@ compiler_yacc_impl_make_all:
 compiler_yacc_impl_clean:
 compiler_lex_make_all:
 compiler_lex_clean:
-compiler_clean: compiler_rcc_clean compiler_moc_predefs_clean compiler_moc_header_clean 
+compiler_clean: compiler_moc_predefs_clean compiler_moc_header_clean 
 
 ####### Compile
 
 Boss.o: Boss.cpp Boss.hpp
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o Boss.o Boss.cpp
 
-Item.o: Item.cpp Item.hpp
-	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o Item.o Item.cpp
-
 main.o: main.cpp MainWindow.hpp \
 		MyScene.hpp \
-		Map.hpp \
 		Player.hpp
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o main.o main.cpp
 
 MainWindow.o: MainWindow.cpp MainWindow.hpp \
 		MyScene.hpp \
-		Map.hpp \
 		Player.hpp
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o MainWindow.o MainWindow.cpp
 
-Map.o: Map.cpp Map.hpp
-	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o Map.o Map.cpp
-
-Monster.o: Monster.cpp Monster.hpp
-	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o Monster.o Monster.cpp
-
 MyScene.o: MyScene.cpp MyScene.hpp \
-		Map.hpp \
 		Player.hpp
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o MyScene.o MyScene.cpp
 
