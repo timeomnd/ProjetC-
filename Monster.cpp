@@ -46,7 +46,8 @@ void Monster::move() {
 BigMonster::BigMonster(Player* myPlayer, QObject* parent)
     : Monster(myPlayer, parent)
 {
-    sprite = QPixmap(":/assets/BigMonster.png");
+    QPixmap pixmap (":/assets/BigMonster.png");
+    QPixmap sprite = pixmap.scaled(120, 120, Qt::KeepAspectRatio, Qt::SmoothTransformation);
     if (sprite.isNull()) {
         qWarning("Erreur : le sprite est introuvable !");
         return;
@@ -60,12 +61,13 @@ BigMonster::BigMonster(Player* myPlayer, QObject* parent)
 SmallMonster::SmallMonster(Player* myPlayer, QObject* parent)
     : Monster(myPlayer, parent)
 {
-    sprite = QPixmap(":/assets/SmallMonster.png");
+    QPixmap pixmap (":/assets/BigMonster.png");
+    QPixmap sprite = pixmap.scaled(80, 80, Qt::KeepAspectRatio, Qt::SmoothTransformation);
     if (sprite.isNull()) {
         qWarning("Erreur : le sprite est introuvable !");
         return;
     }
     setPixmap(sprite);
-    setSpeed(8);
+    setSpeed(7);
     setHP(20);
 }
