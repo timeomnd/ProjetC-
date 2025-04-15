@@ -51,7 +51,7 @@ void Monster::attack() {
         return;
     }
     if (this->collidesWithItem(player)) {
-        player->
+        return;
     }
 }
 BigMonster::BigMonster(Player* myPlayer, QObject* parent)
