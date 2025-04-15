@@ -27,3 +27,6 @@ moc_Player.o
 moc_Map.o
 Tiled
 qrc_ressource.cpp
+moc_Monster.o
+moc_Monster.cpp
+qrc_ressource.cpp
