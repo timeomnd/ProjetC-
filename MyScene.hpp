@@ -1,22 +1,26 @@
-#ifndef MYSCENE_HPP
-#define MYSCENE_HPP
-
+#ifndef MYSCENE_H
+#define MYSCENE_H
 #include <QGraphicsScene>
-#include <QPointF>
+#include <QRandomGenerator>
+#include <QGraphicsView>
+#include "Map.hpp"
 #include "Player.hpp"
-
+#include "Monster.hpp"
+#include <QPointF>
 class MyScene : public QGraphicsScene {
     Q_OBJECT
 
 public:
-    MyScene(QGraphicsView* mainView, QObject* parent = nullptr);
     MyScene(QObject* parent = nullptr);
-    ~MyScene();
-
-
+    MyScene(QGraphicsView* mainView, QObject* parent = nullptr);
+    virtual ~MyScene();
 private:
+    Map* map;
     Player* player;
-    QGraphicsItem* map;
+    QTimer* spawnTimer;
+    private slots:
+    void spawnMonster();
 };
 
-#endif // MYSCENE_HPP
+
+#endif //MYSCENE_H
