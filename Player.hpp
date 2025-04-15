@@ -15,13 +15,15 @@ public:
     void keyPressEvent(QKeyEvent* event) override;
     void keyReleaseEvent(QKeyEvent* event) override;
     void setSpeed(int s);
+    void setHP(int h);
     int getSpeed() const;
-
+    int getHP()const;
 private slots:
     void updatePosition();
 
 private:
     int speed;
+    int HP;
     int dx;
     int dy;
     QTimer* movementTimer;

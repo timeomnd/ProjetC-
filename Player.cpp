@@ -4,7 +4,7 @@
 
 Player::Player(QGraphicsItem* parent)
     : QGraphicsPixmapItem(parent), speed(5), dx(0), dy(0) {
-    
+    setHP(100);
     // Chargement des sprites
     spriteUp = QPixmap(":/assets/nils_rear.png");
     spriteDown = QPixmap(":/assets/nils_front.png");
@@ -81,4 +81,10 @@ void Player::setSpeed(int s) {
 
 int Player::getSpeed() const {
     return speed;
+}
+int Player::getHP() const {
+    return HP;
+}
+void Player::setHP(int h) {
+    HP = h;
 }

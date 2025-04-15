@@ -7,7 +7,7 @@ Monster::Monster(Player* myPlayer, QObject* parent)
 {
     timer = new QTimer(this);
     connect(timer, &QTimer::timeout, this, &Monster::move);
-    timer->start(50);           // Déplacement toutes les 50 ms (pas encore codé)
+    timer->start(50);//déplacement toute les 50ms
 }
 
 int Monster::getSpeed() const {
@@ -17,7 +17,9 @@ int Monster::getSpeed() const {
 int Monster::getHP() const {
     return HP;
 }
-
+int Monster::getDamage() const {
+    return damage;
+}
 void Monster::setSpeed(int s) {
     speed = s;
 }
@@ -25,7 +27,9 @@ void Monster::setSpeed(int s) {
 void Monster::setHP(int h) {
     HP = h;
 }
-
+void Monster::setDamage(int d) {
+    damage = d;
+}
 void Monster::move() {
     if (!player) {
         return;
@@ -42,7 +46,14 @@ void Monster::move() {
     this->moveBy(dx, dy);
 }
 
-
+void Monster::attack() {
+    if (!player) {
+        return;
+    }
+    if (this->collidesWithItem(player)) {
+        player->
+    }
+}
 BigMonster::BigMonster(Player* myPlayer, QObject* parent)
     : Monster(myPlayer, parent)
 {
@@ -55,6 +66,7 @@ BigMonster::BigMonster(Player* myPlayer, QObject* parent)
     setPixmap(sprite);
     setSpeed(5);
     setHP(40);
+    setDamage(25);
 }
 
 
@@ -70,4 +82,5 @@ SmallMonster::SmallMonster(Player* myPlayer, QObject* parent)
     setPixmap(sprite);
     setSpeed(7);
     setHP(20);
+    setDamage(5);
 }
