@@ -30,6 +30,8 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="a8d64388-feea-4285-bcc3-762a82d64f45" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/editor.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/editor.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/vcs.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.qmake.stash" beforeDir="false" afterPath="$PROJECT_DIR$/.qmake.stash" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Boss.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Boss.cpp" afterDir="false" />
@@ -177,6 +179,7 @@
       <workItem from="1744734152999" duration="48000" />
       <workItem from="1744734228391" duration="18000" />
       <workItem from="1744735834015" duration="58000" />
+      <workItem from="1744735908583" duration="186000" />
     </task>
     <servers />
   </component>
