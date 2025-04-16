@@ -31,3 +31,20 @@ moc_Monster.o
 moc_Monster.cpp
 qrc_ressource.cpp
 
+*.o
+*.xml
+*.xml
+Makefile
+qrc_ressource.cpp
+ProjetC-.pro
+ProjetC-
+Player.o
+MyScene.o
+moc_predefs.h
+moc_Player.o
+moc_Player.cpp
+moc_MyScene.o
+moc_MyScene.cpp
+moc_Map.cpp
+moc_MainWindow.cpp
+Makefile
