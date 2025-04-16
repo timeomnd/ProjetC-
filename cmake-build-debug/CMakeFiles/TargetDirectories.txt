@@ -1,4 +1,0 @@
-/mnt/c/Users/timti/Desktop/ProjetC-/cmake-build-debug/CMakeFiles/ProjetC-.dir
-/mnt/c/Users/timti/Desktop/ProjetC-/cmake-build-debug/CMakeFiles/edit_cache.dir
-/mnt/c/Users/timti/Desktop/ProjetC-/cmake-build-debug/CMakeFiles/rebuild_cache.dir
-/mnt/c/Users/timti/Desktop/ProjetC-/cmake-build-debug/CMakeFiles/ProjetC-_autogen.dir

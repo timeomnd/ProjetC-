@@ -1,4 +1,0 @@
-/usr/bin/cmake -DCMAKE_BUILD_TYPE=Debug -DCMAKE_PREFIX_PATH=/usr/lib/x86_64-linux-gnu/cmake/Qt6 -G "Unix Makefiles" -S /mnt/c/Users/timti/Desktop/ProjetC- -B /mnt/c/Users/timti/Desktop/ProjetC-/cmake-build-debug
--- Configuring done
--- Generating done
--- Build files have been written to: /mnt/c/Users/timti/Desktop/ProjetC-/cmake-build-debug
