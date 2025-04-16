@@ -64,7 +64,7 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent)
 
     audioOutput->setVolume(0.2);
     media->setAudioOutput(audioOutput);
-    media->setSource(QUrl("qrc:/assets/GameMusic.wav"));
+    media->setSource(QUrl("qrc:/assets/GameMusic.mp3"));
 
     media->setLoops(QMediaPlayer::Infinite);
     media->play();
