@@ -51,7 +51,7 @@ void Monster::attack() {
         return;
     }
     if (this->collidesWithItem(player)) {
-        return;
+        player->setHP(player->getHP() - damage);
     }
 }
 BigMonster::BigMonster(Player* myPlayer, QObject* parent)
