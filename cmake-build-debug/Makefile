@@ -117,24 +117,37 @@ depend:
 .PHONY : depend
 
 #=============================================================================
-# Target rules for targets named ProjetC_
+# Target rules for targets named ProjetC-
 
 # Build rule for target.
-ProjetC_: cmake_check_build_system
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 ProjetC_
-.PHONY : ProjetC_
+ProjetC-: cmake_check_build_system
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 ProjetC-
+.PHONY : ProjetC-
 
 # fast build rule for target.
-ProjetC_/fast:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/ProjetC_.dir/build.make CMakeFiles/ProjetC_.dir/build
-.PHONY : ProjetC_/fast
+ProjetC-/fast:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/ProjetC-.dir/build.make CMakeFiles/ProjetC-.dir/build
+.PHONY : ProjetC-/fast
+
+#=============================================================================
+# Target rules for targets named ProjetC-_autogen
+
+# Build rule for target.
+ProjetC-_autogen: cmake_check_build_system
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 ProjetC-_autogen
+.PHONY : ProjetC-_autogen
+
+# fast build rule for target.
+ProjetC-_autogen/fast:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/ProjetC-_autogen.dir/build.make CMakeFiles/ProjetC-_autogen.dir/build
+.PHONY : ProjetC-_autogen/fast
 
 Boss.o: Boss.cpp.o
 .PHONY : Boss.o
 
 # target to build an object file
 Boss.cpp.o:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/ProjetC_.dir/build.make CMakeFiles/ProjetC_.dir/Boss.cpp.o
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/ProjetC-.dir/build.make CMakeFiles/ProjetC-.dir/Boss.cpp.o
 .PHONY : Boss.cpp.o
 
 Boss.i: Boss.cpp.i
@@ -142,7 +155,7 @@ Boss.i: Boss.cpp.i
 
 # target to preprocess a source file
 Boss.cpp.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/ProjetC_.dir/build.make CMakeFiles/ProjetC_.dir/Boss.cpp.i
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/ProjetC-.dir/build.make CMakeFiles/ProjetC-.dir/Boss.cpp.i
 .PHONY : Boss.cpp.i
 
 Boss.s: Boss.cpp.s
@@ -150,15 +163,39 @@ Boss.s: Boss.cpp.s
 
 # target to generate assembly for a file
 Boss.cpp.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/ProjetC_.dir/build.make CMakeFiles/ProjetC_.dir/Boss.cpp.s
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/ProjetC-.dir/build.make CMakeFiles/ProjetC-.dir/Boss.cpp.s
 .PHONY : Boss.cpp.s
+
+Item.o: Item.cpp.o
+.PHONY : Item.o
+
+# target to build an object file
+Item.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/ProjetC-.dir/build.make CMakeFiles/ProjetC-.dir/Item.cpp.o
+.PHONY : Item.cpp.o
+
+Item.i: Item.cpp.i
+.PHONY : Item.i
+
+# target to preprocess a source file
+Item.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/ProjetC-.dir/build.make CMakeFiles/ProjetC-.dir/Item.cpp.i
+.PHONY : Item.cpp.i
+
+Item.s: Item.cpp.s
+.PHONY : Item.s
+
+# target to generate assembly for a file
+Item.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/ProjetC-.dir/build.make CMakeFiles/ProjetC-.dir/Item.cpp.s
+.PHONY : Item.cpp.s
 
 MainWindow.o: MainWindow.cpp.o
 .PHONY : MainWindow.o
 
 # target to build an object file
 MainWindow.cpp.o:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/ProjetC_.dir/build.make CMakeFiles/ProjetC_.dir/MainWindow.cpp.o
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/ProjetC-.dir/build.make CMakeFiles/ProjetC-.dir/MainWindow.cpp.o
 .PHONY : MainWindow.cpp.o
 
 MainWindow.i: MainWindow.cpp.i
@@ -166,7 +203,7 @@ MainWindow.i: MainWindow.cpp.i
 
 # target to preprocess a source file
 MainWindow.cpp.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/ProjetC_.dir/build.make CMakeFiles/ProjetC_.dir/MainWindow.cpp.i
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/ProjetC-.dir/build.make CMakeFiles/ProjetC-.dir/MainWindow.cpp.i
 .PHONY : MainWindow.cpp.i
 
 MainWindow.s: MainWindow.cpp.s
@@ -174,15 +211,63 @@ MainWindow.s: MainWindow.cpp.s
 
 # target to generate assembly for a file
 MainWindow.cpp.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/ProjetC_.dir/build.make CMakeFiles/ProjetC_.dir/MainWindow.cpp.s
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/ProjetC-.dir/build.make CMakeFiles/ProjetC-.dir/MainWindow.cpp.s
 .PHONY : MainWindow.cpp.s
+
+Map.o: Map.cpp.o
+.PHONY : Map.o
+
+# target to build an object file
+Map.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/ProjetC-.dir/build.make CMakeFiles/ProjetC-.dir/Map.cpp.o
+.PHONY : Map.cpp.o
+
+Map.i: Map.cpp.i
+.PHONY : Map.i
+
+# target to preprocess a source file
+Map.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/ProjetC-.dir/build.make CMakeFiles/ProjetC-.dir/Map.cpp.i
+.PHONY : Map.cpp.i
+
+Map.s: Map.cpp.s
+.PHONY : Map.s
+
+# target to generate assembly for a file
+Map.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/ProjetC-.dir/build.make CMakeFiles/ProjetC-.dir/Map.cpp.s
+.PHONY : Map.cpp.s
+
+Monster.o: Monster.cpp.o
+.PHONY : Monster.o
+
+# target to build an object file
+Monster.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/ProjetC-.dir/build.make CMakeFiles/ProjetC-.dir/Monster.cpp.o
+.PHONY : Monster.cpp.o
+
+Monster.i: Monster.cpp.i
+.PHONY : Monster.i
+
+# target to preprocess a source file
+Monster.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/ProjetC-.dir/build.make CMakeFiles/ProjetC-.dir/Monster.cpp.i
+.PHONY : Monster.cpp.i
+
+Monster.s: Monster.cpp.s
+.PHONY : Monster.s
+
+# target to generate assembly for a file
+Monster.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/ProjetC-.dir/build.make CMakeFiles/ProjetC-.dir/Monster.cpp.s
+.PHONY : Monster.cpp.s
 
 MyScene.o: MyScene.cpp.o
 .PHONY : MyScene.o
 
 # target to build an object file
 MyScene.cpp.o:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/ProjetC_.dir/build.make CMakeFiles/ProjetC_.dir/MyScene.cpp.o
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/ProjetC-.dir/build.make CMakeFiles/ProjetC-.dir/MyScene.cpp.o
 .PHONY : MyScene.cpp.o
 
 MyScene.i: MyScene.cpp.i
@@ -190,7 +275,7 @@ MyScene.i: MyScene.cpp.i
 
 # target to preprocess a source file
 MyScene.cpp.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/ProjetC_.dir/build.make CMakeFiles/ProjetC_.dir/MyScene.cpp.i
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/ProjetC-.dir/build.make CMakeFiles/ProjetC-.dir/MyScene.cpp.i
 .PHONY : MyScene.cpp.i
 
 MyScene.s: MyScene.cpp.s
@@ -198,7 +283,7 @@ MyScene.s: MyScene.cpp.s
 
 # target to generate assembly for a file
 MyScene.cpp.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/ProjetC_.dir/build.make CMakeFiles/ProjetC_.dir/MyScene.cpp.s
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/ProjetC-.dir/build.make CMakeFiles/ProjetC-.dir/MyScene.cpp.s
 .PHONY : MyScene.cpp.s
 
 Player.o: Player.cpp.o
@@ -206,7 +291,7 @@ Player.o: Player.cpp.o
 
 # target to build an object file
 Player.cpp.o:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/ProjetC_.dir/build.make CMakeFiles/ProjetC_.dir/Player.cpp.o
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/ProjetC-.dir/build.make CMakeFiles/ProjetC-.dir/Player.cpp.o
 .PHONY : Player.cpp.o
 
 Player.i: Player.cpp.i
@@ -214,7 +299,7 @@ Player.i: Player.cpp.i
 
 # target to preprocess a source file
 Player.cpp.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/ProjetC_.dir/build.make CMakeFiles/ProjetC_.dir/Player.cpp.i
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/ProjetC-.dir/build.make CMakeFiles/ProjetC-.dir/Player.cpp.i
 .PHONY : Player.cpp.i
 
 Player.s: Player.cpp.s
@@ -222,15 +307,39 @@ Player.s: Player.cpp.s
 
 # target to generate assembly for a file
 Player.cpp.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/ProjetC_.dir/build.make CMakeFiles/ProjetC_.dir/Player.cpp.s
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/ProjetC-.dir/build.make CMakeFiles/ProjetC-.dir/Player.cpp.s
 .PHONY : Player.cpp.s
+
+ProjetC-_autogen/mocs_compilation.o: ProjetC-_autogen/mocs_compilation.cpp.o
+.PHONY : ProjetC-_autogen/mocs_compilation.o
+
+# target to build an object file
+ProjetC-_autogen/mocs_compilation.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/ProjetC-.dir/build.make CMakeFiles/ProjetC-.dir/ProjetC-_autogen/mocs_compilation.cpp.o
+.PHONY : ProjetC-_autogen/mocs_compilation.cpp.o
+
+ProjetC-_autogen/mocs_compilation.i: ProjetC-_autogen/mocs_compilation.cpp.i
+.PHONY : ProjetC-_autogen/mocs_compilation.i
+
+# target to preprocess a source file
+ProjetC-_autogen/mocs_compilation.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/ProjetC-.dir/build.make CMakeFiles/ProjetC-.dir/ProjetC-_autogen/mocs_compilation.cpp.i
+.PHONY : ProjetC-_autogen/mocs_compilation.cpp.i
+
+ProjetC-_autogen/mocs_compilation.s: ProjetC-_autogen/mocs_compilation.cpp.s
+.PHONY : ProjetC-_autogen/mocs_compilation.s
+
+# target to generate assembly for a file
+ProjetC-_autogen/mocs_compilation.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/ProjetC-.dir/build.make CMakeFiles/ProjetC-.dir/ProjetC-_autogen/mocs_compilation.cpp.s
+.PHONY : ProjetC-_autogen/mocs_compilation.cpp.s
 
 main.o: main.cpp.o
 .PHONY : main.o
 
 # target to build an object file
 main.cpp.o:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/ProjetC_.dir/build.make CMakeFiles/ProjetC_.dir/main.cpp.o
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/ProjetC-.dir/build.make CMakeFiles/ProjetC-.dir/main.cpp.o
 .PHONY : main.cpp.o
 
 main.i: main.cpp.i
@@ -238,7 +347,7 @@ main.i: main.cpp.i
 
 # target to preprocess a source file
 main.cpp.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/ProjetC_.dir/build.make CMakeFiles/ProjetC_.dir/main.cpp.i
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/ProjetC-.dir/build.make CMakeFiles/ProjetC-.dir/main.cpp.i
 .PHONY : main.cpp.i
 
 main.s: main.cpp.s
@@ -246,8 +355,32 @@ main.s: main.cpp.s
 
 # target to generate assembly for a file
 main.cpp.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/ProjetC_.dir/build.make CMakeFiles/ProjetC_.dir/main.cpp.s
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/ProjetC-.dir/build.make CMakeFiles/ProjetC-.dir/main.cpp.s
 .PHONY : main.cpp.s
+
+qrc_ressource.o: qrc_ressource.cpp.o
+.PHONY : qrc_ressource.o
+
+# target to build an object file
+qrc_ressource.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/ProjetC-.dir/build.make CMakeFiles/ProjetC-.dir/qrc_ressource.cpp.o
+.PHONY : qrc_ressource.cpp.o
+
+qrc_ressource.i: qrc_ressource.cpp.i
+.PHONY : qrc_ressource.i
+
+# target to preprocess a source file
+qrc_ressource.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/ProjetC-.dir/build.make CMakeFiles/ProjetC-.dir/qrc_ressource.cpp.i
+.PHONY : qrc_ressource.cpp.i
+
+qrc_ressource.s: qrc_ressource.cpp.s
+.PHONY : qrc_ressource.s
+
+# target to generate assembly for a file
+qrc_ressource.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/ProjetC-.dir/build.make CMakeFiles/ProjetC-.dir/qrc_ressource.cpp.s
+.PHONY : qrc_ressource.cpp.s
 
 # Help Target
 help:
@@ -257,22 +390,38 @@ help:
 	@echo "... depend"
 	@echo "... edit_cache"
 	@echo "... rebuild_cache"
-	@echo "... ProjetC_"
+	@echo "... ProjetC-_autogen"
+	@echo "... ProjetC-"
 	@echo "... Boss.o"
 	@echo "... Boss.i"
 	@echo "... Boss.s"
+	@echo "... Item.o"
+	@echo "... Item.i"
+	@echo "... Item.s"
 	@echo "... MainWindow.o"
 	@echo "... MainWindow.i"
 	@echo "... MainWindow.s"
+	@echo "... Map.o"
+	@echo "... Map.i"
+	@echo "... Map.s"
+	@echo "... Monster.o"
+	@echo "... Monster.i"
+	@echo "... Monster.s"
 	@echo "... MyScene.o"
 	@echo "... MyScene.i"
 	@echo "... MyScene.s"
 	@echo "... Player.o"
 	@echo "... Player.i"
 	@echo "... Player.s"
+	@echo "... ProjetC-_autogen/mocs_compilation.o"
+	@echo "... ProjetC-_autogen/mocs_compilation.i"
+	@echo "... ProjetC-_autogen/mocs_compilation.s"
 	@echo "... main.o"
 	@echo "... main.i"
 	@echo "... main.s"
+	@echo "... qrc_ressource.o"
+	@echo "... qrc_ressource.i"
+	@echo "... qrc_ressource.s"
 .PHONY : help
 
 

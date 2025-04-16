@@ -1,1 +1,0 @@
-/usr/bin/c++ -g CMakeFiles/ProjetC_.dir/Boss.cpp.o CMakeFiles/ProjetC_.dir/main.cpp.o CMakeFiles/ProjetC_.dir/MainWindow.cpp.o CMakeFiles/ProjetC_.dir/MyScene.cpp.o CMakeFiles/ProjetC_.dir/Player.cpp.o -o ProjetC_ 
