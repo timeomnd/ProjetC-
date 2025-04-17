@@ -3,10 +3,17 @@
 
 
 Monster::Monster(Player* myPlayer, QObject* parent)
-    : QObject(parent), speed(2), HP(1), player(myPlayer)
+    : QObject(parent), speed(2), HP(1), player(myPlayer), attackCooldown(1000)
 {
+    hitSound = new QSoundEffect(this);
+    hitSound->setSource(QUrl("qrc:/assets/hitMonster.wav")); // de préférence .wav
+    hitSound->setVolume(0.5);
+    lastAttackTime.start();
     timer = new QTimer(this);
-    connect(timer, &QTimer::timeout, this, &Monster::move);
+    connect(timer, &QTimer::timeout, this, [this]() {
+    this->move();   // déplacement du monstre
+    this->attack(); // attaque du monstre si collision
+});
     timer->start(50);//déplacement toute les 50ms
 }
 
@@ -20,6 +27,9 @@ int Monster::getHP() const {
 int Monster::getDamage() const {
     return damage;
 }
+int Monster::getAttackCooldown() const {
+    return attackCooldown;
+}
 void Monster::setSpeed(int s) {
     speed = s;
 }
@@ -29,6 +39,9 @@ void Monster::setHP(int h) {
 }
 void Monster::setDamage(int d) {
     damage = d;
+}
+void Monster::setAttackCooldown(int c) {
+    attackCooldown = c;
 }
 void Monster::move() {
     if (!player) {
@@ -47,12 +60,16 @@ void Monster::move() {
 }
 
 void Monster::attack() {
-    if (!player) {
-        return;
-    }
+    if (!player) return;
+
     if (this->collidesWithItem(player)) {
-        player->setHP(player->getHP() - damage);
-        
+        if (lastAttackTime.elapsed() >= attackCooldown) {
+            player->setHP(player->getHP() - damage);
+            qDebug() << "Attaque ! HP joueur :" << player->getHP();
+            hitSound->stop();
+            hitSound->play();
+            lastAttackTime.restart(); // reset du cooldown
+        }
     }
 }
 BigMonster::BigMonster(Player* myPlayer, QObject* parent)
@@ -64,6 +81,7 @@ BigMonster::BigMonster(Player* myPlayer, QObject* parent)
         qWarning("Erreur : le sprite est introuvable !");
         return;
     }
+    setAttackCooldown(2200);
     setPixmap(sprite);
     setSpeed(5);
     setHP(40);
@@ -80,6 +98,7 @@ SmallMonster::SmallMonster(Player* myPlayer, QObject* parent)
         qWarning("Erreur : le sprite est introuvable !");
         return;
     }
+    setAttackCooldown(1200);
     setPixmap(sprite);
     setSpeed(7);
     setHP(20);

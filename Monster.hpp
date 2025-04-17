@@ -10,6 +10,8 @@
 #include <QGraphicsRectItem>
 #include <QBrush>
 #include <QLineF>
+#include <QSoundEffect>
+#include <QElapsedTimer>
 
 
 
@@ -23,10 +25,12 @@ public:
     int getSpeed() const;
     int getHP() const;
     int getDamage() const;
+    int getAttackCooldown() const;
 
     void setSpeed(int s);
     void setHP(int h);
     void setDamage(int d);
+    void setAttackCooldown(int c);
     public slots:
         virtual void move();
         virtual void attack();
@@ -36,6 +40,9 @@ protected:
     QTimer* timer;
     QTimer* healthTimer;
     QPixmap sprite;
+    QSoundEffect* hitSound;
+    QElapsedTimer lastAttackTime;
+    int attackCooldown; // en millisecondes
     int speed;
     int HP;
     int damage;

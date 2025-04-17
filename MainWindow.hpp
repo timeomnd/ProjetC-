@@ -26,6 +26,7 @@
 #include <QAudioFormat>
 #include <QAudioDevice>
 #include <QMediaDevices>
+#include <QSoundEffect>
 
 
 
@@ -42,8 +43,7 @@ private :
     QToolBar* toolbar;
     QPushButton* Play;
     QVBoxLayout* mainLayout;
-    QMediaPlayer* media;
-    QAudioOutput* audioOutput;
+    QSoundEffect* sound;
 protected:
     void resizeEvent(QResizeEvent *event) override;
     bool launchGame;
