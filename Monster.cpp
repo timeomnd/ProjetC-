@@ -17,10 +17,12 @@ Monster::Monster(Player* myPlayer, QObject* parent)
     timer->start(50);//déplacement toute les 50ms
 }
 
+
+
+
 int Monster::getSpeed() const {
     return speed;
 }
-
 int Monster::getHP() const {
     return HP;
 }
@@ -30,6 +32,12 @@ int Monster::getDamage() const {
 int Monster::getAttackCooldown() const {
     return attackCooldown;
 }
+int Monster::getSpriteSize() const {
+    return spriteSize;
+}
+
+
+
 void Monster::setSpeed(int s) {
     speed = s;
 }
@@ -43,21 +51,58 @@ void Monster::setDamage(int d) {
 void Monster::setAttackCooldown(int c) {
     attackCooldown = c;
 }
+void Monster::setSpriteSize(int size) {
+    spriteSize = size;
+}
+
+
+
+
+
 void Monster::move() {
     if (!player) {
         return;
     }
-    QPointF monsterPos = this->pos(); //position du monstre
-    QPointF playerPos = player->pos(); //position du joueur
 
-    QLineF direction(monsterPos, playerPos);
+    QPointF monsterPos = this->pos();  // position du monstre
+    QPointF playerPos = player->pos(); // position du joueur
 
-    double angle = direction.angle(); // on récupère l'angle du monstre par rapport au joueur
-    double dx = speed * qCos(qDegreesToRadians(-angle));
-    double dy = speed * qSin(qDegreesToRadians(-angle));
+    qreal dx = playerPos.x() - monsterPos.x();  // différence en x
+    qreal dy = playerPos.y() - monsterPos.y();  // différence en y
 
-    this->moveBy(dx, dy);
+    // Calcul des directions possibles
+    qreal angle = qAtan2(dy, dx); // angle entre le monstre et le joueur
+
+    // Calcul des distances horizontale et verticale
+    qreal absDx = qAbs(dx);
+    qreal absDy = qAbs(dy);
+
+    // Choisir la direction la plus proche
+    if (absDx > absDy) {
+        // Déplacement horizontal (gauche/droite)
+        if (dx > 0) {
+            // Aller à droite
+            setPixmap(spriteRight->scaled(spriteSize, spriteSize, Qt::KeepAspectRatio, Qt::SmoothTransformation));
+            this->moveBy(speed, 0);
+        } else {
+            // Aller à gauche
+            setPixmap(spriteLeft->scaled(spriteSize, spriteSize, Qt::KeepAspectRatio, Qt::SmoothTransformation));
+            this->moveBy(-speed, 0);
+        }
+    } else {
+        // Déplacement vertical (haut/bas)
+        if (dy > 0) {
+            // Aller vers le bas
+            setPixmap(spriteDown->scaled(spriteSize, spriteSize, Qt::KeepAspectRatio, Qt::SmoothTransformation));
+            this->moveBy(0, speed);
+        } else {
+            // Aller vers le haut
+            setPixmap(spriteUp->scaled(spriteSize, spriteSize, Qt::KeepAspectRatio, Qt::SmoothTransformation));
+            this->moveBy(0, -speed);
+        }
+    }
 }
+
 
 void Monster::attack() {
     if (!player) return;
@@ -75,32 +120,39 @@ void Monster::attack() {
 BigMonster::BigMonster(Player* myPlayer, QObject* parent)
     : Monster(myPlayer, parent)
 {
-    QPixmap pixmap (":/assets/BigMonster.png");
-    QPixmap sprite = pixmap.scaled(140, 140, Qt::KeepAspectRatio, Qt::SmoothTransformation);
-    if (sprite.isNull()) {
-        qWarning("Erreur : le sprite est introuvable !");
-        return;
-    }
-    setAttackCooldown(2200);
-    setPixmap(sprite);
     setSpeed(5);
     setHP(40);
     setDamage(25);
+    setAttackCooldown(2500);
+    setSpriteSize(160);
+    spriteUp = new QPixmap(":/assets/BigMonster_rear.png");
+    spriteDown = new QPixmap(":/assets/BigMonster_front.png");
+    spriteLeft = new QPixmap(":/assets/BigMonster_left.png");
+    spriteRight = new QPixmap(":/assets/BigMonster_right.png");
+    // Vérification des sprites
+    if (spriteUp->isNull() || spriteDown->isNull() || spriteLeft->isNull() || spriteRight->isNull()) {
+        qWarning("Erreur : un ou plusieurs sprites sont introuvables !");
+    }
+    setPixmap(spriteUp->scaled(spriteSize, spriteSize, Qt::KeepAspectRatio, Qt::SmoothTransformation));
 }
 
 
 SmallMonster::SmallMonster(Player* myPlayer, QObject* parent)
     : Monster(myPlayer, parent)
 {
-    QPixmap pixmap (":/assets/SmallMonster.png");
-    QPixmap sprite = pixmap.scaled(80, 80, Qt::KeepAspectRatio, Qt::SmoothTransformation);
-    if (sprite.isNull()) {
-        qWarning("Erreur : le sprite est introuvable !");
-        return;
-    }
     setAttackCooldown(1200);
-    setPixmap(sprite);
     setSpeed(7);
     setHP(20);
     setDamage(5);
+    setSpriteSize(80);
+    spriteUp = new QPixmap(":/assets/SmallMonster_rear.png");
+    spriteDown = new QPixmap(":/assets/SmallMonster_front.png");
+    spriteLeft = new QPixmap(":/assets/SmallMonster_left.png");
+    spriteRight = new QPixmap(":/assets/SmallMonster_right.png");
+    // Vérification des sprites
+    if (spriteUp->isNull() || spriteDown->isNull() || spriteLeft->isNull() || spriteRight->isNull()) {
+        qWarning("Erreur : un ou plusieurs sprites sont introuvables !");
+    }
+    setPixmap(spriteUp->scaled(80, 80, Qt::KeepAspectRatio, Qt::SmoothTransformation));
+
 }

@@ -26,11 +26,13 @@ public:
     int getHP() const;
     int getDamage() const;
     int getAttackCooldown() const;
+    int getSpriteSize() const;
 
     void setSpeed(int s);
     void setHP(int h);
     void setDamage(int d);
     void setAttackCooldown(int c);
+    void setSpriteSize(int size);
     public slots:
         virtual void move();
         virtual void attack();
@@ -39,13 +41,17 @@ protected:
     Player* player; //pointeur vers le joueur
     QTimer* timer;
     QTimer* healthTimer;
-    QPixmap sprite;
+    QPixmap* spriteUp;
+    QPixmap* spriteDown;
+    QPixmap* spriteLeft;
+    QPixmap* spriteRight;
     QSoundEffect* hitSound;
     QElapsedTimer lastAttackTime;
     int attackCooldown; // en millisecondes
     int speed;
     int HP;
     int damage;
+    int spriteSize;
 };
 
 
