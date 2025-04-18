@@ -13,27 +13,21 @@ void MyScene::mousePressEvent(QGraphicsSceneMouseEvent* event) {
 
 
 MyScene::MyScene(QGraphicsView* mainView, QObject* parent) : QGraphicsScene(parent) {
-    // Ajout du joueur à la scène
-    player = new Player();
-    this->addItem(player); // Ajoute le joueur à la scène
-    player->setPos(mainView->width()/2, mainView->height()/2); // Position initiale
-    this->addItem(player->getHealthBar());
+
+    setBackgroundBrush(Qt::black);
     healthbarTimer = new QTimer(this);
     connect(healthbarTimer, &QTimer::timeout, [this]() {
         if (player && player->getHealthBar()) {
-            // Met à jour la position pour qu'elle reste en bas à gauche
-            auto view = views().first(); // récupère la view associé à la scène
-            QPointF pos = view->mapToScene(20, view->height() - 40); // 20 px du bord gauche, 40 px du bas
+            auto view = views().first();
+            QPointF pos = view->mapToScene(20, view->height() - 40);
             player->getHealthBar()->setPos(pos);
         }
     });
-    healthbarTimer->start(16); // ~60 FPS
+    healthbarTimer->start(16);
     spawnTimer = new QTimer(this);
     connect(spawnTimer, &QTimer::timeout, this, &MyScene::spawnMonster);
-    spawnTimer->start(15000); // 15 secondes
-
-    // Active les événements souris
-    setFocus(); // Permet à la scène de recevoir les événements clavier/souris
+    spawnTimer->start(15000);
+    setFocus();
 }
 
 void MyScene::initPlayer() {
@@ -41,6 +35,7 @@ void MyScene::initPlayer() {
         player = new Player();
         addItem(player);
         player->setPos(sceneRect().center());
+        addItem(player->getHealthBar()); // Ajouter la barre de vie
         playerInitialized = true;
     }
 }

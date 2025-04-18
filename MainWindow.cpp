@@ -2,12 +2,9 @@
 #include "Player.hpp"
 
 
-MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent){
-
-
-    //création de la scène et d'une view
-    this->mainView = new QGraphicsView(this); // Créer la vue en premier
-    mainView->setFixedSize(1200, 800);
+MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent) {
+    mainView = new QGraphicsView(this);
+    mainView->setFixedSize(1200, 800); 
 
     this->mainScene = new MyScene(mainView, this); // Passer la vue à la scène
     this->mainView->setScene(mainScene);
@@ -103,39 +100,37 @@ void MainWindow::slot_aboutMenu(){
 
 void MainWindow::slot_launchGame() {
     delete Play;
-
     Play = nullptr;
     media->stop();
-    mainView = new QGraphicsView();
+
+    // Recréer la vue avec une taille fixe
+    mainView = new QGraphicsView(this);
+    mainView->setFixedSize(1200, 800); // Taille fixe
+    mainView->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff); // Désactiver les barres de défilement
+    mainView->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
+
     mainScene = new MyScene(mainView, this);
     mainView->setScene(mainScene);
+    mainView->setBackgroundBrush(Qt::black);
     mainView->setFocusPolicy(Qt::StrongFocus);
-    mainView->setFocus();
-    
-    launchGame = true;
+    setCentralWidget(mainView); // Mettre à jour le widget central
 
-    // Forcer le recalcul du fond
-    QTimer::singleShot(50, [this]() {
-        this->resize(this->size());
-    });
+    // Initialiser le joueur explicitement
+    mainScene->initPlayer();
+
+    launchGame = true;
 }
 
 
-void MainWindow::resizeEvent(QResizeEvent *event){ 
-
-    QPixmap backgroundPixmap(":/assets/backgroundMenu.png");
-
-
-    if (!backgroundPixmap.isNull() && !launchGame) {
-        QSize viewSize = mainView->viewport()->size();
-        QPixmap scaledBackground = backgroundPixmap.scaled(viewSize,Qt::IgnoreAspectRatio,Qt::SmoothTransformation);
-        QBrush brush(scaledBackground);
-        brush.setStyle(Qt::TexturePattern); // Pour éviter la répétition
-
-        mainScene->setSceneRect(0, 0, viewSize.width(), viewSize.height());
-        mainScene->setBackgroundBrush(brush);
+void MainWindow::resizeEvent(QResizeEvent *event) {
+    if (!launchGame) { 
+        // Applique l'image de fond uniquement pour le menu
+        QPixmap backgroundPixmap(":/assets/backgroundMenu.png");
+        if (!backgroundPixmap.isNull()) {
+            QSize viewSize = mainView->viewport()->size();
+            QPixmap scaledBackground = backgroundPixmap.scaled(viewSize, Qt::IgnoreAspectRatio, Qt::SmoothTransformation);
+            mainScene->setBackgroundBrush(scaledBackground);
+        }
     }
-
-    // Appelle la version d'origine de Qt pour que la fonction de base continue à faire les choses qu'on a pas codé
     QMainWindow::resizeEvent(event);
 }

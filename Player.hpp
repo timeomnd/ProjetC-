@@ -14,6 +14,7 @@ class Player : public QObject, public QGraphicsPixmapItem {
 
     public:
     Player(QGraphicsItem* parent = nullptr);
+    void die();
     void keyPressEvent(QKeyEvent* event) override;
     void keyReleaseEvent(QKeyEvent* event) override;
     void setSpeed(int s);
@@ -21,7 +22,6 @@ class Player : public QObject, public QGraphicsPixmapItem {
     int getSpeed() const;
     int getHP()const;
     bool isAlive() const;
-    void die();
     HealthBar* getHealthBar() const;
     void shoot(const QPointF& targetPos); // Declaration added here
 private slots:
