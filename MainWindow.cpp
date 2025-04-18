@@ -106,9 +106,8 @@ void MainWindow::slot_launchGame() {
 
     Play = nullptr;
     media->stop();
-
-
-    mainScene->initPlayer();
+    mainView = new QGraphicsView();
+    mainScene = new MyScene(mainView, this);
     mainView->setScene(mainScene);
     mainView->setFocusPolicy(Qt::StrongFocus);
     mainView->setFocus();

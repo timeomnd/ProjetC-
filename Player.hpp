@@ -6,12 +6,13 @@
 #include <QKeyEvent>
 #include <QTimer>
 #include <QPixmap>
+#include "HealthBar.hpp"
 #include <QSet>
 
 class Player : public QObject, public QGraphicsPixmapItem {
     Q_OBJECT
 
-public:
+    public:
     Player(QGraphicsItem* parent = nullptr);
     void keyPressEvent(QKeyEvent* event) override;
     void keyReleaseEvent(QKeyEvent* event) override;
@@ -19,7 +20,8 @@ public:
     void setHP(int h);
     int getSpeed() const;
     int getHP()const;
-    void shoot(const QPointF& targetPos);
+    HealthBar* getHealthBar() const;
+    void shoot(const QPointF& targetPos); // Declaration added here
 private slots:
     void updatePosition();
 
@@ -28,6 +30,7 @@ private:
     int HP;
     int dx;
     int dy;
+    HealthBar* healthBar;
     QTimer* movementTimer;
     QSet<int> pressedKeys;
     QPixmap spriteUp;    // Sprite pour la direction haut

@@ -27,6 +27,7 @@
 #include <QAudioDevice>
 #include <QMediaDevices>
 #include <QResizeEvent>  // Pour resizeEvent
+#include <QSoundEffect>
 
 
 
@@ -45,7 +46,6 @@ private :
     QVBoxLayout* mainLayout;
     QMediaPlayer* media;
     QAudioOutput* audioOutput;
-    QPixmap backgroundPixmap; 
 protected:
 
     void resizeEvent(QResizeEvent *event) override;

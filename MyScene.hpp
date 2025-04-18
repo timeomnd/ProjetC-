@@ -18,6 +18,7 @@ public:
     void setPlayerInitialized(bool initialized);
 private:
     Map* map;
+    QTimer* healthbarTimer;
     QTimer* spawnTimer;
     Player* player = nullptr;
     bool playerInitialized = false;
