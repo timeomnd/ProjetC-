@@ -14,10 +14,6 @@ Monster::Monster(Player* myPlayer, QObject* parent): QObject(parent), HP(1), spe
 });
     timer->start(50);//déplacement toute les 50ms
 }
-
-
-
-
 int Monster::getSpeed() const {
     return speed;
 }
@@ -33,9 +29,6 @@ int Monster::getAttackCooldown() const {
 int Monster::getSpriteSize() const {
     return spriteSize;
 }
-
-
-
 void Monster::setSpeed(int s) {
     speed = s;
 }
@@ -52,11 +45,6 @@ void Monster::setAttackCooldown(int c) {
 void Monster::setSpriteSize(int size) {
     spriteSize = size;
 }
-
-
-
-
-
 void Monster::move() {
     if (!player) {
         return;
@@ -120,42 +108,37 @@ void Monster::attack() {
 BigMonster::BigMonster(Player* myPlayer, QObject* parent)
     : Monster(myPlayer, parent)
 {
-    QPixmap pixmap(":/assets/BigMonster.png");
-    QPixmap scaled = pixmap.scaled(140, 140, Qt::KeepAspectRatio, Qt::SmoothTransformation);
-    if (scaled.isNull()) {
-        qWarning("Erreur : le sprite est introuvable !");
-        return;
-    }
-    // Initialize all directional sprites to the same image
-    spriteUp = new QPixmap(scaled);
-    spriteDown = new QPixmap(scaled);
-    spriteLeft = new QPixmap(scaled);
-    spriteRight = new QPixmap(scaled);
-    setPixmap(scaled);
     setSpeed(5);
     setHP(40);
     setDamage(25);
-    setSpriteSize(140); // Set the sprite size
+    setAttackCooldown(2500);
+    setSpriteSize(160);
+    spriteUp = new QPixmap(":/assets/BigMonster_rear.png");
+    spriteDown = new QPixmap(":/assets/BigMonster_front.png");
+    spriteLeft = new QPixmap(":/assets/BigMonster_left.png");
+    spriteRight = new QPixmap(":/assets/BigMonster_right.png");
+    // Vérification des sprites
+    if (spriteUp->isNull() || spriteDown->isNull() || spriteLeft->isNull() || spriteRight->isNull()) {
+        qWarning("Erreur : un ou plusieurs sprites sont introuvables !");
+    }
+    setPixmap(spriteUp->scaled(spriteSize, spriteSize, Qt::KeepAspectRatio, Qt::SmoothTransformation));
 }
 
-// SmallMonster constructor in Monster.cpp
 SmallMonster::SmallMonster(Player* myPlayer, QObject* parent)
     : Monster(myPlayer, parent)
 {
-    QPixmap pixmap(":/assets/SmallMonster.png");
-    QPixmap scaled = pixmap.scaled(80, 80, Qt::KeepAspectRatio, Qt::SmoothTransformation);
-    if (scaled.isNull()) {
-        qWarning("Erreur : le sprite est introuvable !");
-        return;
-    }
-    // Initialize all directional sprites to the same image
-    spriteUp = new QPixmap(scaled);
-    spriteDown = new QPixmap(scaled);
-    spriteLeft = new QPixmap(scaled);
-    spriteRight = new QPixmap(scaled);
-    setPixmap(scaled);
     setSpeed(7);
     setHP(20);
     setDamage(5);
-    setSpriteSize(80); // Set the sprite size
+    setSpriteSize(80);
+    spriteUp = new QPixmap(":/assets/SmallMonster_rear.png");
+    spriteDown = new QPixmap(":/assets/SmallMonster_front.png");
+    spriteLeft = new QPixmap(":/assets/SmallMonster_left.png");
+    spriteRight = new QPixmap(":/assets/SmallMonster_right.png");
+    // Vérification des sprites
+    if (spriteUp->isNull() || spriteDown->isNull() || spriteLeft->isNull() || spriteRight->isNull()) {
+        qWarning("Erreur : un ou plusieurs sprites sont introuvables !");
+    }
+    setPixmap(spriteUp->scaled(80, 80, Qt::KeepAspectRatio, Qt::SmoothTransformation));
+
 }
