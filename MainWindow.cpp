@@ -4,7 +4,7 @@
 
 MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent) {
     mainView = new QGraphicsView(this);
-    mainView->setFixedSize(1200, 800); 
+    mainView->setFixedSize(1200, 800);
 
     this->mainScene = new MyScene(mainView, this); // Passer la vue à la scène
     this->mainView->setScene(mainScene);
