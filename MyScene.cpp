@@ -7,6 +7,17 @@ MyScene::MyScene(QGraphicsView* mainView, QObject* parent) : QGraphicsScene(pare
     player = new Player();
     this->addItem(player); // Ajoute le joueur à la scène
     player->setPos(mainView->width()/2, mainView->height()/2); // Position initiale
+    this->addItem(player->getHealthBar());
+    healthbarTimer = new QTimer(this);
+    connect(healthbarTimer, &QTimer::timeout, [this]() {
+        if (player && player->getHealthBar()) {
+            // Met à jour la position pour qu'elle reste en bas à gauche
+            auto view = views().first(); // récupère la view associé à la scène
+            QPointF pos = view->mapToScene(20, view->height() - 40); // 20 px du bord gauche, 40 px du bas
+            player->getHealthBar()->setPos(pos);
+        }
+    });
+    healthbarTimer->start(16); // ~60 FPS
     spawnTimer = new QTimer(this);
     connect(spawnTimer, &QTimer::timeout, this, &MyScene::spawnMonster);
     spawnTimer->start(15000); // tout les 15 secondes un nouveau spawn
@@ -18,7 +29,7 @@ void MyScene::spawnMonster() {
     const int maxAttempts = 50;
     bool valid = false;
 
-    for (int i = 0; i < maxAttempts; ++i) {
+    for (int i = 0; i < maxAttempts; i++) {
         int x = QRandomGenerator::global()->bounded(0, int(width()));
         int y = QRandomGenerator::global()->bounded(0, int(height()));
         QPointF goodPosition(x, y);

@@ -109,7 +109,11 @@ void Monster::attack() {
 
     if (this->collidesWithItem(player)) {
         if (lastAttackTime.elapsed() >= attackCooldown) {
-            player->setHP(player->getHP() - damage);
+            int newHP = player->getHP() - damage;
+            player->setHP(newHP);
+            if (player->getHealthBar()) {
+                player->getHealthBar()->updateHP(newHP);
+            }
             qDebug() << "Attaque ! HP joueur :" << player->getHP();
             hitSound->stop();
             hitSound->play();

@@ -27,6 +27,9 @@ Player::Player(QGraphicsItem* parent)
     movementTimer = new QTimer(this);
     connect(movementTimer, &QTimer::timeout, this, &Player::updatePosition);
     movementTimer->start(16); // ~60 FPS
+
+    //Barre de vie
+    healthBar = new HealthBar(100);
 }
 
 void Player::keyPressEvent(QKeyEvent* event) {
@@ -86,5 +89,13 @@ int Player::getHP() const {
     return HP;
 }
 void Player::setHP(int h) {
-    HP = h;
+    if (h <=0) {
+        HP = 0;
+    }
+    else {
+        HP = h;
+    }
+}
+HealthBar* Player::getHealthBar() const {
+    return healthBar;
 }

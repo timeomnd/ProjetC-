@@ -12,7 +12,7 @@
 #include <QLineF>
 #include <QSoundEffect>
 #include <QElapsedTimer>
-
+#include "HealthBar.hpp"
 
 
 class Monster : public QObject, public QGraphicsPixmapItem {
@@ -28,11 +28,13 @@ public:
     int getAttackCooldown() const;
     int getSpriteSize() const;
 
+
     void setSpeed(int s);
     void setHP(int h);
     void setDamage(int d);
     void setAttackCooldown(int c);
     void setSpriteSize(int size);
+
     public slots:
         virtual void move();
         virtual void attack();

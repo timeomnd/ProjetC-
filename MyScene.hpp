@@ -17,6 +17,7 @@ public:
 private:
     Map* map;
     Player* player;
+    QTimer* healthbarTimer;
     QTimer* spawnTimer;
     private slots:
     void spawnMonster();
