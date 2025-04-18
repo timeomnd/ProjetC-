@@ -19,16 +19,18 @@ public:
     void setHP(int h);
     int getSpeed() const;
     int getHP()const;
+    bool isAlive() const;
+    void die();
     HealthBar* getHealthBar() const;
     void removeHP(int amount);
 private slots:
     void updatePosition();
-
 private:
     int speed;
     int HP;
     int dx;
     int dy;
+    bool alive = true;
     HealthBar* healthBar;
     QTimer* movementTimer;
     QPixmap spriteUp;    // Sprite pour la direction haut

@@ -158,5 +158,4 @@ SmallMonster::SmallMonster(Player* myPlayer, QObject* parent)
         qWarning("Erreur : un ou plusieurs sprites sont introuvables !");
     }
     setPixmap(spriteUp->scaled(80, 80, Qt::KeepAspectRatio, Qt::SmoothTransformation));
-
 }
