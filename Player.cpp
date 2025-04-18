@@ -120,6 +120,8 @@ int Player::getHP() const {
 void Player::setHP(int h) {
     if (h <=0) {
         HP = 0;
+        alive = false;
+        die();
     }
     else {
         HP = h;
@@ -127,4 +129,14 @@ void Player::setHP(int h) {
 }
 HealthBar* Player::getHealthBar() const {
     return healthBar;
+}
+
+/*void Player::die() {
+    if (!isAlive()) {
+        return;
+    }
+}
+*/
+bool Player::isAlive() const {
+    return alive;
 }

@@ -20,16 +20,18 @@ class Player : public QObject, public QGraphicsPixmapItem {
     void setHP(int h);
     int getSpeed() const;
     int getHP()const;
+    bool isAlive() const;
+    void die();
     HealthBar* getHealthBar() const;
     void shoot(const QPointF& targetPos); // Declaration added here
 private slots:
     void updatePosition();
-
 private:
     int speed;
     int HP;
     int dx;
     int dy;
+    bool alive = true;
     HealthBar* healthBar;
     QTimer* movementTimer;
     QSet<int> pressedKeys;
