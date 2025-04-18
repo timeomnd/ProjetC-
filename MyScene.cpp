@@ -1,17 +1,47 @@
 #include "MyScene.hpp"
+#include <QGraphicsSceneMouseEvent>
 
+void MyScene::mousePressEvent(QGraphicsSceneMouseEvent* event) {
+    if (event->button() == Qt::LeftButton) {
+        QPointF targetPos = event->scenePos();
+        player->shoot(targetPos);
+    }
+    QGraphicsScene::mousePressEvent(event); // Traitement de base
+    player->setFocus(); // Rétablir le focus sur le joueur
+}
 
+MyScene::MyScene(QGraphicsView* mainView, QObject* parent): QGraphicsScene(parent), map(nullptr), player(nullptr) {
+    
+    setSceneRect(0, 0, 1200, 800); // Valeurs par défaut
 
-MyScene::MyScene(QGraphicsView* mainView, QObject* parent) : QGraphicsScene(parent) {
-    // Ajout du joueur à la scène
-    player = new Player();
-    this->addItem(player); // Ajoute le joueur à la scène
-    player->setPos(mainView->width()/2, mainView->height()/2); // Position initiale
+    
+    // Configuration du spawn de monstres
     spawnTimer = new QTimer(this);
     connect(spawnTimer, &QTimer::timeout, this, &MyScene::spawnMonster);
-    spawnTimer->start(15000); // tout les 15 secondes un nouveau spawn
+    spawnTimer->start(15000); // 15 secondes
+
+    // Active les événements souris
+    setFocus(); // Permet à la scène de recevoir les événements clavier/souris
 }
+
+void MyScene::initPlayer() {
+    if (!player) {
+        player = new Player();
+        addItem(player);
+        player->setPos(sceneRect().center());
+        playerInitialized = true;
+    }
+}
+
+void MyScene::setPlayerInitialized(bool initialized) {
+    playerInitialized = initialized;
+}
+
 void MyScene::spawnMonster() {
+    if (!player || !playerInitialized){ 
+        return;
+    }
+    
     QPointF playerPos = player->pos();
     QPointF spawnPos;
     const int minDistance = 100;
@@ -41,17 +71,23 @@ void MyScene::spawnMonster() {
         BigMonster* monster = new BigMonster(player, this);
         monster->setPos(spawnPos);
         addItem(monster);
+        activeMonsters.append(monster);
     }
     else if (random == 2) {
         SmallMonster* monster = new SmallMonster(player, this);
         monster->setPos(spawnPos);
         addItem(monster);
+        activeMonsters.append(monster);
     }
 
 }
 
-MyScene::MyScene(QObject* parent) : QGraphicsScene(parent) {
-}
+
 MyScene::~MyScene() {
+    qDeleteAll(activeMonsters); // Détruit tous les monstres
     delete map;
+    if (spawnTimer){
+        spawnTimer->stop(); // Arrête le timer
+        delete spawnTimer;
+    }
 }

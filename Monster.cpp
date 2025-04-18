@@ -3,7 +3,7 @@
 
 
 Monster::Monster(Player* myPlayer, QObject* parent)
-    : QObject(parent), speed(2), HP(1), player(myPlayer)
+    : QObject(parent), HP(1), speed(2), damage(0), player(myPlayer)
 {
     timer = new QTimer(this);
     connect(timer, &QTimer::timeout, this, &Monster::move);
@@ -55,9 +55,8 @@ void Monster::attack() {
     }
 }
 BigMonster::BigMonster(Player* myPlayer, QObject* parent)
-    : Monster(myPlayer, parent)
-{
-    QPixmap pixmap (":/assets/BigMonster.png");
+    : Monster(myPlayer, parent) {
+    QPixmap pixmap(":/assets/BigMonster.png");
     QPixmap sprite = pixmap.scaled(140, 140, Qt::KeepAspectRatio, Qt::SmoothTransformation);
     if (sprite.isNull()) {
         qWarning("Erreur : le sprite est introuvable !");
@@ -66,14 +65,12 @@ BigMonster::BigMonster(Player* myPlayer, QObject* parent)
     setPixmap(sprite);
     setSpeed(5);
     setHP(40);
-    setDamage(25);
+    setDamage(25); // Initialisation explicite de damage
 }
 
-
 SmallMonster::SmallMonster(Player* myPlayer, QObject* parent)
-    : Monster(myPlayer, parent)
-{
-    QPixmap pixmap (":/assets/SmallMonster.png");
+    : Monster(myPlayer, parent) {
+    QPixmap pixmap(":/assets/SmallMonster.png");
     QPixmap sprite = pixmap.scaled(80, 80, Qt::KeepAspectRatio, Qt::SmoothTransformation);
     if (sprite.isNull()) {
         qWarning("Erreur : le sprite est introuvable !");
@@ -82,5 +79,5 @@ SmallMonster::SmallMonster(Player* myPlayer, QObject* parent)
     setPixmap(sprite);
     setSpeed(7);
     setHP(20);
-    setDamage(5);
+    setDamage(5); // Initialisation explicite de damage
 }

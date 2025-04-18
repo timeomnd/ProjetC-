@@ -26,6 +26,7 @@
 #include <QAudioFormat>
 #include <QAudioDevice>
 #include <QMediaDevices>
+#include <QResizeEvent>  // Pour resizeEvent
 
 
 
@@ -44,10 +45,13 @@ private :
     QVBoxLayout* mainLayout;
     QMediaPlayer* media;
     QAudioOutput* audioOutput;
+    QPixmap backgroundPixmap; 
 protected:
+
     void resizeEvent(QResizeEvent *event) override;
     bool launchGame;
 public:
+
     MainWindow(QWidget* parent = nullptr);
     virtual ~MainWindow();
 

@@ -1,6 +1,24 @@
 #include "Player.hpp"
 #include <QGraphicsScene>
 #include <QDebug>
+#include"bullet.hpp"
+#include <cmath>
+
+void Player::shoot(const QPointF& targetPos) {
+    QPointF direction = targetPos - pos();
+    qreal length = std::hypot(direction.x(), direction.y());
+    if (length == 0) return;
+    
+    // Normaliser et ajuster la vitesse
+    const qreal projectileSpeed = 15.0;
+    QPointF velocity = direction * (projectileSpeed / length);
+    
+    Projectile* projectile = new Projectile(velocity);
+    QPointF playerCenter = pos() + QPointF(boundingRect().width()/2, boundingRect().height()/2);
+    projectile->setPos(playerCenter); // Set to center
+    scene()->addItem(projectile);
+    setFocus();
+}
 
 Player::Player(QGraphicsItem* parent)
     : QGraphicsPixmapItem(parent), speed(5), dx(0), dy(0) {
@@ -29,47 +47,58 @@ Player::Player(QGraphicsItem* parent)
     movementTimer->start(16); // ~60 FPS
 }
 
+
+
 void Player::keyPressEvent(QKeyEvent* event) {
-    switch (event->key()) {
-        case Qt::Key_Q:
-            dx = -speed;
-            dy = 0;
-            setPixmap(spriteLeft); // Sprite gauche
-            break;
-        case Qt::Key_D:
-            dx = speed;
-            dy = 0;
-            setPixmap(spriteRight); // Sprite droite
-            break;
-        case Qt::Key_Z:
-            dy = -speed;
-            dx = 0;
-            setPixmap(spriteUp); // Sprite haut
-            break;
-        case Qt::Key_S:
-            dy = speed;
-            dx = 0;
-            setPixmap(spriteDown); // Sprite bas
-            break;
-        default:
-            break;
+    pressedKeys.insert(event->key());
+    
+    dx = 0;
+    dy = 0;
+    
+    if (pressedKeys.contains(Qt::Key_Q)) dx -= speed;
+    if (pressedKeys.contains(Qt::Key_D)) dx += speed;
+    if (pressedKeys.contains(Qt::Key_Z)) dy -= speed;
+    if (pressedKeys.contains(Qt::Key_S)) dy += speed;
+    
+    // Normalisation
+    if (dx != 0 && dy != 0) {
+        dx *= 0.7071;
+        dy *= 0.7071;
     }
+    
+    // Mise à jour du sprite uniquement si mouvement
+    if (dx < 0) setPixmap(spriteLeft);
+    else if (dx > 0) setPixmap(spriteRight);
+    else if (dy < 0) setPixmap(spriteUp);
+    else if (dy > 0) setPixmap(spriteDown);
 }
 
 void Player::keyReleaseEvent(QKeyEvent* event) {
-    switch (event->key()) {
-        case Qt::Key_Q:
-        case Qt::Key_D:
-            dx = 0; // Arrêt du mouvement horizontal
-            break;
-        case Qt::Key_Z:
-        case Qt::Key_S:
-            dy = 0; // Arrêt du mouvement vertical
-            break;
-        default:
-            break;
+    pressedKeys.remove(event->key());
+    
+    dx = 0;
+    dy = 0;
+    
+    if (pressedKeys.contains(Qt::Key_Q)) dx -= speed;
+    if (pressedKeys.contains(Qt::Key_D)) dx += speed;
+    if (pressedKeys.contains(Qt::Key_Z)) dy -= speed;
+    if (pressedKeys.contains(Qt::Key_S)) dy += speed;
+    
+    // Normalisation
+    if (dx != 0 && dy != 0) {
+        dx *= 0.7071;
+        dy *= 0.7071;
     }
+    
+    // Mise à jour du sprite SEULEMENT s'il y a mouvement
+    if (dx < 0) setPixmap(spriteLeft);
+    else if (dx > 0) setPixmap(spriteRight);
+    else if (dy < 0) setPixmap(spriteUp);
+    else if (dy > 0) setPixmap(spriteDown);
+    
+    // Pas de 'else' : le sprite ne change pas si tout est relâché
 }
+
 
 void Player::updatePosition() {
     moveBy(dx, dy);

@@ -6,6 +6,7 @@
 #include <QKeyEvent>
 #include <QTimer>
 #include <QPixmap>
+#include <QSet>
 
 class Player : public QObject, public QGraphicsPixmapItem {
     Q_OBJECT
@@ -18,6 +19,7 @@ public:
     void setHP(int h);
     int getSpeed() const;
     int getHP()const;
+    void shoot(const QPointF& targetPos);
 private slots:
     void updatePosition();
 
@@ -27,6 +29,7 @@ private:
     int dx;
     int dy;
     QTimer* movementTimer;
+    QSet<int> pressedKeys;
     QPixmap spriteUp;    // Sprite pour la direction haut
     QPixmap spriteDown;  // Sprite pour la direction bas
     QPixmap spriteLeft;  // Sprite pour la direction gauche

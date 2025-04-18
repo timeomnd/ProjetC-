@@ -23,7 +23,6 @@ ProjetC-.pro
 cmake-build-debug
 CMakeLists.txt
 .idea
-assets/ressource.qrc
 Player.o
 Monster.o
 Map.o
@@ -35,7 +34,9 @@ moc_Map.o
 Tiled
 qrc_ressource.cpp
 qrc_ressource.o
-assets
 moc_Monster.o
 moc_Monster.cpp
 qrc_ressource.cpp
+moc_bullet.cpp
+moc_bullet.o
+bullet.o

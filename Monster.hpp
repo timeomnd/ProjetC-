@@ -32,13 +32,11 @@ public:
         virtual void attack();
 
 protected:
-    Player* player; //pointeur vers le joueur
-    QTimer* timer;
-    QTimer* healthTimer;
-    QPixmap sprite;
-    int speed;
     int HP;
+    int speed;
     int damage;
+    Player* player;
+    QTimer* timer;
 };
 
 

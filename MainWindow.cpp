@@ -1,18 +1,23 @@
 #include "MainWindow.hpp"
 #include "Player.hpp"
 
-MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent)
-{
+
+MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent){
+
+
     //création de la scène et d'une view
-    this->mainView = new QGraphicsView;
-    this->mainScene = new MyScene(this);
+    this->mainView = new QGraphicsView(this); // Créer la vue en premier
+    mainView->setFixedSize(1200, 800);
+
+    this->mainScene = new MyScene(mainView, this); // Passer la vue à la scène
     this->mainView->setScene(mainScene);
     this->setCentralWidget(mainView);
     this->setWindowTitle("The Cursed ISEN");
-    this->resize(1200, 800);
-    QPalette palette;
-    this->setPalette(QColorConstants::Svg::black);
+    
+    mainView->setBackgroundBrush(Qt::black);
     QPixmap backgroundPixmap(":/assets/backgroundMenu.png");
+
+    
 
     if (!backgroundPixmap.isNull() && !launchGame) {
         QSize viewSize = mainView->viewport()->size();
@@ -59,6 +64,8 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent)
         mainLayout->addWidget(Play);
 
     }
+
+
     media = new QMediaPlayer(this);
     audioOutput = new QAudioOutput(this);
 
@@ -75,6 +82,7 @@ MainWindow::~MainWindow(){
 
 }
 
+
 void MainWindow::slot_restartGame(){
     QString ProgramPath = QCoreApplication::applicationFilePath(); //récupère le chemin du jeu
     QStringList arguments = QCoreApplication::arguments(); // récupère les arguments de la ligne de commande avec lesquels on lance
@@ -82,28 +90,42 @@ void MainWindow::slot_restartGame(){
     QProcess::startDetached(ProgramPath,arguments); //relance le jeu
     QCoreApplication::exit(0); //ferme le jeu actuelle
 }
+
+
 void MainWindow::slot_aboutMenu(){
     QMessageBox msgBox;
     msgBox.setText("A small QT/C++ projet...");
     msgBox.setModal(true); // on souhaite que la fenetre soit modale i.e qu'on ne puisse plus cliquer ailleurs
     msgBox.exec();
 }
+
+
+
 void MainWindow::slot_launchGame() {
     delete Play;
+
     Play = nullptr;
     media->stop();
-    mainView = new QGraphicsView();
-    mainScene = new MyScene(mainView, this);
+
+
+    mainScene->initPlayer();
     mainView->setScene(mainScene);
-    setCentralWidget(mainView);
-    // Assure que la vue transmet les événements clavier
     mainView->setFocusPolicy(Qt::StrongFocus);
     mainView->setFocus();
-    launchGame = true; //permet d'éviter que le background se remette avec la fonction resize alors que la game est lancée
+    
+    launchGame = true;
+
+    // Forcer le recalcul du fond
+    QTimer::singleShot(50, [this]() {
+        this->resize(this->size());
+    });
 }
-void MainWindow::resizeEvent(QResizeEvent *event){ //fonction déjà définie que on redéfini pour que ce soit dynamique
+
+
+void MainWindow::resizeEvent(QResizeEvent *event){ 
 
     QPixmap backgroundPixmap(":/assets/backgroundMenu.png");
+
 
     if (!backgroundPixmap.isNull() && !launchGame) {
         QSize viewSize = mainView->viewport()->size();

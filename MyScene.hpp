@@ -11,15 +11,21 @@ class MyScene : public QGraphicsScene {
     Q_OBJECT
 
 public:
-    MyScene(QObject* parent = nullptr);
     MyScene(QGraphicsView* mainView, QObject* parent = nullptr);
+    void initPlayer();
     virtual ~MyScene();
+    void spawnMonster();
+    void setPlayerInitialized(bool initialized);
 private:
     Map* map;
-    Player* player;
     QTimer* spawnTimer;
-    private slots:
-    void spawnMonster();
+    Player* player = nullptr;
+    bool playerInitialized = false;
+    QList<Monster*> activeMonsters;
+
+
+    protected:
+    void mousePressEvent(QGraphicsSceneMouseEvent* event) override;
 };
 
 
