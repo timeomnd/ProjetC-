@@ -40,3 +40,4 @@ qrc_ressource.cpp
 moc_bullet.cpp
 moc_bullet.o
 bullet.o
+HealthBar.o
