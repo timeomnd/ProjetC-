@@ -12,7 +12,7 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent) {
     this->setWindowTitle("The Cursed ISEN");
     
     mainView->setBackgroundBrush(Qt::black);
-    QPixmap backgroundPixmap(":/assets/backgroundMenu.png");
+    QPixmap backgroundPixmap("qrc:/assets/backgroundMenu.png");
 
     
 
@@ -125,7 +125,7 @@ void MainWindow::slot_launchGame() {
 void MainWindow::resizeEvent(QResizeEvent *event) {
     if (!launchGame) { 
         // Applique l'image de fond uniquement pour le menu
-        QPixmap backgroundPixmap(":/assets/backgroundMenu.png");
+        QPixmap backgroundPixmap("qrc:/assets/backgroundMenu.png");
         if (!backgroundPixmap.isNull()) {
             QSize viewSize = mainView->viewport()->size();
             QPixmap scaledBackground = backgroundPixmap.scaled(viewSize, Qt::IgnoreAspectRatio, Qt::SmoothTransformation);
