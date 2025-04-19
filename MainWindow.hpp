@@ -49,7 +49,8 @@ public:
 
     MainWindow(QWidget* parent = nullptr);
     virtual ~MainWindow();
-
+    void showEvent(QShowEvent *event);
+    void updateBackground();
     public slots:
         void slot_aboutMenu();
         void slot_restartGame();

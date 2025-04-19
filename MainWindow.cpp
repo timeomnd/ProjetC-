@@ -2,30 +2,18 @@
 #include "Player.hpp"
 
 
-MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent) {
-    mainView = new QGraphicsView(this);
-    mainView->setFixedSize(1200, 800);
-
-    this->mainScene = new MyScene(mainView, this); // Passer la vue à la scène
+MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent)
+{
+    //création de la scène et d'une view
+    this->mainView = new QGraphicsView;
+    this->mainScene = new MyScene(mainView);
     this->mainView->setScene(mainScene);
     this->setCentralWidget(mainView);
     this->setWindowTitle("The Cursed ISEN");
-    
-    mainView->setBackgroundBrush(Qt::black);
-    QPixmap backgroundPixmap("qrc:/assets/backgroundMenu.png");
-
-    
-
-    if (!backgroundPixmap.isNull() && !launchGame) {
-        QSize viewSize = mainView->viewport()->size();
-        QPixmap scaledBackground = backgroundPixmap.scaled(viewSize,Qt::IgnoreAspectRatio,Qt::SmoothTransformation);
-        QBrush brush(scaledBackground);
-        brush.setStyle(Qt::TexturePattern); // Pour éviter la répétition
-
-        mainScene->setSceneRect(0, 0, viewSize.width(), viewSize.height());
-        mainScene->setBackgroundBrush(brush);
-    }
-
+    this->resize(1200, 800);
+    QPalette palette;
+    this->setPalette(QColorConstants::Svg::black);
+    QPixmap backgroundPixmap(":/assets/backgroundMenu.png");
     //bouton action
     helpMenu = menuBar()->addMenu(tr("&Help"));
     actionHelp = new QAction(tr("&About"), this);
@@ -118,15 +106,28 @@ void MainWindow::slot_launchGame() {
 }
 
 
-void MainWindow::resizeEvent(QResizeEvent *event) {
-    if (!launchGame) { 
-        // Applique l'image de fond uniquement pour le menu
-        QPixmap backgroundPixmap("qrc:/assets/backgroundMenu.png");
-        if (!backgroundPixmap.isNull()) {
-            QSize viewSize = mainView->viewport()->size();
-            QPixmap scaledBackground = backgroundPixmap.scaled(viewSize, Qt::IgnoreAspectRatio, Qt::SmoothTransformation);
-            mainScene->setBackgroundBrush(scaledBackground);
-        }
-    }
+void MainWindow::resizeEvent(QResizeEvent *event){
+    updateBackground();
     QMainWindow::resizeEvent(event);
+}
+void MainWindow::updateBackground() {
+    QPixmap backgroundPixmap(":/assets/backgroundMenu.png");
+
+    if (!backgroundPixmap.isNull() && !launchGame) {
+        QSize viewSize = mainView->viewport()->size();
+        QPixmap scaledBackground = backgroundPixmap.scaled(viewSize, Qt::IgnoreAspectRatio, Qt::SmoothTransformation);
+        QBrush brush(scaledBackground);
+        brush.setStyle(Qt::TexturePattern);
+
+        mainScene->setSceneRect(0, 0, viewSize.width(), viewSize.height());
+        mainScene->setBackgroundBrush(brush);
+    }
+}
+void MainWindow::showEvent(QShowEvent *event) {
+    QMainWindow::showEvent(event); // Laisse Qt gérer son affichage
+
+    // On redessine le background correctement ici
+    if (!launchGame) {
+        updateBackground();
+    }
 }
