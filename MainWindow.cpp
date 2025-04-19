@@ -89,7 +89,6 @@ void MainWindow::slot_launchGame() {
 
     // Recréer la vue avec une taille fixe
     mainView = new QGraphicsView(this);
-    mainView->setFixedSize(1200, 800); // Taille fixe
     mainView->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff); // Désactiver les barres de défilement
     mainView->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
 
