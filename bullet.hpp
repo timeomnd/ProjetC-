@@ -6,7 +6,7 @@
 #include <QGraphicsPixmapItem>
 #include <QTimer>
 #include <QPointF>
-
+#include "Monster.hpp"
 class Projectile : public QObject, public QGraphicsPixmapItem {
     Q_OBJECT
 

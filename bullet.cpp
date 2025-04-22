@@ -35,6 +35,20 @@ void Projectile::move() {
     if (!scene() || !scene()->sceneRect().contains(pos())) {
         destroy();
     }
+    QList<QGraphicsItem*> collisions = collidingItems();
+    for (QGraphicsItem* item : collisions) {
+        Monster* monster = dynamic_cast<Monster*>(item);
+        if (monster) {
+            monster->setHP(monster->getHP() - getDamage());
+
+            if (monster->getHP() <= 0) {
+                scene()->removeItem(monster);
+            }
+
+            destroy(); // supprime le projectile
+            return;
+        }
+    }
 }
 
 void Projectile::destroy() {

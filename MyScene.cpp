@@ -9,9 +9,6 @@ void MyScene::mousePressEvent(QGraphicsSceneMouseEvent* event) {
     QGraphicsScene::mousePressEvent(event); // Traitement de base
     player->setFocus(); // Rétablir le focus sur le joueur
 }
-
-
-
 MyScene::MyScene(QGraphicsView* mainView, QObject* parent) : QGraphicsScene(parent) {
 
     setBackgroundBrush(Qt::black);

@@ -36,6 +36,7 @@ void Monster::setSpeed(int s) {
 void Monster::setHP(int h) {
     if (h <=0) {
         HP = 0;
+
         delete this;
     }
     else {
