@@ -46,7 +46,7 @@ protected:
     void resizeEvent(QResizeEvent *event) override;
     bool launchGame;
 public:
-
+    MyScene* getScene();
     MainWindow(QWidget* parent = nullptr);
     virtual ~MainWindow();
     void showEvent(QShowEvent *event);

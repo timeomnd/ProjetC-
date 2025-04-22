@@ -3,7 +3,6 @@
 #include <QtMath>
 
 Projectile::Projectile(const QPointF& velocity, QGraphicsItem* parent): QGraphicsPixmapItem(parent), velocity(velocity){
-    
     setPixmap(QPixmap(":/assets/bullet.png"));
     setDamage(10);
     qreal w = pixmap().width();
@@ -35,17 +34,17 @@ void Projectile::move() {
     if (!scene() || !scene()->sceneRect().contains(pos())) {
         destroy();
     }
-    QList<QGraphicsItem*> collisions = collidingItems();
-    for (QGraphicsItem* item : collisions) {
+    for (QGraphicsItem* item : collidingItems()) {
         Monster* monster = dynamic_cast<Monster*>(item);
         if (monster) {
             monster->setHP(monster->getHP() - getDamage());
 
             if (monster->getHP() <= 0) {
-                scene()->removeItem(monster);
+                QGraphicsScene* s = monster->scene();
+                if (s) s->removeItem(monster);
             }
 
-            destroy(); // supprime le projectile
+            destroy(); // supprime la balle
             return;
         }
     }

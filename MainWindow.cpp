@@ -130,3 +130,6 @@ void MainWindow::showEvent(QShowEvent *event) {
         updateBackground();
     }
 }
+MyScene*MainWindow::getScene() {
+    return mainScene;
+}
