@@ -38,7 +38,6 @@ public:
     public slots:
         virtual void move();
         virtual void attack();
-
 protected:
     int spriteSize;
     int HP;

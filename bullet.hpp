@@ -12,15 +12,18 @@ class Projectile : public QObject, public QGraphicsPixmapItem {
 
 public:
     Projectile(const QPointF& velocity, QGraphicsItem* parent = nullptr);
-
+    void setDamage(int d);
+    int getDamage();
 private slots:
     void move();
     void destroy();
+
 
 private:
     QTimer* moveTimer;
     QTimer* lifespanTimer;
     QPointF velocity;
+    int damage;
 
     void applyRotation(); // 🔥
 };

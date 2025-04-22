@@ -34,7 +34,13 @@ void Monster::setSpeed(int s) {
 }
 
 void Monster::setHP(int h) {
-    HP = h;
+    if (h <=0) {
+        HP = 0;
+        delete this;
+    }
+    else {
+        HP = h;
+    }
 }
 void Monster::setDamage(int d) {
     damage = d;
@@ -89,7 +95,6 @@ void Monster::move() {
 
 void Monster::attack() {
     if (!player) return;
-
     if (this->collidesWithItem(player)) {
         if (lastAttackTime.elapsed() >= attackCooldown) {
             int newHP = player->getHP() - damage;

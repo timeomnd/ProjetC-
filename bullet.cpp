@@ -5,7 +5,7 @@
 Projectile::Projectile(const QPointF& velocity, QGraphicsItem* parent): QGraphicsPixmapItem(parent), velocity(velocity){
     
     setPixmap(QPixmap(":/assets/bullet.png"));
-
+    setDamage(10);
     qreal w = pixmap().width();
     qreal h = pixmap().height();
     setOffset(-w/2, -h/2);
@@ -43,3 +43,11 @@ void Projectile::destroy() {
     if (scene()) scene()->removeItem(this);
     deleteLater();
 }
+void Projectile::setDamage(int d){
+    damage = d;
+}
+int Projectile::getDamage(){
+    return damage;
+}
+
+
