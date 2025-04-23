@@ -23,7 +23,7 @@ MyScene::MyScene(QGraphicsView* mainView, QObject* parent) : QGraphicsScene(pare
     healthbarTimer->start(16);
     spawnTimer = new QTimer(this);
     connect(spawnTimer, &QTimer::timeout, this, &MyScene::spawnMonster);
-    spawnTimer->start(15000);
+    spawnTimer->start(7500);
     setFocus();
 }
 
