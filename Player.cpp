@@ -135,13 +135,10 @@ void Player::die() {
     if (!isAlive()) {
         return;
     }
-    alive = false;
-    // Example: Remove the player from the scene
     if (scene()) {
         scene()->removeItem(this);
     }
     qDebug() << "Player has died!";
-    // Add additional death logic (e.g., game over signal)
 }
 
 bool Player::isAlive() const {
