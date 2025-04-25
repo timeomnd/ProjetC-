@@ -121,26 +121,18 @@ void Player::setHP(int h) {
     if (h <=0) {
         HP = 0;
         alive = false;
-        die();
+        mainWindow->die();
     }
     else {
         HP = h;
     }
 }
+void Player::setMainWindow(MainWindow* mw) {
+    mainWindow = mw;
+}
 HealthBar* Player::getHealthBar() const {
     return healthBar;
 }
-
-void Player::die() {
-    if (!isAlive()) {
-        return;
-    }
-    if (scene()) {
-        scene()->removeItem(this);
-    }
-    qDebug() << "Player has died!";
-}
-
 bool Player::isAlive() const {
     return alive;
 }

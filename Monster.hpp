@@ -13,7 +13,7 @@
 #include <QSoundEffect>
 #include <QElapsedTimer>
 #include "HealthBar.hpp"
-
+class Player;
 
 class Monster : public QObject, public QGraphicsPixmapItem {
     Q_OBJECT

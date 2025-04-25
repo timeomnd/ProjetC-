@@ -9,7 +9,6 @@
 #include <QMessageBox>
 #include <QProcess>
 #include <QCoreApplication>
-#include "MyScene.hpp"
 #include <QPushButton>
 #include <QToolBar>
 #include <QVBoxLayout>
@@ -24,6 +23,7 @@
 #include <QSoundEffect>
 #include <QResizeEvent>  // Pour resizeEvent
 #include <QSoundEffect>
+class MyScene;
 
 
 
@@ -33,6 +33,7 @@ class MainWindow : public QMainWindow {
 
 private :
     MyScene* mainScene;
+    QSoundEffect* gameOverSound;
     QGraphicsView* mainView;
     QMenu* helpMenu;
     QAction* actionHelp;
@@ -51,6 +52,7 @@ public:
     virtual ~MainWindow();
     void showEvent(QShowEvent *event);
     void updateBackground();
+    void die();
     public slots:
         void slot_aboutMenu();
         void slot_restartGame();

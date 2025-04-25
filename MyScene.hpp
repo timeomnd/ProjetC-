@@ -7,16 +7,26 @@
 #include "Player.hpp"
 #include "Monster.hpp"
 #include <QPointF>
+#include "MainWindow.hpp"
+class MainWindow;
+class Player;
+class Monster;
+
 class MyScene : public QGraphicsScene {
     Q_OBJECT
 
 public:
-    MyScene(QGraphicsView* mainView, QObject* parent = nullptr);
+    MyScene(QGraphicsView* mainView, MainWindow* mw = nullptr, QObject* parent = nullptr);
     void initPlayer();
     virtual ~MyScene();
     void spawnMonster();
     void setPlayerInitialized(bool initialized);
+
+    signals:
+        void monsterDestroyed(Monster* monster); // Déclaration du signal
+
 private:
+    MainWindow* mainWindow;
     Map* map;
     QTimer* healthbarTimer;
     QTimer* spawnTimer;
@@ -24,10 +34,8 @@ private:
     bool playerInitialized = false;
     QList<Monster*> activeMonsters;
 
-
-    protected:
+protected:
     void mousePressEvent(QGraphicsSceneMouseEvent* event) override;
 };
-
 
 #endif //MYSCENE_H

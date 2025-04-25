@@ -1,12 +1,12 @@
 #include "MainWindow.hpp"
 #include "Player.hpp"
-
+#include "MyScene.hpp"
 
 MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent)
 {
     //création de la scène et d'une view
     this->mainView = new QGraphicsView;
-    this->mainScene = new MyScene(mainView);
+    this->mainScene = new MyScene(mainView,this);
     this->mainView->setScene(mainScene);
     this->setCentralWidget(mainView);
     this->setWindowTitle("The Cursed ISEN");
@@ -42,7 +42,7 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent)
         Play->setFont(fontPlay);
         Play->setFixedSize(800,100);
         QPalette palette;
-        palette.setColor(QPalette::ButtonText, QColor("#8B0000")); // Changer la couleur du texte en orange
+        palette.setColor(QPalette::ButtonText, QColor("#8B0000"));
         Play->setPalette(palette);
         connect(Play, &QPushButton::clicked, this, &MainWindow::slot_launchGame);
         mainLayout->setAlignment(Qt::AlignCenter);
@@ -85,6 +85,8 @@ void MainWindow::slot_aboutMenu(){
 void MainWindow::slot_launchGame() {
     delete Play;
     Play = nullptr;
+    mainScene->clear();
+    mainScene = nullptr;
     sound->stop();
 
     // Recréer la vue avec une taille fixe
@@ -130,6 +132,7 @@ void MainWindow::showEvent(QShowEvent *event) {
         updateBackground();
     }
 }
+
 MyScene*MainWindow::getScene() {
     return mainScene;
 }

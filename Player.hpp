@@ -6,19 +6,22 @@
 #include <QKeyEvent>
 #include <QTimer>
 #include <QPixmap>
-#include "HealthBar.hpp"
 #include <QSet>
+#include "HealthBar.hpp"
+#include "MainWindow.hpp"
+
+class MainWindow;
 
 class Player : public QObject, public QGraphicsPixmapItem {
     Q_OBJECT
 
     public:
     Player(QGraphicsItem* parent = nullptr);
-    void die();
     void keyPressEvent(QKeyEvent* event) override;
     void keyReleaseEvent(QKeyEvent* event) override;
     void setSpeed(int s);
     void setHP(int h);
+    void setMainWindow(MainWindow* mw);
     int getSpeed() const;
     int getHP()const;
     bool isAlive() const;
@@ -33,6 +36,7 @@ private:
     int dy;
     bool alive = true;
     HealthBar* healthBar;
+    MainWindow* mainWindow = nullptr;
     QTimer* movementTimer;
     QSet<int> pressedKeys;
     QPixmap spriteUp;    // Sprite pour la direction haut
