@@ -34,6 +34,8 @@ class MainWindow : public QMainWindow {
 private :
     MyScene* mainScene;
     QSoundEffect* gameOverSound;
+    QVBoxLayout* gameOverLayout;
+    QPushButton* Restart;
     QGraphicsView* mainView;
     QMenu* helpMenu;
     QAction* actionHelp;

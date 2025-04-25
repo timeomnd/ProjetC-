@@ -93,18 +93,18 @@ void MyScene::spawnMonster() {
     }
 
     if (monster) {
-        monster->setPos(spawnPos);
-        addItem(monster);
-        activeMonsters.append(monster);
+    monster->setPos(spawnPos);
+    addItem(monster);
+    activeMonsters.append(monster);
 
-        // Connecte le signal destroyed du monstre à une lambda
-        connect(monster, &Monster::destroyed, this, [this](QObject* obj) {
-            Monster* monster = qobject_cast<Monster*>(obj);
-            if (monster) {
-                emit monsterDestroyed(monster);
-            }
-        });
-    }
+    // Connecte le signal destroyed du monstre à une lambda
+    connect(monster, &Monster::destroyed, this, [this](QObject* obj) {
+        Monster* monster = qobject_cast<Monster*>(obj);
+        if (monster) {
+            emit monsterDestroyed(monster);
+        }
+    });
+}
 }
 void MainWindow::die() {
     if (mainScene) {

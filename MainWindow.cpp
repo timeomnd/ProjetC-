@@ -47,10 +47,7 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent)
         connect(Play, &QPushButton::clicked, this, &MainWindow::slot_launchGame);
         mainLayout->setAlignment(Qt::AlignCenter);
         mainLayout->addWidget(Play);
-
     }
-
-
     sound = new QSoundEffect(this);
     sound->setSource(QUrl("qrc:/assets/GameMusic.wav"));
     sound->setVolume(0.5);
@@ -87,6 +84,9 @@ void MainWindow::slot_launchGame() {
     Play = nullptr;
     mainScene->clear();
     mainScene = nullptr;
+    if (gameOverSound) {
+        gameOverSound->stop();
+    }
     sound->stop();
 
     // Recréer la vue avec une taille fixe
