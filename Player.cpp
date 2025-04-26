@@ -121,7 +121,6 @@ void Player::setHP(int h) {
     if (h <=0) {
         HP = 0;
         alive = false;
-        mainWindow->die();
     }
     else {
         HP = h;

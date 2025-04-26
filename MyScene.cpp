@@ -106,36 +106,6 @@ void MyScene::spawnMonster() {
     });
 }
 }
-void MainWindow::die() {
-    if (mainScene) {
-        mainScene->clear();
-    }
-    gameOverSound = new QSoundEffect(this);
-    gameOverSound->setSource(QUrl("qrc:/assets/gameOverSound.wav"));
-    gameOverSound->setVolume(0.7);
-    gameOverSound->play();
-    mainLayout = new QVBoxLayout(mainView);
-    mainView->setLayout(mainLayout);
-
-    int id = QFontDatabase::addApplicationFont(":/assets/Creepster-Regular.ttf"); // récupère l'id du fichier font
-    if (id == -1) {
-        qDebug() << "La police n'est pas bien chargé";
-    } else {
-        QString family = QFontDatabase::applicationFontFamilies(id).at(0); //récupère la première famille retourner par la fonction applicationFontFamilies trouvé grâce a l'id
-
-        // Et maintenant on utilise le nom de famille retourné
-        QFont fontPlay(family, 20, QFont::Bold);
-        Play = new QPushButton(tr("restart Game"));
-        Play->setFont(fontPlay);
-        Play->setFixedSize(800,100);
-        QPalette palette;
-        palette.setColor(QPalette::ButtonText, QColor("#8B0000"));
-        Play->setPalette(palette);
-        connect(Play, &QPushButton::clicked, this, &MainWindow::slot_launchGame);
-        mainLayout->setAlignment(Qt::AlignCenter);
-        mainLayout->addWidget(Play);
-    }
-}
 MyScene::~MyScene() {
     qDeleteAll(activeMonsters); // Détruit tous les monstres
     delete map;
