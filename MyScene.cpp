@@ -9,6 +9,7 @@ void MyScene::mousePressEvent(QGraphicsSceneMouseEvent* event) {
     QGraphicsScene::mousePressEvent(event); // Traitement de base
     player->setFocus(); // Rétablir le focus sur le joueur
 }
+
 MyScene::MyScene(QGraphicsView* mainView, MainWindow* mw, QObject* parent)
     : QGraphicsScene(parent), mainWindow(mw) {
 

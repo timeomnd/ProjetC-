@@ -7,6 +7,7 @@
     "expandedProjectPaths": [
         "."
     ],
+    "file.lastUsedOpenFilter": "Tous les Fichiers (*)",
     "fileStates": {
         "A5.tsx": {
             "scaleInDock": 1,
@@ -27,6 +28,10 @@
         "tileset1.tsx": {
             "scaleInDock": 1,
             "scaleInEditor": 3
+        },
+        "tilesetpng.tsx": {
+            "scaleInDock": 1,
+            "scaleInEditor": 1
         }
     },
     "last.imagePath": "C:/Users/timti/Downloads",
@@ -35,15 +40,16 @@
     ],
     "project": "ProjetTiled.tiled-project",
     "recentFiles": [
+        "tilesetpng.tsx",
+        "tileset.tsx",
         "A5.tsx",
         "tileset1.tsx",
-        "tileset.tsx",
         "floor.tsx",
         "tiles.tsx"
     ],
     "tileset.lastUsedFormat": "tsx",
     "tileset.tileSize": {
-        "height": 64,
-        "width": 64
+        "height": 32,
+        "width": 32
     }
 }
