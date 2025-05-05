@@ -95,26 +95,6 @@
          "tilewidth":16
         }, 
         {
-         "firstgid":217,
-         "source":"..\/..\/ProjetC- - Copie\/assets\/stairs_32x32_EVEN EVEN MOAR SHADOW.tsx"
-        }, 
-        {
-         "firstgid":218,
-         "source":"..\/..\/ProjetC- - Copie\/assets\/minitileset.tsx"
-        }, 
-        {
-         "firstgid":288,
-         "source":"all_in_one.tsx"
-        }, 
-        {
-         "firstgid":504,
-         "source":"minitileset.tsx"
-        }, 
-        {
-         "firstgid":574,
-         "source":"stairs_32x32_EVEN EVEN MOAR SHADOW.tsx"
-        }, 
-        {
          "columns":8,
          "firstgid":575,
          "image":"..\/..\/..\/Downloads\/all_in_one.png",
