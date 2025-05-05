@@ -101,7 +101,7 @@ void MainWindow::slot_launchGame() {
     setCentralWidget(mainView); // Mettre à jour le widget central
 
     // Initialiser le joueur explicitement
-    mainScene->initMap();
+    //mainScene->initMap();
     mainScene->initPlayer();
 
     launchGame = true;
