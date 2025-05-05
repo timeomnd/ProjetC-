@@ -17,6 +17,7 @@ class MyScene : public QGraphicsScene {
 
 public:
     MyScene(QGraphicsView* mainView, MainWindow* mw = nullptr, QObject* parent = nullptr);
+    void initMap();
     void initPlayer();
     virtual ~MyScene();
     void spawnMonster();

@@ -14,7 +14,6 @@ MyScene::MyScene(QGraphicsView* mainView, MainWindow* mw, QObject* parent)
     : QGraphicsScene(parent), mainWindow(mw) {
 
     setBackgroundBrush(Qt::black);
-
     // Timer pour la barre de vie
     healthbarTimer = new QTimer(this);
     connect(healthbarTimer, &QTimer::timeout, [this]() {
@@ -40,7 +39,11 @@ MyScene::MyScene(QGraphicsView* mainView, MainWindow* mw, QObject* parent)
 
     setFocus();
 }
-
+void MyScene::initMap() {
+    if (!map) {
+        map = new Map(this, ":/assets/Etage1.tmj"); // adapte le chemin selon ton projet
+    }
+}
 void MyScene::initPlayer() {
     if (!player) {
         player = new Player();

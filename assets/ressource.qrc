@@ -18,5 +18,7 @@
         <file>SmallMonster_right.png</file>
         <file>hitMonster.wav</file>
         <file>gameOverSound.wav</file>
+        <file>Etage1.tmj</file>
+        <file>Etage1.png</file>
     </qresource>
 </RCC>
