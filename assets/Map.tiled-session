@@ -3,7 +3,7 @@
         "height": 4300,
         "width": 2
     },
-    "activeFile": "stairs_32x32_EVEN EVEN MOAR SHADOW.tsx",
+    "activeFile": "stairs.tsx",
     "expandedProjectPaths": [
         "."
     ],
@@ -47,7 +47,7 @@
         "map.tmx#house-furniture": {
             "scaleInDock": 4
         },
-        "stairs_32x32_EVEN EVEN MOAR SHADOW.tsx": {
+        "stairs.tsx": {
             "scaleInDock": 1,
             "scaleInEditor": 1
         }

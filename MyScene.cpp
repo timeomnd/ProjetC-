@@ -41,7 +41,7 @@ MyScene::MyScene(QGraphicsView* mainView, MainWindow* mw, QObject* parent)
 }
 void MyScene::initMap() {
     if (!map) {
-        //map = new Map(this, ":/assets/Etage1.json"); // adapte le chemin selon ton projet
+        map = new Map(this, ":/assets/map.json"); // adapte le chemin selon ton projet
     }
 }
 void MyScene::initPlayer() {

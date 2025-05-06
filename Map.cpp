@@ -8,6 +8,7 @@
 #include <QPixmap>
 #include <QDebug>
 #include <QDir>
+#include <QFileInfo>
 
 Map::Map(QGraphicsScene* scene, const QString& jsonPath, QObject* parent)
     : QObject(parent), scene(scene) {
@@ -39,6 +40,9 @@ void Map::loadMapFromJson(const QString& jsonPath) {
     qDebug() << "📐 Dimensions de la carte:" << width << "x" << height;
     qDebug() << "📏 Dimensions des tuiles:" << tileWidth << "x" << tileHeight;
 
+    // --- Préparer le chemin de base pour les images ---
+    QString basePath = QFileInfo(jsonPath).absolutePath();
+
     // --- Charger tous les tilesets ---
     struct Tileset {
         int firstgid;
@@ -50,16 +54,24 @@ void Map::loadMapFromJson(const QString& jsonPath) {
     QJsonArray tilesetArray = map["tilesets"].toArray();
     for (const QJsonValue& val : tilesetArray) {
         QJsonObject ts = val.toObject();
+
+        if (!ts.contains("image")) {
+            qDebug() << "⏭️ Tileset ignoré (chargé via .tsx externe):" << ts["source"].toString();
+            continue;
+        }
+
         Tileset tileset;
         tileset.firstgid = ts["firstgid"].toInt();
         tileset.columns = ts["columns"].toInt();
         QString imgPath = ts["image"].toString();
-        qDebug() << "🧩 Chargement du tileset:" << imgPath;
 
-        if (!tileset.image.load(imgPath)) {
-            qWarning() << "⚠️ Erreur chargement tileset:" << imgPath;
+        QString fullPath = QDir(basePath).filePath(imgPath);  // Correction ici
+        qDebug() << "🧩 Chargement du tileset:" << fullPath;
+
+        if (!tileset.image.load(fullPath)) {
+            qWarning() << "⚠️ Erreur chargement tileset:" << fullPath;
         } else {
-            qDebug() << "✅ Tileset chargé avec succès:" << imgPath;
+            qDebug() << "✅ Tileset chargé avec succès:" << fullPath;
         }
 
         tilesets.append(tileset);
@@ -116,5 +128,3 @@ void Map::loadMapFromJson(const QString& jsonPath) {
 
     qDebug() << "✅ Chargement de la map terminé.";
 }
-
-
