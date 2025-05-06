@@ -3,28 +3,82 @@
         "height": 4300,
         "width": 2
     },
-    "activeFile": "map.tmx",
+    "activeFile": "stairs_32x32_EVEN EVEN MOAR SHADOW.tsx",
     "expandedProjectPaths": [
+        "."
     ],
     "fileStates": {
+        "": {
+            "scaleInDock": 1
+        },
+        "all_in_one.tsx": {
+            "scaleInDock": 1,
+            "scaleInEditor": 1
+        },
+        "ceiling-border.tsx": {
+            "scaleInDock": 1,
+            "scaleInEditor": 1
+        },
+        "floorandwall.tsx": {
+            "scaleInDock": 1,
+            "scaleInEditor": 1
+        },
+        "house-furniture.tsx": {
+            "scaleInDock": 1,
+            "scaleInEditor": 1
+        },
         "map.tmx": {
-            "scale": 1.387,
+            "scale": 1.5,
             "selectedLayer": 0,
             "viewCenter": {
-                "x": 240.08651766402306,
-                "y": 399.7837058399423
+                "x": 193.99999999999997,
+                "y": 440.33333333333337
             }
+        },
+        "map.tmx#all_in_one": {
+            "scaleInDock": 3
+        },
+        "map.tmx#ceiling-border": {
+            "scaleInDock": 8
+        },
+        "map.tmx#floorandwall": {
+            "scaleInDock": 2
+        },
+        "map.tmx#house-furniture": {
+            "scaleInDock": 4
+        },
+        "stairs_32x32_EVEN EVEN MOAR SHADOW.tsx": {
+            "scaleInDock": 1,
+            "scaleInEditor": 1
         }
     },
+    "last.exportedFilePath": "C:/Users/timti/Desktop/ProjetC-/assets",
+    "last.imagePath": "C:/Users/timti/Desktop/ProjetC-/assets",
     "map.height": 50,
+    "map.lastUsedExportFilter": "Tous les Fichiers (*)",
     "map.lastUsedFormat": "tmx",
     "map.tileHeight": 16,
     "map.tileWidth": 16,
     "openFiles": [
-        "map.tmx"
+        "map.tmx",
+        "floorandwall.tsx",
+        "ceiling-border.tsx",
+        "house-furniture.tsx",
+        "all_in_one.tsx",
+        "stairs_32x32_EVEN EVEN MOAR SHADOW.tsx"
     ],
     "project": "Map.tiled-project",
     "recentFiles": [
-        "map.tmx"
-    ]
+        "map.tmx",
+        "floorandwall.tsx",
+        "ceiling-border.tsx",
+        "house-furniture.tsx",
+        "all_in_one.tsx",
+        "stairs_32x32_EVEN EVEN MOAR SHADOW.tsx"
+    ],
+    "tileset.lastUsedFormat": "tsx",
+    "tileset.tileSize": {
+        "height": 16,
+        "width": 16
+    }
 }
