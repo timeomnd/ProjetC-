@@ -82,30 +82,38 @@ void MainWindow::slot_aboutMenu(){
 void MainWindow::slot_launchGame() {
     delete Play;
     Play = nullptr;
-    mainScene->clear();
-    mainScene = nullptr;
-    if (gameOverSound) {
-        gameOverSound->stop();
-    }
-    sound->stop();
 
-    // Recréer la vue avec une taille fixe
+    if (mainScene) {
+        mainScene->clear();
+        delete mainScene;
+        mainScene = nullptr;
+    }
+
+    if (gameOverSound) gameOverSound->stop();
+    if (sound) sound->stop();
+
+    // Créer la nouvelle scène et vue
     mainView = new QGraphicsView(this);
-    mainView->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff); // Désactiver les barres de défilement
-    mainView->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
+    mainView->setFixedSize(this->size()); // ou mieux :
+    mainView->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
+    mainView->setBackgroundBrush(Qt::black);
+    mainView->setFocusPolicy(Qt::StrongFocus);
 
     mainScene = new MyScene(mainView, this);
     mainView->setScene(mainScene);
-    mainView->setBackgroundBrush(Qt::black);
-    mainView->setFocusPolicy(Qt::StrongFocus);
-    setCentralWidget(mainView); // Mettre à jour le widget central
+    mainView->scale(8.0, 8.0); // Zoom x8
+    setCentralWidget(mainView);
 
-    // Initialiser le joueur explicitement
+    // Initialiser le jeu
     mainScene->initMap();
     mainScene->initPlayer();
 
+    // Centrer la vue sur le joueur
+    mainView->centerOn(mainScene->getPlayer());
+
     launchGame = true;
 }
+
 
 
 void MainWindow::resizeEvent(QResizeEvent *event){
@@ -133,7 +141,9 @@ void MainWindow::showEvent(QShowEvent *event) {
         updateBackground();
     }
 }
-
+QGraphicsView* MainWindow::getView() {
+    return mainView;
+}
 MyScene*MainWindow::getScene() {
     return mainScene;
 }

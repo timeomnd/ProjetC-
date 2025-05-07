@@ -3,7 +3,6 @@
 #include <QDebug>
 #include"bullet.hpp"
 #include <cmath>
-
 void Player::shoot(const QPointF& targetPos) {
     QPointF direction = targetPos - pos();
     qreal length = std::hypot(direction.x(), direction.y());
@@ -105,6 +104,10 @@ void Player::keyReleaseEvent(QKeyEvent* event) {
 
 void Player::updatePosition() {
     moveBy(dx, dy);
+    QGraphicsView* myview = mainWindow->getView();
+    if (myview) {
+        myview->centerOn(this);
+    }
 }
 
 void Player::setSpeed(int s) {

@@ -9,7 +9,6 @@ void MyScene::mousePressEvent(QGraphicsSceneMouseEvent* event) {
     QGraphicsScene::mousePressEvent(event); // Traitement de base
     player->setFocus(); // Rétablir le focus sur le joueur
 }
-
 MyScene::MyScene(QGraphicsView* mainView, MainWindow* mw, QObject* parent)
     : QGraphicsScene(parent), mainWindow(mw) {
 
@@ -43,6 +42,9 @@ void MyScene::initMap() {
     if (!map) {
         map = new Map(this, ":/assets/map.json"); // adapte le chemin selon ton projet
     }
+}
+Player* MyScene::getPlayer() {
+    return player;
 }
 void MyScene::initPlayer() {
     if (!player) {

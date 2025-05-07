@@ -125,6 +125,6 @@ void Map::loadMapFromJson(const QString& jsonPath) {
             item->setPos(x, y);
         }
     }
-
     qDebug() << "✅ Chargement de la map terminé.";
+    scene->setSceneRect(0, 0, width * tileWidth, height * tileHeight);
 }

@@ -23,6 +23,8 @@
 #include <QSoundEffect>
 #include <QResizeEvent>  // Pour resizeEvent
 #include <QSoundEffect>
+
+#include "Player.hpp"
 class MyScene;
 
 
@@ -49,6 +51,7 @@ protected:
     void resizeEvent(QResizeEvent *event) override;
     bool launchGame;
 public:
+    QGraphicsView* getView();
     MyScene* getScene();
     MainWindow(QWidget* parent = nullptr);
     virtual ~MainWindow();

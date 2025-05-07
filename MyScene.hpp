@@ -19,6 +19,7 @@ public:
     MyScene(QGraphicsView* mainView, MainWindow* mw = nullptr, QObject* parent = nullptr);
     void initMap();
     void initPlayer();
+    Player* getPlayer();
     virtual ~MyScene();
     void spawnMonster();
     void setPlayerInitialized(bool initialized);
