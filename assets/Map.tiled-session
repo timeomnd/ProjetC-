@@ -31,8 +31,8 @@
             "scale": 1.5,
             "selectedLayer": 0,
             "viewCenter": {
-                "x": 193.99999999999997,
-                "y": 417.66666666666663
+                "x": 299,
+                "y": 597.6666666666666
             }
         },
         "map.tmx#all_in_one": {
@@ -75,10 +75,7 @@
         "ceiling-border.tsx",
         "house-furniture.tsx",
         "all_in_one.tsx",
-        "stairs_32x32_EVEN EVEN MOAR SHADOW.tsx",
-        "stairs_32x32_EVEN EVEN MOAR SHADOW.tsx",
-        "stairs.tsx",
-        "stairs.tsx"
+        "stairs_32x32_EVEN EVEN MOAR SHADOW.tsx"
     ],
     "project": "Map.tiled-project",
     "recentFiles": [

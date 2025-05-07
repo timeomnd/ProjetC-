@@ -121,19 +121,6 @@
       "tilecount":216,
       "tileheight":16,
       "tilewidth":16
-    },
-    {
-      "columns":2,
-      "firstgid":571,
-      "image":"stairs.png",
-      "imageheight":32,
-      "imagewidth":32,
-      "margin":0,
-      "name":"stairs_32x32_EVEN EVEN MOAR SHADOW",
-      "spacing":0,
-      "tilecount":0,
-      "tileheight":16,
-      "tilewidth":16
     }],
   "tilewidth":16,
   "type":"map",
