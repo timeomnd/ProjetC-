@@ -71,22 +71,22 @@ void Monster::move() {
         // Déplacement horizontal (gauche/droite)
         if (dx > 0) {
             // Aller à droite
-            setPixmap(spriteRight->scaled(spriteSize, spriteSize, Qt::KeepAspectRatio, Qt::SmoothTransformation));
+            setPixmap(spriteRight->scaled(spriteSize, spriteSize, Qt::KeepAspectRatio, Qt::FastTransformation));
             this->moveBy(speed, 0);
         } else {
             // Aller à gauche
-            setPixmap(spriteLeft->scaled(spriteSize, spriteSize, Qt::KeepAspectRatio, Qt::SmoothTransformation));
+            setPixmap(spriteLeft->scaled(spriteSize, spriteSize, Qt::KeepAspectRatio, Qt::FastTransformation));
             this->moveBy(-speed, 0);
         }
     } else {
         // Déplacement vertical (haut/bas)
         if (dy > 0) {
             // Aller vers le bas
-            setPixmap(spriteDown->scaled(spriteSize, spriteSize, Qt::KeepAspectRatio, Qt::SmoothTransformation));
+            setPixmap(spriteDown->scaled(spriteSize, spriteSize, Qt::KeepAspectRatio, Qt::FastTransformation));
             this->moveBy(0, speed);
         } else {
             // Aller vers le haut
-            setPixmap(spriteUp->scaled(spriteSize, spriteSize, Qt::KeepAspectRatio, Qt::SmoothTransformation));
+            setPixmap(spriteUp->scaled(spriteSize, spriteSize, Qt::KeepAspectRatio, Qt::FastTransformation));
             this->moveBy(0, -speed);
         }
     }
@@ -114,10 +114,10 @@ BigMonster::BigMonster(Player* myPlayer, QObject* parent)
     : Monster(myPlayer, parent)
 {
     setSpeed(5);
-    setHP(40);
+    setHP(50);
     setDamage(25);
     setAttackCooldown(2500);
-    setSpriteSize(160);
+    setSpriteSize(30);
     spriteUp = new QPixmap(":/assets/BigMonster_rear.png");
     spriteDown = new QPixmap(":/assets/BigMonster_front.png");
     spriteLeft = new QPixmap(":/assets/BigMonster_left.png");
@@ -126,7 +126,7 @@ BigMonster::BigMonster(Player* myPlayer, QObject* parent)
     if (spriteUp->isNull() || spriteDown->isNull() || spriteLeft->isNull() || spriteRight->isNull()) {
         qWarning("Erreur : un ou plusieurs sprites sont introuvables !");
     }
-    setPixmap(spriteUp->scaled(spriteSize, spriteSize, Qt::KeepAspectRatio, Qt::SmoothTransformation));
+    setPixmap(spriteUp->scaled(spriteSize, spriteSize, Qt::KeepAspectRatio, Qt::FastTransformation));
 }
 
 SmallMonster::SmallMonster(Player* myPlayer, QObject* parent)
@@ -135,7 +135,7 @@ SmallMonster::SmallMonster(Player* myPlayer, QObject* parent)
     setSpeed(7);
     setHP(20);
     setDamage(5);
-    setSpriteSize(80);
+    setSpriteSize(40);
     spriteUp = new QPixmap(":/assets/SmallMonster_rear.png");
     spriteDown = new QPixmap(":/assets/SmallMonster_front.png");
     spriteLeft = new QPixmap(":/assets/SmallMonster_left.png");
@@ -144,6 +144,6 @@ SmallMonster::SmallMonster(Player* myPlayer, QObject* parent)
     if (spriteUp->isNull() || spriteDown->isNull() || spriteLeft->isNull() || spriteRight->isNull()) {
         qWarning("Erreur : un ou plusieurs sprites sont introuvables !");
     }
-    setPixmap(spriteUp->scaled(80, 80, Qt::KeepAspectRatio, Qt::SmoothTransformation));
+    setPixmap(spriteUp->scaled(spriteSize, spriteSize, Qt::KeepAspectRatio, Qt::FastTransformation));
 
 }

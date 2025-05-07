@@ -101,7 +101,8 @@ void MainWindow::slot_launchGame() {
 
     mainScene = new MyScene(mainView, this);
     mainView->setScene(mainScene);
-    mainView->scale(8.0, 8.0); // Zoom x8
+    QSizeF sceneSize = mainScene->sceneRect().size();
+    mainView->setFixedSize(sceneSize.width() * 8.0, sceneSize.height() * 8.0);
     setCentralWidget(mainView);
 
     // Initialiser le jeu
