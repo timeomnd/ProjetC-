@@ -94,17 +94,16 @@ void MainWindow::slot_launchGame() {
 
     // Créer la nouvelle scène et vue
     mainView = new QGraphicsView(this);
+    mainScene = new MyScene(mainView, this);
     mainView->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
     mainView->setBackgroundBrush(Qt::black);
     mainView->setFocusPolicy(Qt::StrongFocus);
-
-    mainScene = new MyScene(mainView, this);
     mainView->setScene(mainScene);
     setCentralWidget(mainView);
-
     // Initialiser le jeu
     mainScene->initMap();
     mainScene->initPlayer();
+    launchGame = true;
 
     // Calculer la taille de la scène et de la vue
     QSizeF sceneSize = mainScene->sceneRect().size();
@@ -130,8 +129,6 @@ void MainWindow::slot_launchGame() {
 
     // Activer le mode de glissement pour naviguer dans la scène
     mainView->setDragMode(QGraphicsView::ScrollHandDrag);
-
-    launchGame = true;
 }
 
 
@@ -142,6 +139,9 @@ void MainWindow::slot_launchGame() {
 void MainWindow::resizeEvent(QResizeEvent *event){
     updateBackground();
     QMainWindow::resizeEvent(event);
+    if (launchGame == true) {
+        adjustViewToScene();
+    }
 }
 void MainWindow::updateBackground() {
     QPixmap backgroundPixmap(":/assets/backgroundMenu.png");
@@ -169,4 +169,20 @@ QGraphicsView* MainWindow::getView() {
 }
 MyScene*MainWindow::getScene() {
     return mainScene;
+}
+void MainWindow::adjustViewToScene() {
+    if (!mainScene || !mainView) return;
+
+    QSizeF sceneSize = mainScene->sceneRect().size();
+    QSize viewSize = mainView->size(); // Utiliser mainView->size() ici, pas this->size()
+
+    double scaleFactorX = viewSize.width() / sceneSize.width();
+    double scaleFactorY = viewSize.height() / sceneSize.height();
+
+    double scaleFactor = qMax(scaleFactorX, scaleFactorY);
+
+    mainView->resetTransform();
+    mainView->scale(scaleFactor, scaleFactor);
+
+    mainView->centerOn(mainScene->getPlayer());
 }
