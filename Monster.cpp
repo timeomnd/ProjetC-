@@ -113,11 +113,11 @@ void Monster::attack() {
 BigMonster::BigMonster(Player* myPlayer, QObject* parent)
     : Monster(myPlayer, parent)
 {
-    setSpeed(5);
+    setSpeed(1);
     setHP(50);
     setDamage(25);
     setAttackCooldown(2500);
-    setSpriteSize(30);
+    setSpriteSize(40);
     spriteUp = new QPixmap(":/assets/BigMonster_rear.png");
     spriteDown = new QPixmap(":/assets/BigMonster_front.png");
     spriteLeft = new QPixmap(":/assets/BigMonster_left.png");
@@ -132,10 +132,10 @@ BigMonster::BigMonster(Player* myPlayer, QObject* parent)
 SmallMonster::SmallMonster(Player* myPlayer, QObject* parent)
     : Monster(myPlayer, parent)
 {
-    setSpeed(7);
+    setSpeed(2);
     setHP(20);
     setDamage(5);
-    setSpriteSize(40);
+    setSpriteSize(35);
     spriteUp = new QPixmap(":/assets/SmallMonster_rear.png");
     spriteDown = new QPixmap(":/assets/SmallMonster_front.png");
     spriteLeft = new QPixmap(":/assets/SmallMonster_left.png");

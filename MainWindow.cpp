@@ -94,26 +94,48 @@ void MainWindow::slot_launchGame() {
 
     // Créer la nouvelle scène et vue
     mainView = new QGraphicsView(this);
-    mainView->setFixedSize(this->size()); // ou mieux :
     mainView->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
     mainView->setBackgroundBrush(Qt::black);
     mainView->setFocusPolicy(Qt::StrongFocus);
 
     mainScene = new MyScene(mainView, this);
     mainView->setScene(mainScene);
-    QSizeF sceneSize = mainScene->sceneRect().size();
-    mainView->setFixedSize(sceneSize.width() * 8.0, sceneSize.height() * 8.0);
     setCentralWidget(mainView);
 
     // Initialiser le jeu
     mainScene->initMap();
     mainScene->initPlayer();
 
+    // Calculer la taille de la scène et de la vue
+    QSizeF sceneSize = mainScene->sceneRect().size();
+    QSize viewSize = this->size();
+
+    // Calculer un facteur de zoom pour que la scène remplisse complètement la vue
+    double scaleFactorX = viewSize.width() / sceneSize.width();
+    double scaleFactorY = viewSize.height() / sceneSize.height();
+
+    // Choisir le plus grand facteur de zoom pour que la scène remplisse toute la vue
+    double scaleFactor = qMax(scaleFactorX, scaleFactorY);
+
+    // Réinitialiser la transformation et appliquer le zoom
+    mainView->resetTransform();
+    mainView->scale(scaleFactor, scaleFactor);
+
     // Centrer la vue sur le joueur
     mainView->centerOn(mainScene->getPlayer());
 
+    // Désactiver les barres de défilement
+    mainView->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
+    mainView->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
+
+    // Activer le mode de glissement pour naviguer dans la scène
+    mainView->setDragMode(QGraphicsView::ScrollHandDrag);
+
     launchGame = true;
 }
+
+
+
 
 
 

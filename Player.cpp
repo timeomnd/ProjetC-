@@ -20,7 +20,7 @@ void Player::shoot(const QPointF& targetPos) {
 }
 
 Player::Player(QGraphicsItem* parent)
-    : QGraphicsPixmapItem(parent), speed(5), dx(0), dy(0) {
+    : QGraphicsPixmapItem(parent), speed(2), dx(0), dy(0) {
     setHP(100);
     // Chargement des sprites
     spriteUp = QPixmap(":/assets/nils_rear.png");
@@ -34,7 +34,7 @@ Player::Player(QGraphicsItem* parent)
     }
 
     // Sprite initial (face avant)
-    setPixmap(spriteDown);
+    setPixmap(spriteDown.scaled(40, 40, Qt::KeepAspectRatio, Qt::FastTransformation));
 
     // Configuration des événements clavier
     setFlag(QGraphicsItem::ItemIsFocusable);
@@ -69,10 +69,10 @@ void Player::keyPressEvent(QKeyEvent* event) {
     }
     
     // Mise à jour du sprite uniquement si mouvement
-    if (dx < 0) setPixmap(spriteLeft);
-    else if (dx > 0) setPixmap(spriteRight);
-    else if (dy < 0) setPixmap(spriteUp);
-    else if (dy > 0) setPixmap(spriteDown);
+    if (dx < 0) setPixmap(spriteLeft.scaled(40, 40, Qt::KeepAspectRatio, Qt::FastTransformation));
+    else if (dx > 0) setPixmap(spriteRight.scaled(40, 40, Qt::KeepAspectRatio, Qt::FastTransformation));
+    else if (dy < 0) setPixmap(spriteUp.scaled(40, 40, Qt::KeepAspectRatio, Qt::FastTransformation));
+    else if (dy > 0) setPixmap(spriteDown.scaled(40, 40, Qt::KeepAspectRatio, Qt::FastTransformation));
 }
 
 void Player::keyReleaseEvent(QKeyEvent* event) {
@@ -93,10 +93,10 @@ void Player::keyReleaseEvent(QKeyEvent* event) {
     }
     
     // Mise à jour du sprite SEULEMENT s'il y a mouvement
-    if (dx < 0) setPixmap(spriteLeft);
-    else if (dx > 0) setPixmap(spriteRight);
-    else if (dy < 0) setPixmap(spriteUp);
-    else if (dy > 0) setPixmap(spriteDown);
+    if (dx < 0) setPixmap(spriteLeft.scaled(40, 40, Qt::KeepAspectRatio, Qt::FastTransformation));
+    else if (dx > 0) setPixmap(spriteRight.scaled(40, 40, Qt::KeepAspectRatio, Qt::FastTransformation));
+    else if (dy < 0) setPixmap(spriteUp.scaled(40, 40, Qt::KeepAspectRatio, Qt::FastTransformation));
+    else if (dy > 0) setPixmap(spriteDown.scaled(40, 40, Qt::KeepAspectRatio, Qt::FastTransformation));
     
     // Pas de 'else' : le sprite ne change pas si tout est relâché
 }
