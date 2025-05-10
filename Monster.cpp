@@ -17,6 +17,12 @@ Monster::Monster(Player* myPlayer, QObject* parent): QObject(parent), HP(1), spe
 int Monster::getSpeed() const {
     return speed;
 }
+int Monster::getValueScore() const {
+    return valueScore;
+}
+void Monster::setValueScore(int s) {
+    valueScore = s;
+}
 int Monster::getHP() const {
     return HP;
 }
@@ -114,7 +120,8 @@ BigMonster::BigMonster(Player* myPlayer, QObject* parent)
     : Monster(myPlayer, parent)
 {
     setSpeed(1);
-    setHP(50);
+    setHP(75);
+    setValueScore(500);
     setDamage(25);
     setAttackCooldown(2500);
     setSpriteSize(40);
@@ -133,9 +140,10 @@ SmallMonster::SmallMonster(Player* myPlayer, QObject* parent)
     : Monster(myPlayer, parent)
 {
     setSpeed(2);
-    setHP(20);
+    setHP(30);
+    setValueScore(250);
     setDamage(5);
-    setSpriteSize(35);
+    setSpriteSize(30);
     spriteUp = new QPixmap(":/assets/SmallMonster_rear.png");
     spriteDown = new QPixmap(":/assets/SmallMonster_front.png");
     spriteLeft = new QPixmap(":/assets/SmallMonster_left.png");
@@ -145,5 +153,4 @@ SmallMonster::SmallMonster(Player* myPlayer, QObject* parent)
         qWarning("Erreur : un ou plusieurs sprites sont introuvables !");
     }
     setPixmap(spriteUp->scaled(spriteSize, spriteSize, Qt::KeepAspectRatio, Qt::FastTransformation));
-
 }

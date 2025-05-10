@@ -27,8 +27,8 @@ public:
     int getDamage() const;
     int getAttackCooldown() const;
     int getSpriteSize() const;
-
-
+    int getValueScore() const;
+    void setValueScore(int s);
     void setSpeed(int s);
     void setHP(int h);
     void setDamage(int d);
@@ -53,6 +53,7 @@ protected:
     int attackCooldown; // en millisecondes
     int speed;
     int damage;
+    int valueScore;
 };
 
 
