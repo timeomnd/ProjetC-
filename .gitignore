@@ -41,3 +41,6 @@ moc_bullet.cpp
 moc_bullet.o
 bullet.o
 HealthBar.o
+moc_Score.cpp
+moc_Score.o
+Score.o
