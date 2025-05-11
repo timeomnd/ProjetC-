@@ -1,8 +1,8 @@
 #include "Player.hpp"
-#include <QGraphicsScene>
 #include <QDebug>
 #include"bullet.hpp"
 #include <cmath>
+#include "MyScene.hpp"
 void Player::shoot(const QPointF& targetPos) {
     QPointF direction = targetPos - pos();
     qreal length = std::hypot(direction.x(), direction.y());
@@ -19,8 +19,8 @@ void Player::shoot(const QPointF& targetPos) {
     setFocus();
 }
 
-Player::Player(QGraphicsItem* parent)
-    : QGraphicsPixmapItem(parent), speed(2), dx(0), dy(0) {
+Player::Player(MyScene* scene, QGraphicsItem* parent)
+    : QGraphicsPixmapItem(parent), speed(2), dx(0), dy(0), mainScene(scene){
     setHP(100);
     // Chargement des sprites
     spriteUp = QPixmap(":/assets/nils_rear.png");
@@ -124,6 +124,9 @@ void Player::setHP(int h) {
     if (h <=0) {
         HP = 0;
         alive = false;
+        if (mainScene) {
+            //mainScene->die();
+        }
     }
     else {
         HP = h;

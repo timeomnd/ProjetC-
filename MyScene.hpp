@@ -8,6 +8,7 @@
 #include "Monster.hpp"
 #include <QPointF>
 #include "MainWindow.hpp"
+#include "Score.hpp"
 class MainWindow;
 class Player;
 class Monster;
@@ -23,6 +24,7 @@ public:
     virtual ~MyScene();
     void spawnMonster();
     void setPlayerInitialized(bool initialized);
+    void die();
 
     signals:
         void monsterDestroyed(Monster* monster); // Déclaration du signal
@@ -30,6 +32,7 @@ public:
 private:
     MainWindow* mainWindow;
     Map* map;
+    ScoreManager* scoreManager;
     QTimer* healthbarTimer;
     QTimer* spawnTimer;
     Player* player = nullptr;

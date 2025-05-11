@@ -59,6 +59,8 @@ public:
     void showEvent(QShowEvent *event);
     void updateBackground();
     void die();
+    QSoundEffect* getSound() const;
+    QSoundEffect* getGameOverSound() const;
     public slots:
         void slot_aboutMenu();
         void slot_restartGame();

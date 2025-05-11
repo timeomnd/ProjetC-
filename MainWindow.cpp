@@ -54,6 +54,11 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent)
     sound->setLoopCount(QSoundEffect::Infinite);
     sound->play();
 
+    // création de la musique du game over
+    gameOverSound = new QSoundEffect();
+    gameOverSound->setSource(QUrl("qrc:/assets/gameOverSound.wav"));
+    gameOverSound->setVolume(0.5);
+
 }
 
 MainWindow::~MainWindow(){
@@ -76,7 +81,13 @@ void MainWindow::slot_aboutMenu(){
     msgBox.setModal(true); // on souhaite que la fenetre soit modale i.e qu'on ne puisse plus cliquer ailleurs
     msgBox.exec();
 }
+QSoundEffect* MainWindow::getSound() const {
+    return sound;
+}
 
+QSoundEffect* MainWindow::getGameOverSound() const {
+    return gameOverSound;
+}
 
 
 void MainWindow::slot_launchGame() {
@@ -88,7 +99,10 @@ void MainWindow::slot_launchGame() {
         delete mainScene;
         mainScene = nullptr;
     }
-
+    if (mainView) {
+        delete mainView;
+        mainView = nullptr;
+    }
     if (gameOverSound) gameOverSound->stop();
     if (sound) sound->stop();
 

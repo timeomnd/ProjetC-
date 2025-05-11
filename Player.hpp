@@ -11,12 +11,13 @@
 #include "MainWindow.hpp"
 
 class MainWindow;
+class MyScene;
 
 class Player : public QObject, public QGraphicsPixmapItem {
     Q_OBJECT
 
     public:
-    Player(QGraphicsItem* parent = nullptr);
+    Player(MyScene* scene, QGraphicsItem* parent = nullptr);
     void keyPressEvent(QKeyEvent* event) override;
     void keyReleaseEvent(QKeyEvent* event) override;
     void setSpeed(int s);
@@ -37,6 +38,7 @@ private:
     bool alive = true;
     HealthBar* healthBar;
     MainWindow* mainWindow = nullptr;
+    MyScene* mainScene = nullptr;
     QTimer* movementTimer;
     QSet<int> pressedKeys;
     QPixmap spriteUp;    // Sprite pour la direction haut
