@@ -154,3 +154,10 @@ SmallMonster::SmallMonster(Player* myPlayer, QObject* parent)
     }
     setPixmap(spriteUp->scaled(spriteSize, spriteSize, Qt::KeepAspectRatio, Qt::FastTransformation));
 }
+Monster::~Monster() {
+    delete spriteUp;
+    delete spriteDown;
+    delete spriteLeft;
+    delete spriteRight;
+    delete hitSound;
+}

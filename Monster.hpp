@@ -34,6 +34,7 @@ public:
     void setDamage(int d);
     void setAttackCooldown(int c);
     void setSpriteSize(int size);
+    virtual ~Monster();
 
     public slots:
         virtual void move();
@@ -43,7 +44,6 @@ protected:
     int HP;
     Player* player; //pointeur vers le joueur
     QTimer* timer;
-    QTimer* healthTimer;
     QPixmap* spriteUp;
     QPixmap* spriteDown;
     QPixmap* spriteLeft;
