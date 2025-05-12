@@ -116,28 +116,45 @@ void MyScene::spawnMonster() {
 }
 }
 MyScene::~MyScene() {
-    qDeleteAll(activeMonsters); // Détruit tous les monstres
-    if (map) { // Vérifie si map n'est pas nul avant de le supprimer
+    // Supprime tous les monstres encore actifs
+    qDeleteAll(activeMonsters);
+    activeMonsters.clear();
+
+    // Supprimer la map si présente
+    if (map) {
         delete map;
         map = nullptr;
     }
+
+    // Supprimer le joueur
     if (player) {
+        // Supprimer d'abord sa barre de vie si elle est dans la scène
+        if (player->getHealthBar()) {
+            removeItem(player->getHealthBar());
+            delete player->getHealthBar();
+        }
+
+        removeItem(player); // juste au cas où
         delete player;
         player = nullptr;
     }
-    MainWindow* mainWindow;
-    Map* map;
-    ScoreManager* scoreManager;
-    QTimer* healthbarTimer;
-    QTimer* spawnTimer;
-    Player* player = nullptr;
-    bool playerInitialized = false;
-    QList<Monster*> activeMonsters;
+
+    // Supprimer les timers
     if (healthbarTimer) {
+        healthbarTimer->stop();
         delete healthbarTimer;
         healthbarTimer = nullptr;
     }
-    if (spawnTimer) {
 
+    if (spawnTimer) {
+        spawnTimer->stop();
+        delete spawnTimer;
+        spawnTimer = nullptr;
+    }
+
+    // Supprimer le scoreManager
+    if (scoreManager) {
+        delete scoreManager;
+        scoreManager = nullptr;
     }
 }

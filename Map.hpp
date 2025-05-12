@@ -12,6 +12,7 @@ class Map : public QObject {
 public:
     explicit Map(QGraphicsScene* scene, const QString& jsonPath, QObject* parent = nullptr);
     const QVector<QRectF>& getCollisionRects() const;
+    Map::~Map();
 
 private:
     QGraphicsScene* scene;
@@ -19,5 +20,6 @@ private:
 
     void loadMapFromJson(const QString& jsonPath);
 };
+
 
 #endif // MAP_HPP

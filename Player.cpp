@@ -141,4 +141,7 @@ HealthBar* Player::getHealthBar() const {
 bool Player::isAlive() const {
     return alive;
 }
+Player::~Player() {
+
+}
 //pas besoin de destructeur car QObject s'occupe de delete les enfants et QGraphicsPixmapItem s'occupe des QpixMap

@@ -55,7 +55,7 @@ public:
     void adjustViewToScene();
     MyScene* getScene();
     MainWindow(QWidget* parent = nullptr);
-    virtual ~MainWindow();
+    ~MainWindow();
     void showEvent(QShowEvent *event);
     void updateBackground();
     void die();

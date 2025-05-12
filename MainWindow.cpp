@@ -60,12 +60,6 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent)
     gameOverSound->setVolume(0.5);
 
 }
-
-MainWindow::~MainWindow(){
-
-}
-
-
 void MainWindow::slot_restartGame(){
     QString ProgramPath = QCoreApplication::applicationFilePath(); //récupère le chemin du jeu
     QStringList arguments = QCoreApplication::arguments(); // récupère les arguments de la ligne de commande avec lesquels on lance
@@ -145,11 +139,6 @@ void MainWindow::slot_launchGame() {
     mainView->setDragMode(QGraphicsView::ScrollHandDrag);
 }
 
-
-
-
-
-
 void MainWindow::resizeEvent(QResizeEvent *event){
     updateBackground();
     QMainWindow::resizeEvent(event);
@@ -203,3 +192,13 @@ void MainWindow::adjustViewToScene() {
 void MainWindow::die() {
 
 }
+MainWindow::~MainWindow() {
+    qDebug() << "🧹 Destruction de MainWindow";
+
+    // Par sécurité, mais normalement déjà supprimés dans slot_launchGame()
+    delete mainScene;
+    delete mainView;
+
+    // Pas besoin de delete les QPushButton ou QSoundEffect avec parent !
+}
+

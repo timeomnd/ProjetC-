@@ -159,5 +159,4 @@ Monster::~Monster() {
     delete spriteDown;
     delete spriteLeft;
     delete spriteRight;
-    delete hitSound;
 }

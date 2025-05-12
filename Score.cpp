@@ -62,3 +62,8 @@ void ScoreManager::writeBestScore() {
         file.close();
     }
 }
+ScoreManager::~ScoreManager() {
+    // Rien à supprimer manuellement
+    // La scène détruira scoreText automatiquement
+}
+

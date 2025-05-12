@@ -20,6 +20,8 @@ public :
     void addPoints(int points);
     void resetCurrentScore();
     void saveScore(); //pour enregistrer le score a la fin de la partie
+    ~ScoreManager();
+
 
 private:
     int currentScore;
