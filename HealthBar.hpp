@@ -6,15 +6,17 @@
 #include <QBrush>
 #include <QPen>
 
+#include "Player.hpp"
+
 class HealthBar : public QGraphicsItemGroup {
 public:
-    HealthBar(int maxHP);
-
+    HealthBar(int maxHP, Player* parent);
     void updateHP(int currentHP);
 
 private:
     QGraphicsRectItem* background;
     QGraphicsRectItem* bar;
+    Player* player;
     int maxHP = 100;
 };
 

@@ -49,7 +49,7 @@ Player* MyScene::getPlayer() {
 }
 void MyScene::initPlayer() {
     if (!player) {
-        player = new Player(this);
+        player = new Player(mainWindow,this);
         addItem(player);
         player->setMainWindow(mainWindow);
         player->setPos(sceneRect().center());
@@ -58,43 +58,6 @@ void MyScene::initPlayer() {
         //HUD pour afficher le score
         scoreManager = new ScoreManager(this);
     }
-}
-void MyScene::die() {
-    // Arrêter et supprimer les timers
-    if (spawnTimer) {
-        spawnTimer->stop();
-        delete spawnTimer;
-        spawnTimer = nullptr;
-    }
-    if (healthbarTimer) {
-        healthbarTimer->stop();
-        delete healthbarTimer;
-        healthbarTimer = nullptr;
-    }
-
-    // Supprimer les monstres actifs
-    for (Monster* monster : activeMonsters) {
-        if (monster) {
-            delete monster;
-        }
-    }
-    activeMonsters.clear();
-
-    // Supprimer le joueur
-    if (player) {
-        delete player;
-        player = nullptr;
-        playerInitialized = false;
-    }
-
-    // Supprimer la map
-    if (map) {
-        delete map;
-        map = nullptr;
-    }
-
-    // Effacer la scène
-    clear();
 }
 
 void MyScene::setPlayerInitialized(bool initialized) {
@@ -158,8 +121,23 @@ MyScene::~MyScene() {
         delete map;
         map = nullptr;
     }
+    if (player) {
+        delete player;
+        player = nullptr;
+    }
+    MainWindow* mainWindow;
+    Map* map;
+    ScoreManager* scoreManager;
+    QTimer* healthbarTimer;
+    QTimer* spawnTimer;
+    Player* player = nullptr;
+    bool playerInitialized = false;
+    QList<Monster*> activeMonsters;
+    if (healthbarTimer) {
+        delete healthbarTimer;
+        healthbarTimer = nullptr;
+    }
     if (spawnTimer) {
-        spawnTimer->stop(); // Arrête le timer
-        delete spawnTimer;
+
     }
 }

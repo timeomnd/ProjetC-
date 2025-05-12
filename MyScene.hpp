@@ -24,7 +24,6 @@ public:
     virtual ~MyScene();
     void spawnMonster();
     void setPlayerInitialized(bool initialized);
-    void die();
 
     signals:
         void monsterDestroyed(Monster* monster); // Déclaration du signal

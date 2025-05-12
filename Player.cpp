@@ -19,8 +19,8 @@ void Player::shoot(const QPointF& targetPos) {
     setFocus();
 }
 
-Player::Player(MyScene* scene, QGraphicsItem* parent)
-    : QGraphicsPixmapItem(parent), speed(2), dx(0), dy(0), mainScene(scene){
+Player::Player(MainWindow* mw, MyScene* scene, QGraphicsItem* parent)
+    : QGraphicsPixmapItem(parent), speed(2), dx(0), dy(0), mainScene(scene), mainWindow(mw){
     setHP(100);
     // Chargement des sprites
     spriteUp = QPixmap(":/assets/nils_rear.png");
@@ -46,7 +46,7 @@ Player::Player(MyScene* scene, QGraphicsItem* parent)
     movementTimer->start(16); // ~60 FPS
 
     //Barre de vie
-    healthBar = new HealthBar(100);
+    healthBar = new HealthBar(100,this);
 }
 
 
@@ -124,8 +124,8 @@ void Player::setHP(int h) {
     if (h <=0) {
         HP = 0;
         alive = false;
-        if (mainScene) {
-            //mainScene->die();
+        if (mainWindow) {
+            mainWindow->die;
         }
     }
     else {
@@ -141,3 +141,4 @@ HealthBar* Player::getHealthBar() const {
 bool Player::isAlive() const {
     return alive;
 }
+//pas besoin de destructeur car QObject s'occupe de delete les enfants et QGraphicsPixmapItem s'occupe des QpixMap

@@ -17,7 +17,7 @@ class Player : public QObject, public QGraphicsPixmapItem {
     Q_OBJECT
 
     public:
-    Player(MyScene* scene, QGraphicsItem* parent = nullptr);
+    Player(MainWindow* mw, MyScene* scene, QGraphicsItem* parent = nullptr);
     void keyPressEvent(QKeyEvent* event) override;
     void keyReleaseEvent(QKeyEvent* event) override;
     void setSpeed(int s);
@@ -28,6 +28,7 @@ class Player : public QObject, public QGraphicsPixmapItem {
     bool isAlive() const;
     HealthBar* getHealthBar() const;
     void shoot(const QPointF& targetPos); // Declaration added here
+    virtual ~Player();
 private slots:
     void updatePosition();
 private:

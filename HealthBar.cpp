@@ -1,6 +1,6 @@
 #include "HealthBar.hpp"
-HealthBar::HealthBar(int maxHP)
-    : maxHP(maxHP)
+HealthBar::HealthBar(int maxHP, Player* parent)
+    : maxHP(maxHP), player(parent)
 {
     background = new QGraphicsRectItem(0, 0, 100, 10); //taille de la barre de vie
     background->setBrush(Qt::red);

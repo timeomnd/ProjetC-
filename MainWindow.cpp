@@ -200,3 +200,6 @@ void MainWindow::adjustViewToScene() {
 
     mainView->centerOn(mainScene->getPlayer());
 }
+void MainWindow::die() {
+
+}
