@@ -1,4 +1,5 @@
 #include "HealthBar.hpp"
+#include "Player.hpp"
 HealthBar::HealthBar(int maxHP, Player* parent)
     : maxHP(maxHP), player(parent)
 {

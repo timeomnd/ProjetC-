@@ -1,3 +1,4 @@
+// HealthBar.hpp
 #ifndef HEALTHBAR_H
 #define HEALTHBAR_H
 
@@ -6,7 +7,8 @@
 #include <QBrush>
 #include <QPen>
 
-#include "Player.hpp"
+// Déclaration anticipée de Player, au lieu de l'inclure ici
+class Player;
 
 class HealthBar : public QGraphicsItemGroup {
 public:
@@ -16,7 +18,7 @@ public:
 private:
     QGraphicsRectItem* background;
     QGraphicsRectItem* bar;
-    Player* player;
+    Player* player;  // Utilisation de Player* sans inclure Player.hpp ici
     int maxHP = 100;
 };
 

@@ -36,7 +36,6 @@ MyScene::MyScene(QGraphicsView* mainView, MainWindow* mw, QObject* parent)
         removeItem(monster);              // Retirer de la scène
         delete monster;                   // Libérer la mémoire
     });
-
     setFocus();
 }
 void MyScene::initMap() {
@@ -100,13 +99,12 @@ void MyScene::spawnMonster() {
     } else if (random == 2) {
         monster = new SmallMonster(player, this);
     }
-
     if (monster) {
     monster->setPos(spawnPos);
     addItem(monster);
     activeMonsters.append(monster);
 
-    // Connecte le signal destroyed du monstre à une lambda
+    // Connecte le signal destroyed du monstre à une fonction lambda
     connect(monster, &Monster::destroyed, this, [this](QObject* obj) {
         Monster* monster = qobject_cast<Monster*>(obj);
         if (monster) {

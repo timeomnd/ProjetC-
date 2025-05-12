@@ -97,8 +97,6 @@ void MainWindow::slot_launchGame() {
         delete mainView;
         mainView = nullptr;
     }
-    if (gameOverSound) gameOverSound->stop();
-    if (sound) sound->stop();
 
     // Créer la nouvelle scène et vue
     mainView = new QGraphicsView(this);
@@ -190,7 +188,10 @@ void MainWindow::adjustViewToScene() {
     mainView->centerOn(mainScene->getPlayer());
 }
 void MainWindow::die() {
-
+    if (mainScene->getPlayer()) {
+        mainScene->getPlayer()->deleteLater();
+        mainScene->setPlayerInitialized(false);
+    }
 }
 MainWindow::~MainWindow() {
     qDebug() << "🧹 Destruction de MainWindow";

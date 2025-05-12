@@ -128,7 +128,4 @@ void Map::loadMapFromJson(const QString& jsonPath) {
     qDebug() << "✅ Chargement de la map terminé.";
     scene->setSceneRect(0, 0, width * tileWidth, height * tileHeight);
 }
-Map::~Map() {
-    qDebug() << "🧹 Map détruite.";
-}
 
