@@ -142,7 +142,7 @@ SmallMonster::SmallMonster(Player* myPlayer, QObject* parent)
     setSpeed(2);
     setHP(30);
     setValueScore(250);
-    setDamage(5);
+    setDamage(15);
     setSpriteSize(30);
     spriteUp = new QPixmap(":/assets/SmallMonster_rear.png");
     spriteDown = new QPixmap(":/assets/SmallMonster_front.png");

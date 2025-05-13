@@ -48,9 +48,6 @@ Player::Player(MainWindow* mw, MyScene* scene, QGraphicsItem* parent)
     //Barre de vie
     healthBar = new HealthBar(100,this);
 }
-
-
-
 void Player::keyPressEvent(QKeyEvent* event) {
     pressedKeys.insert(event->key());
     

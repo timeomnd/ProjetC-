@@ -27,8 +27,7 @@ MyScene::MyScene(QGraphicsView* mainView, MainWindow* mw, QObject* parent)
     // Timer pour le spawn des monstres
     spawnTimer = new QTimer(this);
     connect(spawnTimer, &QTimer::timeout, this, &MyScene::spawnMonster);
-    spawnTimer->start(7500);
-
+    spawnTimer->start(5000);
     // Connect pour gérer la destruction des monstres
     connect(this, &MyScene::monsterDestroyed, this, [this](Monster* monster) {
         scoreManager->addPoints(monster->getValueScore()); // getValueScore() retourne les points que le monstre vaut
