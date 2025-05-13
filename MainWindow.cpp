@@ -234,4 +234,7 @@ MainWindow::~MainWindow() {
 
     // Pas besoin de delete les QPushButton ou QSoundEffect avec parent !
 }
+bool MainWindow::getLaunchGame() {
+    return launchGame;
+}
 

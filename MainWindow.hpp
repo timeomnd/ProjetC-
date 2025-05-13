@@ -52,6 +52,7 @@ protected:
     bool launchGame;
 public:
     QGraphicsView* getView();
+    bool getLaunchGame();
     void adjustViewToScene();
     MyScene* getScene();
     MainWindow(QWidget* parent = nullptr);

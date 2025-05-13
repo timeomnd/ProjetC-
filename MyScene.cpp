@@ -36,6 +36,10 @@ MyScene::MyScene(QGraphicsView* mainView, MainWindow* mw, QObject* parent)
         delete monster;                   // Libérer la mémoire
     });
     setFocus();
+    if (mainWindow->getLaunchGame()) {
+        //HUD pour afficher le score
+        scoreManager = new ScoreManager(this);
+    }
 }
 void MyScene::initMap() {
     if (!map) {
@@ -53,8 +57,6 @@ void MyScene::initPlayer() {
         player->setPos(sceneRect().center());
         addItem(player->getHealthBar()); // Ajouter la barre de vie
         playerInitialized = true;
-        //HUD pour afficher le score
-        scoreManager = new ScoreManager(this);
     }
 }
 
