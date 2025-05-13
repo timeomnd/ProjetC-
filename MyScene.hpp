@@ -30,6 +30,7 @@ public:
     ScoreManager* getScoreManager() const;
     void setHealthbarTimer(QTimer* timer);
     void setSpawnTimer(QTimer* timer);
+    void initScoreManager();
 
 
     signals:

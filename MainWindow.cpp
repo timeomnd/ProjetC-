@@ -109,7 +109,7 @@ void MainWindow::slot_launchGame() {
     // Initialiser le jeu
     mainScene->initMap();
     mainScene->initPlayer();
-    launchGame = true;
+    mainScene->initScoreManager();
 
     // Calculer la taille de la scène et de la vue
     QSizeF sceneSize = mainScene->sceneRect().size();
@@ -135,6 +135,7 @@ void MainWindow::slot_launchGame() {
 
     // Activer le mode de glissement pour naviguer dans la scène
     mainView->setDragMode(QGraphicsView::ScrollHandDrag);
+    launchGame = true;
 }
 
 void MainWindow::resizeEvent(QResizeEvent *event){

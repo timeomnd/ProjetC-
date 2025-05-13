@@ -31,18 +31,11 @@ MyScene::MyScene(QGraphicsView* mainView, MainWindow* mw, QObject* parent)
     // Connect pour gérer la destruction des monstres
     connect(this, &MyScene::monsterDestroyed, this, [this](Monster* monster) {
         scoreManager->addPoints(monster->getValueScore()); // getValueScore() retourne les points que le monstre vaut
-        activeMonsters.removeOne(monster); // Retirer de la liste
+        activeMonsters.removeOne(monster); // Retirer de la liste des monstres le monstre qui vient d'être tué
         removeItem(monster);              // Retirer de la scène
-        delete monster;                   // Libérer la mémoire
+        monster->deleteLater();           // Libérer la mémoire
     });
     setFocus();
-    if (mainWindow->getLaunchGame()) {
-        //HUD pour afficher le score
-        scoreManager = new ScoreManager(this);
-        auto view = views().first();
-        QPointF pos = view->mapToScene(20, view->height() - 70);
-        scoreManager->getScoreText()->setPos(pos);
-    }
 }
 void MyScene::initMap() {
     if (!map) {
@@ -51,6 +44,14 @@ void MyScene::initMap() {
 }
 Player* MyScene::getPlayer() {
     return player;
+}
+void MyScene::initScoreManager() {
+    if (!scoreManager) {
+        scoreManager = new ScoreManager(this);
+        auto view = views().first();
+        QPointF pos = view->mapToScene(20, view->height() - 70);
+        scoreManager->getScoreText()->setPos(pos);
+    }
 }
 void MyScene::initPlayer() {
     if (!player) {
