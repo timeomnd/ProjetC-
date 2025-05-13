@@ -47,8 +47,8 @@ private :
     QPushButton* Play;
     QVBoxLayout* mainLayout;
     QSoundEffect* sound;
-protected:
-
+    QPixmap gameOverBackground;
+    bool isGameOver = false; // Indique si le jeu est terminé
     void resizeEvent(QResizeEvent *event) override;
     bool launchGame;
 public:

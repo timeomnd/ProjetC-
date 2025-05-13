@@ -11,9 +11,8 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent)
     this->setCentralWidget(mainView);
     this->setWindowTitle("The Cursed ISEN");
     this->resize(1200, 800);
-    QPalette palette;
+
     this->setPalette(QColorConstants::Svg::black);
-    QPixmap backgroundPixmap(":/assets/backgroundMenu.png");
     //bouton action
     helpMenu = menuBar()->addMenu(tr("&Help"));
     actionHelp = new QAction(tr("&About"), this);
@@ -146,17 +145,19 @@ void MainWindow::resizeEvent(QResizeEvent *event){
     }
 }
 void MainWindow::updateBackground() {
+    qDebug() << "🪵 [DEBUG] updateBackground() appelé";
     QPixmap backgroundPixmap;
 
     if (!launchGame) {
-        // Choisir le bon fond selon le contexte
-        if (mainScene) {
-            backgroundPixmap = QPixmap(":/assets/backgroundMenu.png");
-        } else {
+        if (gameOverScene) {
             backgroundPixmap = QPixmap(":/assets/GameOverBackground.png");
+        } else {
+            backgroundPixmap = QPixmap(":/assets/backgroundMenu.png");
         }
 
         if (!backgroundPixmap.isNull()) {
+            qDebug() << "✅ Background chargé avec succès";
+
             QSize viewSize = mainView->viewport()->size();
             QPixmap scaledBackground = backgroundPixmap.scaled(viewSize, Qt::IgnoreAspectRatio, Qt::SmoothTransformation);
             QBrush brush(scaledBackground);
@@ -166,7 +167,12 @@ void MainWindow::updateBackground() {
             if (currentScene) {
                 currentScene->setSceneRect(0, 0, viewSize.width(), viewSize.height());
                 currentScene->setBackgroundBrush(brush);
+                qDebug() << "🎨 Background appliqué à la scène actuelle";
+            } else {
+                qDebug() << "⚠️ Aucune scène active pour appliquer le fond";
             }
+        } else {
+            qDebug() << "❌ Le QPixmap de fond est vide (non chargé)";
         }
     }
 }
@@ -204,24 +210,29 @@ void MainWindow::adjustViewToScene() {
 void MainWindow::die() {
     if (!mainScene) return;
 
-    // Désactiver le joueur
     mainScene->setPlayerInitialized(false);
 
-    // Stopper les sons
     if (sound) sound->stop();
 
-    // Jouer le son de Game Over
     if (gameOverSound) {
         gameOverSound->stop();
         gameOverSound->play();
     }
 
-    // Supprimer proprement la scène (le destructeur fera tout le ménage)
-    mainView->setScene(nullptr);  // Déconnecte la vue de la scène avant suppression
+    mainView->setScene(nullptr);
     mainScene->deleteLater();
     mainScene = nullptr;
+    isGameOver = true;
 
-    // Créer le layout de game over et le bouton restart
+    // Créer la scène de game over
+    gameOverScene = new QGraphicsScene(this);
+    mainView->setScene(gameOverScene); // ❗ utiliser la bonne scène
+
+    // Nettoyage éventuel du layout précédent
+    if (mainView->layout()) {
+        mainView->layout()->deleteLater();
+    }
+
     Restart = new QPushButton(tr("Restart Game"));
     Restart->setFixedSize(400, 60);
     QFont myFont("Creepster", 20);
@@ -229,16 +240,18 @@ void MainWindow::die() {
     palette.setColor(QPalette::ButtonText, QColor("#8B0000"));
     Restart->setPalette(palette);
     Restart->setFont(myFont);
-    QPixmap backgroundPixmap(":/assets/GameOverBackground.png");
     connect(Restart, &QPushButton::clicked, this, &MainWindow::slot_launchGame);
 
-    // Ajouter au layout principal de la vue
     gameOverLayout = new QVBoxLayout(mainView);
     mainView->setLayout(gameOverLayout);
     gameOverLayout->addStretch();
     gameOverLayout->addWidget(Restart, 0, Qt::AlignCenter);
     gameOverLayout->addStretch();
+    launchGame = false;
+    // ❗ MAJ du fond
+    updateBackground();
 }
+
 
 
 MainWindow::~MainWindow() {
