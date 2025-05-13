@@ -64,12 +64,6 @@ void Player::keyPressEvent(QKeyEvent* event) {
         dx *= 0.7071;
         dy *= 0.7071;
     }
-    
-    // Mise à jour du sprite uniquement si mouvement
-    if (dx < 0) setPixmap(spriteLeft.scaled(40, 40, Qt::KeepAspectRatio, Qt::FastTransformation));
-    else if (dx > 0) setPixmap(spriteRight.scaled(40, 40, Qt::KeepAspectRatio, Qt::FastTransformation));
-    else if (dy < 0) setPixmap(spriteUp.scaled(40, 40, Qt::KeepAspectRatio, Qt::FastTransformation));
-    else if (dy > 0) setPixmap(spriteDown.scaled(40, 40, Qt::KeepAspectRatio, Qt::FastTransformation));
 }
 
 void Player::keyReleaseEvent(QKeyEvent* event) {
@@ -88,19 +82,22 @@ void Player::keyReleaseEvent(QKeyEvent* event) {
         dx *= 0.7071;
         dy *= 0.7071;
     }
-    
-    // Mise à jour du sprite SEULEMENT s'il y a mouvement
-    if (dx < 0) setPixmap(spriteLeft.scaled(40, 40, Qt::KeepAspectRatio, Qt::FastTransformation));
-    else if (dx > 0) setPixmap(spriteRight.scaled(40, 40, Qt::KeepAspectRatio, Qt::FastTransformation));
-    else if (dy < 0) setPixmap(spriteUp.scaled(40, 40, Qt::KeepAspectRatio, Qt::FastTransformation));
-    else if (dy > 0) setPixmap(spriteDown.scaled(40, 40, Qt::KeepAspectRatio, Qt::FastTransformation));
-    
-    // Pas de 'else' : le sprite ne change pas si tout est relâché
 }
-
 
 void Player::updatePosition() {
     moveBy(dx, dy);
+    
+    // Mise à jour du sprite en fonction de la direction
+    if (dx < 0) {
+        setPixmap(spriteLeft.scaled(40, 40, Qt::KeepAspectRatio, Qt::FastTransformation));
+    } else if (dx > 0) {
+        setPixmap(spriteRight.scaled(40, 40, Qt::KeepAspectRatio, Qt::FastTransformation));
+    } else if (dy < 0) {
+        setPixmap(spriteUp.scaled(40, 40, Qt::KeepAspectRatio, Qt::FastTransformation));
+    } else if (dy > 0) {
+        setPixmap(spriteDown.scaled(40, 40, Qt::KeepAspectRatio, Qt::FastTransformation));
+    }
+    
     QGraphicsView* myview = mainWindow->getView();
     if (myview) {
         myview->centerOn(this);
