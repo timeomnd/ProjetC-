@@ -211,6 +211,9 @@ void MainWindow::die() {
     Restart = new QPushButton(tr("Restart Game"));
     Restart->setFixedSize(400, 60);
     QFont myFont("Creepster", 20);
+    QPalette palette;
+    palette.setColor(QPalette::ButtonText, QColor("#8B0000"));
+    Restart->setPalette(palette);
     Restart->setFont(myFont);
     connect(Restart, &QPushButton::clicked, this, &MainWindow::slot_launchGame);
 
