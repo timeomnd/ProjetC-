@@ -1,8 +1,8 @@
 #include "Monster.hpp"
+class MyScene;
 
 
-
-Monster::Monster(Player* myPlayer, QObject* parent): QObject(parent), HP(1), speed(2), player(myPlayer), attackCooldown(1000){
+Monster::Monster(Player* myPlayer, MyScene* mainScene, QObject* parent): QObject(parent), HP(1), speed(2), player(myPlayer), attackCooldown(1000), mainScene(mainScene){
     hitSound = new QSoundEffect(this);
     hitSound->setSource(QUrl("qrc:/assets/hitMonster.wav")); // de préférence .wav
     hitSound->setVolume(0.5);
@@ -40,14 +40,17 @@ void Monster::setSpeed(int s) {
 }
 
 void Monster::setHP(int h) {
-    if (h <=0) {
+    if (h <= 0) {
         HP = 0;
-        emit destroyed(this); // ça émet un signal pour notifier la scène
-    }
-    else {
+        if (mainScene) {
+            mainScene->destroyMonster(this); // Appelle directement
+        }
+    } else {
         HP = h;
     }
 }
+
+
 void Monster::setDamage(int d) {
     damage = d;
 }
@@ -116,8 +119,8 @@ void Monster::attack() {
     }
 }
 
-BigMonster::BigMonster(Player* myPlayer, QObject* parent)
-    : Monster(myPlayer, parent)
+BigMonster::BigMonster(Player* myPlayer, MyScene* ms, QObject* parent)
+    : Monster(myPlayer, ms, parent)
 {
     setSpeed(1);
     setHP(75);
@@ -136,8 +139,8 @@ BigMonster::BigMonster(Player* myPlayer, QObject* parent)
     setPixmap(spriteUp->scaled(spriteSize, spriteSize, Qt::KeepAspectRatio, Qt::FastTransformation));
 }
 
-SmallMonster::SmallMonster(Player* myPlayer, QObject* parent)
-    : Monster(myPlayer, parent)
+SmallMonster::SmallMonster(Player* myPlayer, MyScene* ms, QObject* parent)
+    : Monster(myPlayer, ms, parent)
 {
     setSpeed(2);
     setHP(30);
@@ -156,7 +159,11 @@ SmallMonster::SmallMonster(Player* myPlayer, QObject* parent)
 }
 Monster::~Monster() {
     delete spriteUp;
+    spriteUp = nullptr;
     delete spriteDown;
+    spriteDown = nullptr;
     delete spriteLeft;
+    spriteLeft = nullptr;
     delete spriteRight;
+    spriteRight = nullptr;
 }

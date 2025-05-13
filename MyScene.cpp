@@ -1,19 +1,22 @@
 #include "MyScene.hpp"
 #include <QGraphicsSceneMouseEvent>
+#include <QDebug>
 
 void MyScene::mousePressEvent(QGraphicsSceneMouseEvent* event) {
     if (event->button() == Qt::LeftButton) {
         QPointF targetPos = event->scenePos();
         player->shoot(targetPos);
     }
-    QGraphicsScene::mousePressEvent(event); // Traitement de base
-    player->setFocus(); // Rétablir le focus sur le joueur
+    QGraphicsScene::mousePressEvent(event);
+    player->setFocus();
 }
+
 MyScene::MyScene(QGraphicsView* mainView, MainWindow* mw, QObject* parent)
-    : QGraphicsScene(parent), mainWindow(mw), map(nullptr){
+    : QGraphicsScene(parent), mainWindow(mw), map(nullptr), scoreManager(nullptr),
+      healthbarTimer(nullptr), spawnTimer(nullptr), player(nullptr), playerInitialized(false) {
 
     setBackgroundBrush(Qt::black);
-    // Timer pour la barre de vie
+
     healthbarTimer = new QTimer(this);
     connect(healthbarTimer, &QTimer::timeout, [this]() {
         if (player && player->getHealthBar()) {
@@ -24,27 +27,38 @@ MyScene::MyScene(QGraphicsView* mainView, MainWindow* mw, QObject* parent)
     });
     healthbarTimer->start(16);
 
-    // Timer pour le spawn des monstres
     spawnTimer = new QTimer(this);
     connect(spawnTimer, &QTimer::timeout, this, &MyScene::spawnMonster);
     spawnTimer->start(5000);
-    // Connect pour gérer la destruction des monstres
+
     connect(this, &MyScene::monsterDestroyed, this, [this](Monster* monster) {
-        scoreManager->addPoints(monster->getValueScore()); // getValueScore() retourne les points que le monstre vaut
-        activeMonsters.removeOne(monster); // Retirer de la liste des monstres le monstre qui vient d'être tué
-        removeItem(monster);              // Retirer de la scène
-        monster->deleteLater();           // Libérer la mémoire
+        if (!monster) return;
+        scoreManager->addPoints(monster->getValueScore());
+        activeMonsters.removeOne(monster);
+        if (monster->scene()) removeItem(monster);
+        monster->deleteLater();
     });
+
     setFocus();
 }
+
 void MyScene::initMap() {
     if (!map) {
-        map = new Map(this, ":/assets/map.json"); // adapte le chemin selon ton projet
+        map = new Map(this, ":/assets/map.json");
     }
 }
-Player* MyScene::getPlayer() {
-    return player;
+
+void MyScene::initPlayer() {
+    if (!player) {
+        player = new Player(mainWindow, this);
+        player->setMainWindow(mainWindow);
+        addItem(player);
+        player->setPos(sceneRect().center());
+        addItem(player->getHealthBar());
+        playerInitialized = true;
+    }
 }
+
 void MyScene::initScoreManager() {
     if (!scoreManager) {
         scoreManager = new ScoreManager(this);
@@ -53,25 +67,9 @@ void MyScene::initScoreManager() {
         scoreManager->getScoreText()->setPos(pos);
     }
 }
-void MyScene::initPlayer() {
-    if (!player) {
-        player = new Player(mainWindow,this);
-        addItem(player);
-        player->setMainWindow(mainWindow);
-        player->setPos(sceneRect().center());
-        addItem(player->getHealthBar()); // Ajouter la barre de vie
-        playerInitialized = true;
-    }
-}
-
-void MyScene::setPlayerInitialized(bool initialized) {
-    playerInitialized = initialized;
-}
 
 void MyScene::spawnMonster() {
-    if (!player || !playerInitialized){
-        return;
-    }
+    if (!player || !playerInitialized) return;
 
     QPointF playerPos = player->pos();
     QPointF spawnPos;
@@ -79,59 +77,58 @@ void MyScene::spawnMonster() {
     const int maxAttempts = 50;
     bool valid = false;
 
-    for (int i = 0; i < maxAttempts; i++) {
+    for (int i = 0; i < maxAttempts; ++i) {
         int x = QRandomGenerator::global()->bounded(0, int(width()));
         int y = QRandomGenerator::global()->bounded(0, int(height()));
-        QPointF goodPosition(x, y);
-
-        double distance = QLineF(playerPos, goodPosition).length();
-
-        if (distance >= minDistance) {
-            spawnPos = goodPosition;
+        QPointF pos(x, y);
+        if (QLineF(playerPos, pos).length() >= minDistance) {
+            spawnPos = pos;
             valid = true;
-            break; // bonne position trouvée
+            break;
         }
     }
 
-    if (!valid) {
-        spawnPos = QPointF(0, 0);
-    }
-    int random = QRandomGenerator::global()->bounded(1, 3); // entier entre a inclus et b exclus
+    if (!valid) spawnPos = QPointF(0, 0);
+
     Monster* monster = nullptr;
-
-    if (random == 1) {
-        monster = new BigMonster(player, this);
-    } else if (random == 2) {
+    int rand = QRandomGenerator::global()->bounded(1, 3);
+    if (rand == 1) {
         monster = new SmallMonster(player, this);
+    } else if (rand == 2) {
+        monster = new BigMonster(player, this);
     }
-    if (monster) {
-    monster->setPos(spawnPos);
-    addItem(monster);
-    activeMonsters.append(monster);
 
-    // Connecte le signal destroyed du monstre à une fonction lambda
-    connect(monster, &Monster::destroyed, this, [this](QObject* obj) {
-        Monster* monster = qobject_cast<Monster*>(obj);
-        if (monster) {
-            emit monsterDestroyed(monster);
-        }
-    });
+    if (monster) {
+        monster->setPos(spawnPos);
+        addItem(monster);
+        activeMonsters.append(monster);
+    }
 }
+
+// ✅ Méthode à appeler quand un monstre meurt
+void MyScene::destroyMonster(Monster* monster) {
+    if (!monster) return;
+    emit monsterDestroyed(monster); // déclenche le slot qui s'occupe du reste
 }
+
+void MyScene::setPlayerInitialized(bool initialized) {
+    playerInitialized = initialized;
+}
+
 MyScene::~MyScene() {
-    // Supprimer tous les monstres
     qDeleteAll(activeMonsters);
     activeMonsters.clear();
 
-    // Supprimer la map
-    delete map;
-    map = nullptr;
+    if (map) {
+        delete map;
+        map = nullptr;
+    }
 
-    // Supprimer le score manager
-    delete scoreManager;
-    scoreManager = nullptr;
+    if (scoreManager) {
+        delete scoreManager;
+        scoreManager = nullptr;
+    }
 
-    // Stopper et supprimer les timers
     if (healthbarTimer) {
         healthbarTimer->stop();
         delete healthbarTimer;
@@ -144,40 +141,21 @@ MyScene::~MyScene() {
         spawnTimer = nullptr;
     }
 
-    // Supprimer le joueur et sa healthbar
     if (player) {
         if (player->getHealthBar()) {
             removeItem(player->getHealthBar());
-            // Pas besoin de delete healthBar manuellement car il est parenté à Player
         }
-
         removeItem(player);
-        delete player;  // ✅ on fait un vrai delete ici
+        delete player;
         player = nullptr;
     }
 }
 
-QTimer* MyScene::getHealthbarTimer() const {
-    return healthbarTimer;
-}
-
-QTimer* MyScene::getSpawnTimer() const {
-    return spawnTimer;
-}
-
-QList<Monster*>& MyScene::getActiveMonsters() {
-    return activeMonsters;
-}
-
-ScoreManager* MyScene::getScoreManager() const {
-    return scoreManager;
-}
-
-void MyScene::setHealthbarTimer(QTimer* timer) {
-    healthbarTimer = timer;
-}
-
-void MyScene::setSpawnTimer(QTimer* timer) {
-    spawnTimer = timer;
-}
-
+// Getters et setters
+QTimer* MyScene::getHealthbarTimer() const { return healthbarTimer; }
+QTimer* MyScene::getSpawnTimer() const { return spawnTimer; }
+QList<Monster*>& MyScene::getActiveMonsters() { return activeMonsters; }
+ScoreManager* MyScene::getScoreManager() const { return scoreManager; }
+void MyScene::setHealthbarTimer(QTimer* timer) { healthbarTimer = timer; }
+void MyScene::setSpawnTimer(QTimer* timer) { spawnTimer = timer; }
+Player* MyScene::getPlayer() { return player; }

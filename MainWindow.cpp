@@ -55,7 +55,7 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent)
 
     // création de la musique du game over
     gameOverSound = new QSoundEffect();
-    gameOverSound->setSource(QUrl("qrc:/assets/gameOverSound.wav"));
+    gameOverSound->setSource(QUrl(":/assets/gameOverSound.mp3"));
     gameOverSound->setVolume(0.5);
 
 }
@@ -214,11 +214,6 @@ void MainWindow::die() {
 
     if (sound) sound->stop();
 
-    if (gameOverSound) {
-        gameOverSound->stop();
-        gameOverSound->play();
-    }
-
     mainView->setScene(nullptr);
     mainScene->deleteLater();
     mainScene = nullptr;
@@ -232,7 +227,7 @@ void MainWindow::die() {
     if (mainView->layout()) {
         mainView->layout()->deleteLater();
     }
-
+    gameOverSound->play();
     Restart = new QPushButton(tr("Restart Game"));
     Restart->setFixedSize(400, 60);
     QFont myFont("Creepster", 20);
@@ -258,8 +253,10 @@ MainWindow::~MainWindow() {
     qDebug() << "🧹 Destruction de MainWindow";
 
     // Par sécurité, mais normalement déjà supprimés dans slot_launchGame()
-    delete mainScene;
-    delete mainView;
+    mainScene->deleteLater();
+    mainScene = nullptr;
+    mainView->deleteLater();
+    mainView = nullptr;
 
     // Pas besoin de delete les QPushButton ou QSoundEffect avec parent !
 }

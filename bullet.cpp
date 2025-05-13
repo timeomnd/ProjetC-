@@ -57,7 +57,7 @@ void Projectile::destroy() {
     moveTimer->stop();
     lifespanTimer->stop();
     if (scene()) scene()->removeItem(this);
-    deleteLater();
+    this->deleteLater();
 }
 
 Projectile::~Projectile() {

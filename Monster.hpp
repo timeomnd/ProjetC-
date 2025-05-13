@@ -13,13 +13,15 @@
 #include <QSoundEffect>
 #include <QElapsedTimer>
 #include "HealthBar.hpp"
+#include "MyScene.hpp"
+
 class Player;
 
 class Monster : public QObject, public QGraphicsPixmapItem {
     Q_OBJECT
 
 public:
-    Monster(Player* myPlayer, QObject* parent = nullptr);
+    Monster(Player* myPlayer,MyScene* mainScene, QObject* parent = nullptr);
 
 
     int getSpeed() const;
@@ -42,6 +44,7 @@ public:
 protected:
     int spriteSize;
     int HP;
+    MyScene* mainScene;
     Player* player; //pointeur vers le joueur
     QTimer* timer;
     QPixmap* spriteUp;
@@ -59,13 +62,13 @@ protected:
 
 class BigMonster : public Monster {
 public:
-    BigMonster(Player* myPlayer, QObject* parent = nullptr);
+    BigMonster(Player* myPlayer, MyScene* ms, QObject* parent = nullptr);
 };
 
 
 class SmallMonster : public Monster {
 public:
-    SmallMonster(Player* myPlayer, QObject* parent = nullptr);
+    SmallMonster(Player* myPlayer, MyScene* ms, QObject* parent = nullptr);
 };
 
 #endif //MONSTER_H
