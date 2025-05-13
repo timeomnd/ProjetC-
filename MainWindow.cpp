@@ -146,18 +146,31 @@ void MainWindow::resizeEvent(QResizeEvent *event){
     }
 }
 void MainWindow::updateBackground() {
-    QPixmap backgroundPixmap(":/assets/backgroundMenu.png");
+    QPixmap backgroundPixmap;
 
-    if (!backgroundPixmap.isNull() && !launchGame) {
-        QSize viewSize = mainView->viewport()->size();
-        QPixmap scaledBackground = backgroundPixmap.scaled(viewSize, Qt::IgnoreAspectRatio, Qt::SmoothTransformation);
-        QBrush brush(scaledBackground);
-        brush.setStyle(Qt::TexturePattern);
+    if (!launchGame) {
+        // Choisir le bon fond selon le contexte
+        if (mainScene) {
+            backgroundPixmap = QPixmap(":/assets/backgroundMenu.png");
+        } else {
+            backgroundPixmap = QPixmap(":/assets/GameOverBackground.png");
+        }
 
-        mainScene->setSceneRect(0, 0, viewSize.width(), viewSize.height());
-        mainScene->setBackgroundBrush(brush);
+        if (!backgroundPixmap.isNull()) {
+            QSize viewSize = mainView->viewport()->size();
+            QPixmap scaledBackground = backgroundPixmap.scaled(viewSize, Qt::IgnoreAspectRatio, Qt::SmoothTransformation);
+            QBrush brush(scaledBackground);
+            brush.setStyle(Qt::TexturePattern);
+
+            QGraphicsScene* currentScene = mainView->scene();
+            if (currentScene) {
+                currentScene->setSceneRect(0, 0, viewSize.width(), viewSize.height());
+                currentScene->setBackgroundBrush(brush);
+            }
+        }
     }
 }
+
 void MainWindow::showEvent(QShowEvent *event) {
     QMainWindow::showEvent(event); // Laisse Qt gérer son affichage
 
@@ -216,6 +229,7 @@ void MainWindow::die() {
     palette.setColor(QPalette::ButtonText, QColor("#8B0000"));
     Restart->setPalette(palette);
     Restart->setFont(myFont);
+    QPixmap backgroundPixmap(":/assets/GameOverBackground.png");
     connect(Restart, &QPushButton::clicked, this, &MainWindow::slot_launchGame);
 
     // Ajouter au layout principal de la vue
@@ -225,6 +239,7 @@ void MainWindow::die() {
     gameOverLayout->addWidget(Restart, 0, Qt::AlignCenter);
     gameOverLayout->addStretch();
 }
+
 
 MainWindow::~MainWindow() {
     qDebug() << "🧹 Destruction de MainWindow";
