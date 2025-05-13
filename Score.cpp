@@ -14,12 +14,6 @@ ScoreManager::ScoreManager(QGraphicsScene* scene, QObject* parent)
     scoreText->setDefaultTextColor(Qt::white);
     scoreText->setFont(QFont("Arial", 14));
 
-    // Positionner en haut à droite
-    scoreText->setZValue(10); // Toujours au-dessus
-    if (scene) {
-        QRectF sceneRect = scene->sceneRect();
-        scoreText->setPos(sceneRect.width() - 120, 10);
-    }
 }
 
 
@@ -61,6 +55,9 @@ void ScoreManager::writeBestScore() {
         out << bestScore;
         file.close();
     }
+}
+QGraphicsTextItem* ScoreManager::getScoreText() const {
+    return scoreText;
 }
 ScoreManager::~ScoreManager() {
     // Rien à supprimer manuellement

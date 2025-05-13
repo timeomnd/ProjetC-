@@ -16,6 +16,7 @@ public :
     int getCurrentScore() const;
     int getLastScore() const;
     int getBestScore() const;
+    QGraphicsTextItem* getScoreText() const;
 
     void addPoints(int points);
     void resetCurrentScore();

@@ -39,6 +39,9 @@ MyScene::MyScene(QGraphicsView* mainView, MainWindow* mw, QObject* parent)
     if (mainWindow->getLaunchGame()) {
         //HUD pour afficher le score
         scoreManager = new ScoreManager(this);
+        auto view = views().first();
+        QPointF pos = view->mapToScene(20, view->height() - 70);
+        scoreManager->getScoreText()->setPos(pos);
     }
 }
 void MyScene::initMap() {

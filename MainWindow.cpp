@@ -85,9 +85,9 @@ QSoundEffect* MainWindow::getGameOverSound() const {
 
 
 void MainWindow::slot_launchGame() {
+    sound->stop();
     delete Play;
     Play = nullptr;
-
     if (mainScene) {
         mainScene->clear();
         delete mainScene;
