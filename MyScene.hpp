@@ -24,6 +24,13 @@ public:
     virtual ~MyScene();
     void spawnMonster();
     void setPlayerInitialized(bool initialized);
+    QTimer* getHealthbarTimer() const;
+    QTimer* getSpawnTimer() const;
+    QList<Monster*>& getActiveMonsters();
+    ScoreManager* getScoreManager() const;
+    void setHealthbarTimer(QTimer* timer);
+    void setSpawnTimer(QTimer* timer);
+
 
     signals:
         void monsterDestroyed(Monster* monster); // Déclaration du signal

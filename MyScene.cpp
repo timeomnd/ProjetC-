@@ -155,3 +155,27 @@ MyScene::~MyScene() {
         scoreManager = nullptr;
     }
 }
+QTimer* MyScene::getHealthbarTimer() const {
+    return healthbarTimer;
+}
+
+QTimer* MyScene::getSpawnTimer() const {
+    return spawnTimer;
+}
+
+QList<Monster*>& MyScene::getActiveMonsters() {
+    return activeMonsters;
+}
+
+ScoreManager* MyScene::getScoreManager() const {
+    return scoreManager;
+}
+
+void MyScene::setHealthbarTimer(QTimer* timer) {
+    healthbarTimer = timer;
+}
+
+void MyScene::setSpawnTimer(QTimer* timer) {
+    spawnTimer = timer;
+}
+
