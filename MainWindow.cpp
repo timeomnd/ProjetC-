@@ -190,39 +190,10 @@ void MainWindow::adjustViewToScene() {
 void MainWindow::die() {
     if (!mainScene) return;
 
-    // Supprimer le joueur et sa barre de vie
-    if (mainScene->getPlayer()) {
-        if (mainScene->getPlayer()->getHealthBar()) {
-            mainScene->removeItem(mainScene->getPlayer()->getHealthBar());
-            delete mainScene->getPlayer()->getHealthBar();
-        }
+    // Désactiver le joueur
+    mainScene->setPlayerInitialized(false);
 
-        mainScene->removeItem(mainScene->getPlayer());
-        delete mainScene->getPlayer();
-        mainScene->setPlayerInitialized(false);
-    }
-
-    // Supprimer tous les monstres
-    for (Monster* monster : mainScene->getActiveMonsters()) {
-        mainScene->removeItem(monster);
-        delete monster;
-    }
-    mainScene->getActiveMonsters().clear(); // Important !
-
-    // Stopper et supprimer les timers
-    if (mainScene->getHealthbarTimer()) {
-        mainScene->getHealthbarTimer()->stop();
-        mainScene->getHealthbarTimer()->deleteLater();
-        mainScene->setHealthbarTimer(nullptr);
-    }
-
-    if (mainScene->getSpawnTimer()) {
-        mainScene->getSpawnTimer()->stop();
-        mainScene->getSpawnTimer()->deleteLater();
-        mainScene->setSpawnTimer(nullptr);
-    }
-
-    // Stopper la musique de fond
+    // Stopper les sons
     if (sound) sound->stop();
 
     // Jouer le son de Game Over
@@ -231,20 +202,26 @@ void MainWindow::die() {
         gameOverSound->play();
     }
 
-    // Affichage du bouton restart
+    // Supprimer proprement la scène (le destructeur fera tout le ménage)
+    mainView->setScene(nullptr);  // Déconnecte la vue de la scène avant suppression
+    mainScene->deleteLater();
+    mainScene = nullptr;
+
+    // Créer le layout de game over et le bouton restart
     Restart = new QPushButton(tr("Restart Game"));
     Restart->setFixedSize(400, 60);
     QFont myFont("Creepster", 20);
     Restart->setFont(myFont);
     connect(Restart, &QPushButton::clicked, this, &MainWindow::slot_launchGame);
 
-    // Layout en plein centre
+    // Ajouter au layout principal de la vue
     gameOverLayout = new QVBoxLayout(mainView);
     mainView->setLayout(gameOverLayout);
     gameOverLayout->addStretch();
     gameOverLayout->addWidget(Restart, 0, Qt::AlignCenter);
     gameOverLayout->addStretch();
 }
+
 MainWindow::~MainWindow() {
     qDebug() << "🧹 Destruction de MainWindow";
 

@@ -113,30 +113,19 @@ void MyScene::spawnMonster() {
 }
 }
 MyScene::~MyScene() {
-    // Supprime tous les monstres encore actifs
+    // Supprimer tous les monstres
     qDeleteAll(activeMonsters);
     activeMonsters.clear();
 
-    // Supprimer la map si présente
-    if (map) {
-        delete map;
-        map = nullptr;
-    }
+    // Supprimer la map
+    delete map;
+    map = nullptr;
 
-    // Supprimer le joueur
-    if (player) {
-        // Supprimer d'abord sa barre de vie si elle est dans la scène
-        if (player->getHealthBar()) {
-            removeItem(player->getHealthBar());
-            delete player->getHealthBar();
-        }
+    // Supprimer le score manager
+    delete scoreManager;
+    scoreManager = nullptr;
 
-        removeItem(player); // juste au cas où
-        delete player;
-        player = nullptr;
-    }
-
-    // Supprimer les timers
+    // Stopper et supprimer les timers
     if (healthbarTimer) {
         healthbarTimer->stop();
         delete healthbarTimer;
@@ -149,12 +138,19 @@ MyScene::~MyScene() {
         spawnTimer = nullptr;
     }
 
-    // Supprimer le scoreManager
-    if (scoreManager) {
-        delete scoreManager;
-        scoreManager = nullptr;
+    // Supprimer le joueur et sa healthbar
+    if (player) {
+        if (player->getHealthBar()) {
+            removeItem(player->getHealthBar());
+            // Pas besoin de delete healthBar manuellement car il est parenté à Player
+        }
+
+        removeItem(player);
+        delete player;  // ✅ on fait un vrai delete ici
+        player = nullptr;
     }
 }
+
 QTimer* MyScene::getHealthbarTimer() const {
     return healthbarTimer;
 }
