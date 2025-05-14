@@ -35,10 +35,12 @@ MyScene::MyScene(QGraphicsView* mainView, MainWindow* mw, QObject* parent)
         if (!monster) return;
         scoreManager->addPoints(monster->getValueScore());
         activeMonsters.removeOne(monster);
-        if (monster->scene()) removeItem(monster);
+        qDebug() << "ici";
+        qDebug() << monster->scene();
+        //if (monster->scene()) removeItem(monster);
+        qDebug() << "la";
         monster->deleteLater();
     });
-
     setFocus();
 }
 
@@ -109,7 +111,7 @@ void MyScene::spawnMonster() {
     }
 }
 
-// ✅ Méthode à appeler quand un monstre meurt
+//  Méthode à appeler quand un monstre meurt
 void MyScene::destroyMonster(Monster* monster) {
     if (!monster) return;
     emit monsterDestroyed(monster); // déclenche le slot qui s'occupe du reste
