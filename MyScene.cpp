@@ -20,8 +20,7 @@ MyScene::MyScene(QGraphicsView* mainView, MainWindow* mw, QObject* parent)
     healthbarTimer = new QTimer(this);
     connect(healthbarTimer, &QTimer::timeout, [this]() {
         if (player && player->getHealthBar()) {
-            auto view = views().first();
-            QPointF pos = view->mapToScene(20, view->height() - 40);
+            QPointF pos = mainWindow->getView()->mapToScene(20, mainWindow->getView()->height() - 40);
             player->getHealthBar()->setPos(pos);
         }
     });
@@ -35,10 +34,6 @@ MyScene::MyScene(QGraphicsView* mainView, MainWindow* mw, QObject* parent)
         if (!monster) return;
         scoreManager->addPoints(monster->getValueScore());
         activeMonsters.removeOne(monster);
-        qDebug() << "ici";
-        qDebug() << monster->scene();
-        //if (monster->scene()) removeItem(monster);
-        qDebug() << "la";
         monster->deleteLater();
     });
     setFocus();
@@ -66,8 +61,7 @@ void MyScene::initScoreManager() {
         scoreTimer = new QTimer(this);
         scoreManager = new ScoreManager(this);
         connect(scoreTimer, &QTimer::timeout, [this]() {
-            auto view = views().first();
-            QPointF pos = view->mapToScene(20, view->height()-130);
+            QPointF pos = mainWindow->getView()->mapToScene(20, mainWindow->getView()->height()-130);
             scoreManager->getScoreText()->setPos(pos);
         });
         scoreTimer->start(1);
@@ -103,14 +97,12 @@ void MyScene::spawnMonster() {
     } else if (rand == 2) {
         monster = new BigMonster(player, this);
     }
-
     if (monster) {
         monster->setPos(spawnPos);
         addItem(monster);
         activeMonsters.append(monster);
     }
 }
-
 //  Méthode à appeler quand un monstre meurt
 void MyScene::destroyMonster(Monster* monster) {
     if (!monster) return;
@@ -126,33 +118,32 @@ MyScene::~MyScene() {
     activeMonsters.clear();
 
     if (map) {
-        delete map;
+        map->deleteLater();
         map = nullptr;
     }
 
     if (scoreManager) {
-        delete scoreManager;
+        scoreManager->deleteLater();
         scoreManager = nullptr;
     }
 
     if (healthbarTimer) {
         healthbarTimer->stop();
-        delete healthbarTimer;
+        healthbarTimer->deleteLater();
         healthbarTimer = nullptr;
     }
 
     if (spawnTimer) {
         spawnTimer->stop();
-        delete spawnTimer;
+        spawnTimer->deleteLater();
         spawnTimer = nullptr;
     }
 
     if (player) {
         if (player->getHealthBar()) {
-            removeItem(player->getHealthBar());
-        }
-        removeItem(player);
-        delete player;
+            delete player->getHealthBar();
+        };
+        player->deleteLater();
         player = nullptr;
     }
 }

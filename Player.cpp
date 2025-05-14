@@ -113,6 +113,7 @@ void Player::setHP(int h) {
     if (h <= 0) {
         HP = 0;
         alive = false;
+        mainScene->getScoreManager()->saveScore();
         if (mainWindow) {
             mainWindow->die();
         }
@@ -134,7 +135,6 @@ bool Player::isAlive() const {
 }
 
 void Player::focusOutEvent(QFocusEvent* event) {
-    qDebug() << "Focus perdu — récupération";
     setFocus();
     QGraphicsPixmapItem::focusOutEvent(event);
 }
