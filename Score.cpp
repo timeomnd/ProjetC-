@@ -12,8 +12,7 @@ ScoreManager::ScoreManager(QGraphicsScene* scene, QObject* parent)
     // Création du texte HUD
     scoreText = scene->addText("Score: 0");
     scoreText->setDefaultTextColor(Qt::white);
-    scoreText->setFont(QFont("Arial", 14));
-
+    scoreText->setFont(QFont("Creepster", 8, QFont::Bold));
 }
 
 

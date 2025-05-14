@@ -2,7 +2,9 @@
 #include "Player.hpp"
 #include "MyScene.hpp"
 
-MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent)
+MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent),
+    mainScene(nullptr), gameOverScene(nullptr), mainView(nullptr), backgroundMenu(nullptr),
+    gameOverBackground(nullptr), sound(nullptr), gameOverSound(nullptr), launchGame(false)
 {
     //création de la scène et d'une view
     this->mainView = new QGraphicsView;
@@ -13,11 +15,6 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent)
     this->resize(1200, 800);
 
     this->setPalette(QColorConstants::Svg::black);
-    //bouton action
-    helpMenu = menuBar()->addMenu(tr("&Help"));
-    actionHelp = new QAction(tr("&About"), this);
-    connect(actionHelp, SIGNAL(triggered()), this, SLOT(slot_aboutMenu()));
-    helpMenu->addAction(actionHelp);
 
     //bouton restart
     restartGame = new QPushButton(tr("Restart"));
@@ -67,13 +64,6 @@ void MainWindow::slot_restartGame(){
     QCoreApplication::exit(0); //ferme le jeu actuelle
 }
 
-
-void MainWindow::slot_aboutMenu(){
-    QMessageBox msgBox;
-    msgBox.setText("A small QT/C++ projet...");
-    msgBox.setModal(true); // on souhaite que la fenetre soit modale i.e qu'on ne puisse plus cliquer ailleurs
-    msgBox.exec();
-}
 QSoundEffect* MainWindow::getSound() const {
     return sound;
 }
@@ -145,34 +135,39 @@ void MainWindow::resizeEvent(QResizeEvent *event){
     }
 }
 void MainWindow::updateBackground() {
-    qDebug() << "🪵 [DEBUG] updateBackground() appelé";
-    QPixmap backgroundPixmap;
 
     if (!launchGame) {
         if (gameOverScene) {
-            backgroundPixmap = QPixmap(":/assets/GameOverBackground.png");
-        } else {
-            backgroundPixmap = QPixmap(":/assets/backgroundMenu.png");
-        }
-
-        if (!backgroundPixmap.isNull()) {
-            qDebug() << "✅ Background chargé avec succès";
-
-            QSize viewSize = mainView->viewport()->size();
-            QPixmap scaledBackground = backgroundPixmap.scaled(viewSize, Qt::IgnoreAspectRatio, Qt::SmoothTransformation);
-            QBrush brush(scaledBackground);
-            brush.setStyle(Qt::TexturePattern);
-
-            QGraphicsScene* currentScene = mainView->scene();
-            if (currentScene) {
-                currentScene->setSceneRect(0, 0, viewSize.width(), viewSize.height());
-                currentScene->setBackgroundBrush(brush);
+            gameOverBackground = new QPixmap(":/assets/GameOverBackground.png");
+            if (!gameOverBackground->isNull()) {
+                qDebug() << "✅ Background chargé avec succès";
+                QSize viewSize = mainView->viewport()->size();
+                QPixmap scaledBackground = gameOverBackground->scaled(viewSize, Qt::IgnoreAspectRatio, Qt::SmoothTransformation);
+                QBrush brush(scaledBackground);
+                brush.setStyle(Qt::TexturePattern);
+                gameOverScene->setSceneRect(0, 0, viewSize.width(), viewSize.height());
+                gameOverScene->setBackgroundBrush(brush);
                 qDebug() << "🎨 Background appliqué à la scène actuelle";
-            } else {
-                qDebug() << "⚠️ Aucune scène active pour appliquer le fond";
             }
-        } else {
-            qDebug() << "❌ Le QPixmap de fond est vide (non chargé)";
+            else {
+                qDebug() << "❌ Le QPixmap de fond est vide (non chargé)";
+            }
+        }
+        else {
+            backgroundMenu = new QPixmap(":/assets/backgroundMenu.png");
+            if (!backgroundMenu->isNull()) {
+                qDebug() << "✅ Background chargé avec succès";
+                QSize viewSize = mainView->viewport()->size();
+                QPixmap scaledBackground = backgroundMenu->scaled(viewSize, Qt::IgnoreAspectRatio, Qt::SmoothTransformation);
+                QBrush brush(scaledBackground);
+                brush.setStyle(Qt::TexturePattern);
+                mainScene->setSceneRect(0, 0, viewSize.width(), viewSize.height());
+                mainScene->setBackgroundBrush(brush);
+                qDebug() << "🎨 Background appliqué à la scène actuelle";
+            }
+            else {
+                qDebug() << "❌ Le QPixmap de fond est vide (non chargé)";
+            }
         }
     }
 }
@@ -221,7 +216,8 @@ void MainWindow::die() {
 
     // Créer la scène de game over
     gameOverScene = new QGraphicsScene(this);
-    mainView->setScene(gameOverScene); // ❗ utiliser la bonne scène
+    mainView->setScene(gameOverScene);
+
 
     // Nettoyage éventuel du layout précédent
     if (mainView->layout()) {
@@ -243,8 +239,6 @@ void MainWindow::die() {
     gameOverLayout->addWidget(Restart, 0, Qt::AlignCenter);
     gameOverLayout->addStretch();
     launchGame = false;
-    // ❗ MAJ du fond
-    updateBackground();
 }
 
 
@@ -257,6 +251,11 @@ MainWindow::~MainWindow() {
     mainScene = nullptr;
     mainView->deleteLater();
     mainView = nullptr;
+
+    if (gameOverScene) {
+        gameOverScene->deleteLater();
+        gameOverScene = nullptr;
+    }
 
     // Pas besoin de delete les QPushButton ou QSoundEffect avec parent !
 }

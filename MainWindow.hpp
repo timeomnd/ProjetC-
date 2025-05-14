@@ -40,14 +40,13 @@ private :
     QVBoxLayout* gameOverLayout;
     QPushButton* Restart;
     QGraphicsView* mainView;
-    QMenu* helpMenu;
-    QAction* actionHelp;
     QPushButton* restartGame;
     QToolBar* toolbar;
     QPushButton* Play;
     QVBoxLayout* mainLayout;
     QSoundEffect* sound;
-    QPixmap gameOverBackground;
+    QPixmap* backgroundMenu;
+    QPixmap* gameOverBackground;
     bool isGameOver = false; // Indique si le jeu est terminé
     void resizeEvent(QResizeEvent *event) override;
     bool launchGame;
@@ -64,9 +63,7 @@ public:
     QSoundEffect* getSound() const;
     QSoundEffect* getGameOverSound() const;
     public slots:
-        void slot_aboutMenu();
         void slot_restartGame();
-    private slots:
         void slot_launchGame();
 };
 
