@@ -27,7 +27,8 @@ public:
     int getHP() const;
     bool isAlive() const;
     HealthBar* getHealthBar() const;
-    void shoot(const QPointF& targetPos);
+    void gunShoot(const QPointF& targetPos);
+    void shotgunShoot(const QPointF& targetPos);
     virtual ~Player();
 
 protected:

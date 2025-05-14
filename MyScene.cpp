@@ -5,7 +5,11 @@
 void MyScene::mousePressEvent(QGraphicsSceneMouseEvent* event) {
     if (event->button() == Qt::LeftButton) {
         QPointF targetPos = event->scenePos();
-        player->shoot(targetPos);
+        player->gunShoot(targetPos);
+    }
+    if (event->button() == Qt::RightButton) {
+        QPointF targetPos = event->scenePos();
+        player->shotgunShoot(targetPos);
     }
     QGraphicsScene::mousePressEvent(event);
     player->setFocus();

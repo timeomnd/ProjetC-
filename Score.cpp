@@ -48,6 +48,7 @@ void ScoreManager::loadBestScore() {
         file.close();
     }
 }
+
 void ScoreManager::writeBestScore() {
     QFile file("score.txt");
     if (file.open(QIODevice::WriteOnly)) {
@@ -59,8 +60,6 @@ void ScoreManager::writeBestScore() {
 QGraphicsTextItem* ScoreManager::getScoreText() const {
     return scoreText;
 }
-ScoreManager::~ScoreManager() {
-    // Rien à supprimer manuellement
-    // La scène détruira scoreText automatiquement
-}
+
+ScoreManager::~ScoreManager() {}
 

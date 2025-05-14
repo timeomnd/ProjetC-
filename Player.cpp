@@ -2,9 +2,11 @@
 #include <QDebug>
 #include "bullet.hpp"
 #include <cmath>
+#include <QLineF>
+#include <QtMath>
 #include "MyScene.hpp"
 
-void Player::shoot(const QPointF& targetPos) {
+void Player::gunShoot(const QPointF& targetPos) {
     QPointF direction = targetPos - pos();
     qreal length = std::hypot(direction.x(), direction.y());
     if (length == 0) return;
@@ -16,7 +18,27 @@ void Player::shoot(const QPointF& targetPos) {
     QPointF playerCenter = pos() + QPointF(boundingRect().width() / 2, boundingRect().height() / 2);
     projectile->setPos(playerCenter);
     scene()->addItem(projectile);
-    // Ne plus appeler setFocus() ici
+}
+
+void Player::shotgunShoot(const QPointF& targetPos) {
+    QPointF playerCenter = pos() + QPointF(boundingRect().width() / 2, boundingRect().height() / 2);
+    QLineF directionLine(playerCenter, targetPos);
+    qreal baseAngle = directionLine.angle();  // angle en degrés, 0 = vers la droite
+
+    const qreal projectileSpeed = 15.0;
+    const QList<qreal> angleOffsets = { -15, -5, 5, 15 };  // 4 projectiles décalés
+
+    for (qreal offset : angleOffsets) {
+        qreal angle = baseAngle + offset;
+        qreal radian = qDegreesToRadians(-angle);  // Qt: angle en sens horaire, on inverse
+
+        QPointF velocity(projectileSpeed * qCos(radian),
+                         projectileSpeed * qSin(radian));
+
+        Projectile* projectile = new Projectile(velocity);
+        projectile->setPos(playerCenter);
+        scene()->addItem(projectile);
+    }
 }
 
 Player::Player(MainWindow* mw, MyScene* scene, QGraphicsItem* parent)
@@ -56,8 +78,8 @@ void Player::keyPressEvent(QKeyEvent* event) {
     if (pressedKeys.contains(Qt::Key_S)) dy += speed;
 
     if (dx != 0 && dy != 0) {
-        dx *= 0.7071;
-        dy *= 0.7071;
+        dx *= 0.85;
+        dy *= 0.85;
     }
 }
 
@@ -82,7 +104,7 @@ void Player::updatePosition() {
     moveBy(dx, dy);
 
     if (dx < 0) {
-        setPixmap(spriteLeft.scaled(40, 40, Qt::KeepAspectRatio, Qt::FastTransformation));
+        setPixmap(spriteLeft.scaled(40, 40, Qt::KeepAspectRatio, Qt::FastTransformation));  
     } else if (dx > 0) {
         setPixmap(spriteRight.scaled(40, 40, Qt::KeepAspectRatio, Qt::FastTransformation));
     } else if (dy < 0) {
@@ -139,6 +161,5 @@ void Player::focusOutEvent(QFocusEvent* event) {
     QGraphicsPixmapItem::focusOutEvent(event);
 }
 
-Player::~Player() {
-    // Rien à faire ici, les enfants sont supprimés automatiquement
-}
+Player::~Player() {}
+
