@@ -13,7 +13,7 @@ void MyScene::mousePressEvent(QGraphicsSceneMouseEvent* event) {
 
 MyScene::MyScene(QGraphicsView* mainView, MainWindow* mw, QObject* parent)
     : QGraphicsScene(parent), mainWindow(mw), map(nullptr), scoreManager(nullptr),
-      healthbarTimer(nullptr), spawnTimer(nullptr), player(nullptr), playerInitialized(false) {
+      healthbarTimer(nullptr), spawnTimer(nullptr), player(nullptr), playerInitialized(false), scoreTimer(nullptr) {
 
     setBackgroundBrush(Qt::black);
 
@@ -25,7 +25,7 @@ MyScene::MyScene(QGraphicsView* mainView, MainWindow* mw, QObject* parent)
             player->getHealthBar()->setPos(pos);
         }
     });
-    healthbarTimer->start(16);
+    healthbarTimer->start(1);
 
     spawnTimer = new QTimer(this);
     connect(spawnTimer, &QTimer::timeout, this, &MyScene::spawnMonster);
@@ -61,10 +61,15 @@ void MyScene::initPlayer() {
 
 void MyScene::initScoreManager() {
     if (!scoreManager) {
+        scoreTimer = new QTimer(this);
         scoreManager = new ScoreManager(this);
-        auto view = views().first();
-        QPointF pos = view->mapToScene(20, view->height() - 70);
-        scoreManager->getScoreText()->setPos(pos);
+        connect(scoreTimer, &QTimer::timeout, [this]() {
+            views().first()->viewport()->update();
+            auto view = views().first();
+            QPointF pos = view->mapToScene(20, view->height()-130);
+            scoreManager->getScoreText()->setPos(pos);
+        });
+        scoreTimer->start(1);
     }
 }
 
@@ -154,8 +159,10 @@ MyScene::~MyScene() {
 // Getters et setters
 QTimer* MyScene::getHealthbarTimer() const { return healthbarTimer; }
 QTimer* MyScene::getSpawnTimer() const { return spawnTimer; }
+QTimer* MyScene::getScoreTimer() const { return scoreTimer; }
 QList<Monster*>& MyScene::getActiveMonsters() { return activeMonsters; }
 ScoreManager* MyScene::getScoreManager() const { return scoreManager; }
 void MyScene::setHealthbarTimer(QTimer* timer) { healthbarTimer = timer; }
 void MyScene::setSpawnTimer(QTimer* timer) { spawnTimer = timer; }
 Player* MyScene::getPlayer() { return player; }
+

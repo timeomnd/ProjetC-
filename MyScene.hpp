@@ -26,6 +26,7 @@ public:
     void setPlayerInitialized(bool initialized);
     QTimer* getHealthbarTimer() const;
     QTimer* getSpawnTimer() const;
+    QTimer* getScoreTimer() const;
     QList<Monster*>& getActiveMonsters();
     ScoreManager* getScoreManager() const;
     void setHealthbarTimer(QTimer* timer);
@@ -43,6 +44,7 @@ private:
     ScoreManager* scoreManager;
     QTimer* healthbarTimer;
     QTimer* spawnTimer;
+    QTimer* scoreTimer;
     Player* player = nullptr;
     bool playerInitialized = false;
     QList<Monster*> activeMonsters;
