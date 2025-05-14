@@ -16,7 +16,7 @@ class MyScene;
 class Player : public QObject, public QGraphicsPixmapItem {
     Q_OBJECT
 
-    public:
+public:
     Player(MainWindow* mw, MyScene* scene, QGraphicsItem* parent = nullptr);
     void keyPressEvent(QKeyEvent* event) override;
     void keyReleaseEvent(QKeyEvent* event) override;
@@ -24,13 +24,18 @@ class Player : public QObject, public QGraphicsPixmapItem {
     void setHP(int h);
     void setMainWindow(MainWindow* mw);
     int getSpeed() const;
-    int getHP()const;
+    int getHP() const;
     bool isAlive() const;
     HealthBar* getHealthBar() const;
-    void shoot(const QPointF& targetPos); // Declaration added here
+    void shoot(const QPointF& targetPos);
     virtual ~Player();
+
+protected:
+    void focusOutEvent(QFocusEvent* event) override;
+
 private slots:
     void updatePosition();
+
 private:
     int speed;
     int HP;
@@ -42,10 +47,10 @@ private:
     MyScene* mainScene = nullptr;
     QTimer* movementTimer;
     QSet<int> pressedKeys;
-    QPixmap spriteUp;    // Sprite pour la direction haut
-    QPixmap spriteDown;  // Sprite pour la direction bas
-    QPixmap spriteLeft;  // Sprite pour la direction gauche
-    QPixmap spriteRight; // Sprite pour la direction droite
+    QPixmap spriteUp;
+    QPixmap spriteDown;
+    QPixmap spriteLeft;
+    QPixmap spriteRight;
 };
 
 #endif // PLAYER_HPP
