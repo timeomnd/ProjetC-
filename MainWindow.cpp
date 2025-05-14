@@ -13,8 +13,8 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent),
     this->setCentralWidget(mainView);
     this->setWindowTitle("The Cursed ISEN");
     this->resize(1200, 800);
-
     this->setPalette(QColorConstants::Svg::black);
+    this->mainView->setDragMode(QGraphicsView::NoDrag);
 
     //bouton restart
     restartGame = new QPushButton(tr("Restart"));
@@ -54,7 +54,6 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent),
     gameOverSound = new QSoundEffect();
     gameOverSound->setSource(QUrl(":/assets/gameOverSound.mp3"));
     gameOverSound->setVolume(0.5);
-
 }
 void MainWindow::slot_restartGame(){
     QString ProgramPath = QCoreApplication::applicationFilePath(); //récupère le chemin du jeu
@@ -135,7 +134,6 @@ void MainWindow::resizeEvent(QResizeEvent *event){
     }
 }
 void MainWindow::updateBackground() {
-
     if (!launchGame) {
         if (gameOverScene) {
             gameOverBackground = new QPixmap(":/assets/GameOverBackground.png");

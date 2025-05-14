@@ -17,7 +17,6 @@ public :
     int getLastScore() const;
     int getBestScore() const;
     QGraphicsTextItem* getScoreText() const;
-
     void addPoints(int points);
     void resetCurrentScore();
     void saveScore(); //pour enregistrer le score a la fin de la partie

@@ -104,17 +104,19 @@ void Monster::move() {
 
 void Monster::attack() {
     if (!player) return;
-    if (this->collidesWithItem(player)) {
-        if (lastAttackTime.elapsed() >= attackCooldown) {
-            int newHP = player->getHP() - damage;
-            player->setHP(newHP);
-            if (player->getHealthBar()) {
-                player->getHealthBar()->updateHP(newHP);
+    if (this->scene()) {
+        if (this->collidesWithItem(player)) {
+            if (lastAttackTime.elapsed() >= attackCooldown) {
+                int newHP = player->getHP() - damage;
+                player->setHP(newHP);
+                if (player->getHealthBar()) {
+                    player->getHealthBar()->updateHP(newHP);
+                }
+                qDebug() << "Attaque ! HP joueur :" << player->getHP();
+                hitSound->stop();
+                hitSound->play();
+                lastAttackTime.restart(); // reset du cooldown
             }
-            qDebug() << "Attaque ! HP joueur :" << player->getHP();
-            hitSound->stop();
-            hitSound->play();
-            lastAttackTime.restart(); // reset du cooldown
         }
     }
 }

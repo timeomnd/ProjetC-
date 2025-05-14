@@ -40,6 +40,7 @@ void ScoreManager::saveScore() {
     resetCurrentScore();
 }
 void ScoreManager::loadBestScore() {
+    qDebug() << "coucou";
     QFile file("score.txt");
     if (file.open(QIODevice::ReadOnly)) {
         QTextStream in(&file);
