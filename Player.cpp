@@ -11,7 +11,7 @@ void Player::gunShoot(const QPointF& targetPos) {
     qreal length = std::hypot(direction.x(), direction.y());
     if (length == 0) return;
 
-    const qreal projectileSpeed = 15.0;
+    const qreal projectileSpeed = 12.0;
     QPointF velocity = direction * (projectileSpeed / length);
 
     Projectile* projectile = new Projectile(velocity);
@@ -25,7 +25,7 @@ void Player::shotgunShoot(const QPointF& targetPos) {
     QLineF directionLine(playerCenter, targetPos);
     qreal baseAngle = directionLine.angle();  // angle en degrés, 0 = vers la droite
 
-    const qreal projectileSpeed = 15.0;
+    const qreal projectileSpeed = 8.5;
     const QList<qreal> angleOffsets = { -15, -5, 5, 15 };  // 4 projectiles décalés
 
     for (qreal offset : angleOffsets) {

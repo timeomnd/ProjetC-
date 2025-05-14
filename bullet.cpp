@@ -6,7 +6,7 @@
 Projectile::Projectile(const QPointF& velocity, QGraphicsItem* parent)
     : QGraphicsObject(parent), velocity(velocity), sprite(":/assets/bullet.png") {
 
-    setDamage(10);
+    setDamage(7);
     setFlag(QGraphicsItem::ItemIsFocusable, false);
     applyRotation();
 
@@ -29,7 +29,7 @@ QRectF Projectile::boundingRect() const {
 }
 
 void Projectile::paint(QPainter* painter, const QStyleOptionGraphicsItem*, QWidget*) {
-    painter->drawPixmap(boundingRect().topLeft(), sprite);
+    painter->drawPixmap(boundingRect().topLeft(), sprite.scaled(10, 10, Qt::KeepAspectRatio, Qt::FastTransformation));
 }
 
 void Projectile::move() {
