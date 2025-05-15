@@ -43,6 +43,7 @@ private:
     int dx;
     int dy;
     bool alive = true;
+    QSoundEffect* pompeSound;
     HealthBar* healthBar;
     MainWindow* mainWindow = nullptr;
     MyScene* mainScene = nullptr;

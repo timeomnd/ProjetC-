@@ -27,7 +27,8 @@ void Player::shotgunShoot(const QPointF& targetPos) {
 
     const qreal projectileSpeed = 8.5;
     const QList<qreal> angleOffsets = { -15, -5, 5, 15 };  // 4 projectiles décalés
-
+    pompeSound->stop();
+    pompeSound->play();
     for (qreal offset : angleOffsets) {
         qreal angle = baseAngle + offset;
         qreal radian = qDegreesToRadians(-angle);  // Qt: angle en sens horaire, on inverse
@@ -44,7 +45,8 @@ void Player::shotgunShoot(const QPointF& targetPos) {
 Player::Player(MainWindow* mw, MyScene* scene, QGraphicsItem* parent)
     : QGraphicsPixmapItem(parent), speed(2), dx(0), dy(0), mainScene(scene), mainWindow(mw) {
     setHP(100);
-
+    pompeSound = new QSoundEffect(this);
+    pompeSound->setSource(QUrl(":/assets/pompe.wav"));
     spriteUp = QPixmap(":/assets/nils_rear.png");
     spriteDown = QPixmap(":/assets/nils_front.png");
     spriteLeft = QPixmap(":/assets/nils_left.png");

@@ -65,7 +65,7 @@ void MyScene::initScoreManager() {
         scoreTimer = new QTimer(this);
         scoreManager = new ScoreManager(this);
         connect(scoreTimer, &QTimer::timeout, [this]() {
-            QPointF pos = mainWindow->getView()->mapToScene(20, mainWindow->getView()->height()-130);
+            QPointF pos = mainWindow->getView()->mapToScene(10, mainWindow->getView()->height()-130);
             scoreManager->getScoreText()->setPos(pos);
         });
         scoreTimer->start(1);
