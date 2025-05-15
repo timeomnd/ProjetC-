@@ -3,9 +3,13 @@ class MyScene;
 
 
 Monster::Monster(Player* myPlayer, MyScene* mainScene, QObject* parent): QObject(parent), HP(1), speed(2), player(myPlayer), attackCooldown(1000), mainScene(mainScene){
-    hitSound = new QSoundEffect(this);
-    hitSound->setSource(QUrl("qrc:/assets/hitMonster.wav")); // de préférence .wav
-    hitSound->setVolume(0.5);
+    for (int i = 0; i < 5; ++i) {
+        QSoundEffect* sound = new QSoundEffect(this);
+        sound->setSource(QUrl("qrc:/assets/hitMonster.wav"));
+        sound->setLoopCount(1);
+        sound->setVolume(0.2);
+        hitSounds.append(sound);
+    }
     lastAttackTime.start();
     timer = new QTimer(this);
     connect(timer, &QTimer::timeout, this, [this]() {
@@ -113,8 +117,13 @@ void Monster::attack() {
                     player->getHealthBar()->updateHP(newHP);
                 }
                 qDebug() << "Attaque ! HP joueur :" << player->getHP();
-                hitSound->stop();
-                hitSound->play();
+                QSoundEffect* currentSound = hitSounds[currentHitSoundIndex];
+                if (currentSound->status() == QSoundEffect::Ready) {
+                    currentSound->stop(); // redémarre depuis le début proprement
+                    currentSound->play();
+                }
+                currentHitSoundIndex = (currentHitSoundIndex + 1) % hitSounds.size();
+
                 lastAttackTime.restart(); // reset du cooldown
             }
         }

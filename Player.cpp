@@ -21,17 +21,29 @@ void Player::gunShoot(const QPointF& targetPos) {
 }
 
 void Player::shotgunShoot(const QPointF& targetPos) {
+    if (shotgunTimer->elapsed() < shotgunCooldownMs)
+        return;
+
+    shotgunTimer->restart();
+
     QPointF playerCenter = pos() + QPointF(boundingRect().width() / 2, boundingRect().height() / 2);
     QLineF directionLine(playerCenter, targetPos);
-    qreal baseAngle = directionLine.angle();  // angle en degrés, 0 = vers la droite
+    qreal baseAngle = directionLine.angle();
 
     const qreal projectileSpeed = 8.5;
-    const QList<qreal> angleOffsets = { -15, -5, 5, 15 };  // 4 projectiles décalés
-    pompeSound->stop();
-    pompeSound->play();
+    const QList<qreal> angleOffsets = { -15, -5, 5, 15 };
+
+    // Lire le prochain son dans la liste
+    QSoundEffect* sound = pompeSounds[currentSoundIndex];
+    if (sound->status() == QSoundEffect::Ready) {
+        sound->stop();  // Nécessaire pour les instances multiples
+        sound->play();
+    }
+    currentSoundIndex = (currentSoundIndex + 1) % pompeSounds.size();
+
     for (qreal offset : angleOffsets) {
         qreal angle = baseAngle + offset;
-        qreal radian = qDegreesToRadians(-angle);  // Qt: angle en sens horaire, on inverse
+        qreal radian = qDegreesToRadians(-angle);
 
         QPointF velocity(projectileSpeed * qCos(radian),
                          projectileSpeed * qSin(radian));
@@ -42,11 +54,26 @@ void Player::shotgunShoot(const QPointF& targetPos) {
     }
 }
 
+
+
+
 Player::Player(MainWindow* mw, MyScene* scene, QGraphicsItem* parent)
     : QGraphicsPixmapItem(parent), speed(2), dx(0), dy(0), mainScene(scene), mainWindow(mw) {
+
     setHP(100);
-    pompeSound = new QSoundEffect(this);
-    pompeSound->setSource(QUrl(":/assets/pompe.wav"));
+    shotgunTimer = new QElapsedTimer();
+    shotgunTimer->start();
+
+    // Charger plusieurs sons pour éviter les conflits
+    for (int i = 0; i < 5; ++i) {  // 5 instances suffisent
+        QSoundEffect* sound = new QSoundEffect(this);
+        sound->setSource(QUrl("qrc:/assets/pompe.wav"));
+        sound->setLoopCount(1);
+        sound->setVolume(0.2);
+        pompeSounds.append(sound);
+    }
+    shotgunTimer->start();
+
     spriteUp = QPixmap(":/assets/nils_rear.png");
     spriteDown = QPixmap(":/assets/nils_front.png");
     spriteLeft = QPixmap(":/assets/nils_left.png");
@@ -67,6 +94,7 @@ Player::Player(MainWindow* mw, MyScene* scene, QGraphicsItem* parent)
 
     healthBar = new HealthBar(100, this);
 }
+
 
 void Player::keyPressEvent(QKeyEvent* event) {
     pressedKeys.insert(event->key());

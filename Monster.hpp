@@ -51,7 +51,8 @@ protected:
     QPixmap* spriteDown;
     QPixmap* spriteLeft;
     QPixmap* spriteRight;
-    QSoundEffect* hitSound;
+    QVector<QSoundEffect*> hitSounds;
+    int currentHitSoundIndex = 0;
     QElapsedTimer lastAttackTime;
     int attackCooldown; // en millisecondes
     int speed;

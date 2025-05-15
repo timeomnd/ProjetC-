@@ -7,8 +7,10 @@
 #include <QTimer>
 #include <QPixmap>
 #include <QSet>
+#include <QSoundEffect>
 #include "HealthBar.hpp"
 #include "MainWindow.hpp"
+#include <QElapsedTimer>
 
 class MainWindow;
 class MyScene;
@@ -43,7 +45,10 @@ private:
     int dx;
     int dy;
     bool alive = true;
-    QSoundEffect* pompeSound;
+    QVector<QSoundEffect*> pompeSounds;  // Plusieurs instances pour éviter les bug de son
+    int currentSoundIndex = 0;
+    QElapsedTimer* shotgunTimer;
+    int shotgunCooldownMs = 600;
     HealthBar* healthBar;
     MainWindow* mainWindow = nullptr;
     MyScene* mainScene = nullptr;
