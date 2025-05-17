@@ -4,7 +4,7 @@
 
 MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent),
     mainScene(nullptr), gameOverScene(nullptr), mainView(nullptr), backgroundMenu(nullptr),
-    gameOverBackground(nullptr), sound(nullptr), gameOverSound(nullptr), launchGame(false)
+    gameOverBackground(nullptr), sound(nullptr), launchGame(false), scaledGameOverBackground(nullptr)
 {
     //création de la scène et d'une view
     this->mainView = new QGraphicsView;
@@ -49,11 +49,6 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent),
     sound->setVolume(0.5);
     sound->setLoopCount(QSoundEffect::Infinite);
     sound->play();
-
-    // création de la musique du game over
-    gameOverSound = new QSoundEffect();
-    gameOverSound->setSource(QUrl(":/assets/gameOverSound.mp3"));
-    gameOverSound->setVolume(0.5);
 }
 void MainWindow::slot_restartGame(){
     QString ProgramPath = QCoreApplication::applicationFilePath(); //récupère le chemin du jeu
@@ -67,10 +62,6 @@ QSoundEffect* MainWindow::getSound() const {
     return sound;
 }
 
-QSoundEffect* MainWindow::getGameOverSound() const {
-    return gameOverSound;
-}
-
 
 void MainWindow::slot_launchGame() {
     sound->stop();
@@ -78,8 +69,13 @@ void MainWindow::slot_launchGame() {
     Play = nullptr;
     if (mainScene) {
         mainScene->clear();
-        delete mainScene;
+        mainScene->deleteLater();
         mainScene = nullptr;
+    }
+    if (gameOverScene) {
+        gameOverScene->clear();
+        gameOverScene->deleteLater();
+        gameOverScene = nullptr;
     }
     if (mainView) {
         delete mainView;
@@ -136,35 +132,32 @@ void MainWindow::resizeEvent(QResizeEvent *event){
 void MainWindow::updateBackground() {
     if (!launchGame) {
         if (gameOverScene) {
+            if (gameOverBackground) delete gameOverBackground;
             gameOverBackground = new QPixmap(":/assets/GameOverBackground.png");
-            if (!gameOverBackground->isNull()) {
-                qDebug() << "✅ Background chargé avec succès";
+
+            if (gameOverBackground && !gameOverBackground->isNull()) {
                 QSize viewSize = mainView->viewport()->size();
-                QPixmap scaledBackground = gameOverBackground->scaled(viewSize, Qt::IgnoreAspectRatio, Qt::SmoothTransformation);
-                QBrush brush(scaledBackground);
-                brush.setStyle(Qt::TexturePattern);
+
+                if (scaledGameOverBackground) delete scaledGameOverBackground;
+                scaledGameOverBackground = new QPixmap(gameOverBackground->scaled(viewSize, Qt::IgnoreAspectRatio, Qt::SmoothTransformation));
+
+                gameOverScene->clear();
+
+                QGraphicsPixmapItem* backgroundItem = gameOverScene->addPixmap(*scaledGameOverBackground);
+                backgroundItem->setZValue(-1);
+
                 gameOverScene->setSceneRect(0, 0, viewSize.width(), viewSize.height());
-                gameOverScene->setBackgroundBrush(brush);
-                qDebug() << "🎨 Background appliqué à la scène actuelle";
             }
-            else {
-                qDebug() << "❌ Le QPixmap de fond est vide (non chargé)";
-            }
-        }
-        else {
+        } else {
             backgroundMenu = new QPixmap(":/assets/backgroundMenu.png");
             if (!backgroundMenu->isNull()) {
-                qDebug() << "✅ Background chargé avec succès";
                 QSize viewSize = mainView->viewport()->size();
                 QPixmap scaledBackground = backgroundMenu->scaled(viewSize, Qt::IgnoreAspectRatio, Qt::SmoothTransformation);
                 QBrush brush(scaledBackground);
                 brush.setStyle(Qt::TexturePattern);
+
                 mainScene->setSceneRect(0, 0, viewSize.width(), viewSize.height());
                 mainScene->setBackgroundBrush(brush);
-                qDebug() << "🎨 Background appliqué à la scène actuelle";
-            }
-            else {
-                qDebug() << "❌ Le QPixmap de fond est vide (non chargé)";
             }
         }
     }
@@ -212,16 +205,31 @@ void MainWindow::die() {
     mainScene = nullptr;
     isGameOver = true;
 
-    // Créer la scène de game over
+    // 🔁 Reset le zoom avant de changer la scène
+    mainView->resetTransform();
+
     gameOverScene = new QGraphicsScene(this);
     mainView->setScene(gameOverScene);
+    QSize viewSize = mainView->viewport()->size();
+    gameOverScene->setSceneRect(0, 0, viewSize.width(), viewSize.height());
+    mainView->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
+    mainView->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
+    mainView->setFrameStyle(QFrame::NoFrame);
+    mainView->setAlignment(Qt::AlignLeft | Qt::AlignTop);
+    mainView->setRenderHint(QPainter::Antialiasing, true);
 
+    launchGame = false;  // 🔥 Avant le updateBackground() !
+    updateBackground();  // ✅ Applique le bon fond redimensionné
 
-    // Nettoyage éventuel du layout précédent
+    QSoundEffect* gameOverSound = new QSoundEffect(this);
+    gameOverSound->setSource(QUrl("qrc:/assets/gameOverSound.wav"));
+    gameOverSound->setVolume(0.5);
+    gameOverSound->play();
+
     if (mainView->layout()) {
         mainView->layout()->deleteLater();
     }
-    gameOverSound->play();
+
     Restart = new QPushButton(tr("Restart Game"));
     Restart->setFixedSize(400, 60);
     QFont myFont("Creepster", 20);
@@ -236,8 +244,9 @@ void MainWindow::die() {
     gameOverLayout->addStretch();
     gameOverLayout->addWidget(Restart, 0, Qt::AlignCenter);
     gameOverLayout->addStretch();
-    launchGame = false;
 }
+
+
 
 
 

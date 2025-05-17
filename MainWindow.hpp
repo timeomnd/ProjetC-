@@ -36,7 +36,6 @@ class MainWindow : public QMainWindow {
 private :
     MyScene* mainScene;
     QGraphicsScene* gameOverScene;
-    QSoundEffect* gameOverSound;
     QVBoxLayout* gameOverLayout;
     QPushButton* Restart;
     QGraphicsView* mainView;
@@ -47,6 +46,8 @@ private :
     QSoundEffect* sound;
     QPixmap* backgroundMenu;
     QPixmap* gameOverBackground;
+    QPixmap* scaledGameOverBackground;
+
     bool isGameOver = false; // Indique si le jeu est terminé
     void resizeEvent(QResizeEvent *event) override;
     bool launchGame;
@@ -61,7 +62,6 @@ public:
     void updateBackground();
     void die();
     QSoundEffect* getSound() const;
-    QSoundEffect* getGameOverSound() const;
     public slots:
         void slot_restartGame();
         void slot_launchGame();

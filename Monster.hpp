@@ -14,6 +14,7 @@
 #include <QElapsedTimer>
 #include "HealthBar.hpp"
 #include "MyScene.hpp"
+#include "bullet.hpp"
 
 class Player;
 
@@ -71,5 +72,18 @@ class SmallMonster : public Monster {
 public:
     SmallMonster(Player* myPlayer, MyScene* ms, QObject* parent = nullptr);
 };
+
+class ShooterMonster : public Monster {
+public:
+    ShooterMonster(Player* myPlayer, MyScene* ms, QObject* parent = nullptr);
+
+public:
+    void attack() override;
+
+private:
+    int projectileSpeed = 5;
+    void shootAtPlayer();
+};
+
 
 #endif //MONSTER_H

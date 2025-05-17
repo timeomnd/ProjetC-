@@ -59,7 +59,6 @@ void Player::shotgunShoot(const QPointF& targetPos) {
 
 Player::Player(MainWindow* mw, MyScene* scene, QGraphicsItem* parent)
     : QGraphicsPixmapItem(parent), speed(2), dx(0), dy(0), mainScene(scene), mainWindow(mw) {
-
     setHP(100);
     shotgunTimer = new QElapsedTimer();
     shotgunTimer->start();

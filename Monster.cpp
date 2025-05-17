@@ -133,12 +133,12 @@ void Monster::attack() {
 BigMonster::BigMonster(Player* myPlayer, MyScene* ms, QObject* parent)
     : Monster(myPlayer, ms, parent)
 {
-    setSpeed(1);
-    setHP(75);
+    setSpeed(2);
+    setHP(90);
     setValueScore(500);
     setDamage(25);
     setAttackCooldown(2500);
-    setSpriteSize(40);
+    setSpriteSize(45);
     spriteUp = new QPixmap(":/assets/BigMonster_rear.png");
     spriteDown = new QPixmap(":/assets/BigMonster_front.png");
     spriteLeft = new QPixmap(":/assets/BigMonster_left.png");
@@ -153,8 +153,8 @@ BigMonster::BigMonster(Player* myPlayer, MyScene* ms, QObject* parent)
 SmallMonster::SmallMonster(Player* myPlayer, MyScene* ms, QObject* parent)
     : Monster(myPlayer, ms, parent)
 {
-    setSpeed(2);
-    setHP(30);
+    setSpeed(3);
+    setHP(60);
     setValueScore(250);
     setDamage(15);
     setSpriteSize(30);
@@ -167,6 +167,52 @@ SmallMonster::SmallMonster(Player* myPlayer, MyScene* ms, QObject* parent)
         qWarning("Erreur : un ou plusieurs sprites sont introuvables !");
     }
     setPixmap(spriteUp->scaled(spriteSize, spriteSize, Qt::KeepAspectRatio, Qt::FastTransformation));
+}
+ShooterMonster::ShooterMonster(Player* player, MyScene* scene, QObject* parent)
+    : Monster(player, scene, parent)
+{
+    setSpeed(1);
+    setHP(40);
+    setDamage(10);
+    setAttackCooldown(2000);
+    setSpriteSize(35);
+
+    spriteUp = new QPixmap(":/assets/RangedMonster_up.png");
+    spriteDown = new QPixmap(":/assets/RangedMonster_down.png");
+    spriteLeft = new QPixmap(":/assets/RangedMonster_left.png");
+    spriteRight = new QPixmap(":/assets/RangedMonster_right.png");
+
+    if (spriteUp->isNull() || spriteDown->isNull() || spriteLeft->isNull() || spriteRight->isNull()) {
+        qWarning("Erreur : sprites manquants pour RangedMonster !");
+    }
+
+    setPixmap(spriteDown->scaled(spriteSize, spriteSize));
+}
+
+void ShooterMonster::attack() {
+    if (!player) return;
+    if (lastAttackTime.elapsed() >= attackCooldown) {
+        shootAtPlayer();
+        lastAttackTime.restart();
+    }
+}
+
+void ShooterMonster::shootAtPlayer() {
+    QPointF origin = this->pos();
+    QPointF target = player->pos();
+    QPointF direction = (target - origin);
+    qreal length = std::sqrt(direction.x() * direction.x() + direction.y() * direction.y());
+
+    if (length == 0) return;
+
+    QPointF velocity = (direction / length) * 5.0; // 5 pixels/frame
+
+    Projectile* proj = new Projectile(velocity);
+    proj->setPos(this->pos());
+
+    if (this->scene()) {
+        this->scene()->addItem(proj);
+    }
 }
 Monster::~Monster() {
     delete spriteUp;
