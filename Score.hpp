@@ -17,18 +17,25 @@ public :
     int getLastScore() const;
     int getBestScore() const;
     QGraphicsTextItem* getScoreText() const;
+    QGraphicsTextItem* getBestScoreText() const;
+    QGraphicsTextItem* getLastScoreText() const;
     void addPoints(int points);
     void resetCurrentScore();
     void saveScore(); //pour enregistrer le score a la fin de la partie
+    void setValid(bool v);
+    bool getValid() const;
     ~ScoreManager();
 
 
 private:
+    bool valid;
     int currentScore;
     int lastScore;
     int bestScore;
     QGraphicsScene* scene;
     QGraphicsTextItem* scoreText;
+    QGraphicsTextItem* bestScoreText;
+    QGraphicsTextItem* lastScoreText;
 
     void loadBestScore();
     void writeBestScore();
