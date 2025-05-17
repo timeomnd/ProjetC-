@@ -242,7 +242,6 @@ void MainWindow::die() {
     Restart->setPalette(palette);
     Restart->setFont(myFont);
     connect(Restart, &QPushButton::clicked, this, &MainWindow::slot_launchGame);
-
     gameOverLayout = new QVBoxLayout(mainView);
     mainView->setLayout(gameOverLayout);
     gameOverLayout->addStretch();

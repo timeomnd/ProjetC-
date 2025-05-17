@@ -123,6 +123,7 @@ void Player::setHP(int h) {
         HP = 0;
         alive = false;
         mainScene->getScoreManager()->saveScore();
+        QCoreApplication::processEvents();  // Force l'exécution des tâches en attente notamment pour enregister le score
         if (mainWindow) {
             mainWindow->die();
         }
