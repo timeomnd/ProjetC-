@@ -44,3 +44,8 @@ HealthBar.o
 moc_Score.cpp
 moc_Score.o
 Score.o
+moc_NoScrollGraphicsView.cpp
+moc_NoScrollGraphicsView.o
+Weapon.o
+moc_Weapons.cpp
+moc_Weapons.o
