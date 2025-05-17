@@ -2,7 +2,6 @@
 #define MYSCENE_H
 #include <QGraphicsScene>
 #include <QRandomGenerator>
-#include <QGraphicsView>
 #include "Map.hpp"
 #include "Player.hpp"
 #include "Monster.hpp"
@@ -17,7 +16,7 @@ class MyScene : public QGraphicsScene {
     Q_OBJECT
 
 public:
-    MyScene(QGraphicsView* mainView, MainWindow* mw = nullptr, QObject* parent = nullptr);
+    MyScene(NoScrollGraphicsView* mainView, MainWindow* mw = nullptr, QObject* parent = nullptr);
     void initMap();
     void initPlayer();
     Player* getPlayer();

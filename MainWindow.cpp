@@ -7,7 +7,7 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent),
     gameOverBackground(nullptr), sound(nullptr), launchGame(false), scaledGameOverBackground(nullptr)
 {
     //création de la scène et d'une view
-    this->mainView = new QGraphicsView;
+    this->mainView = new NoScrollGraphicsView;
     this->mainScene = new MyScene(mainView,this);
     this->mainView->setScene(mainScene);
     this->setCentralWidget(mainView);
@@ -83,7 +83,7 @@ void MainWindow::slot_launchGame() {
     }
 
     // Créer la nouvelle scène et vue
-    mainView = new QGraphicsView(this);
+    mainView = new NoScrollGraphicsView(this);
     mainScene = new MyScene(mainView, this);
     mainView->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
     mainView->setBackgroundBrush(Qt::black);
@@ -118,7 +118,10 @@ void MainWindow::slot_launchGame() {
     mainView->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
 
     // Activer le mode de glissement pour naviguer dans la scène
-    mainView->setDragMode(QGraphicsView::ScrollHandDrag);
+    // Empêcher tout scroll dans le jeu
+    mainView->setDragMode(QGraphicsView::NoDrag);
+    mainView->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
+    mainView->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
     launchGame = true;
 }
 
@@ -171,7 +174,7 @@ void MainWindow::showEvent(QShowEvent *event) {
         updateBackground();
     }
 }
-QGraphicsView* MainWindow::getView() {
+NoScrollGraphicsView* MainWindow::getView() {
     return mainView;
 }
 MyScene*MainWindow::getScene() {
@@ -214,6 +217,7 @@ void MainWindow::die() {
     gameOverScene->setSceneRect(0, 0, viewSize.width(), viewSize.height());
     mainView->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
     mainView->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
+    mainView->setDragMode(QGraphicsView::NoDrag);
     mainView->setFrameStyle(QFrame::NoFrame);
     mainView->setAlignment(Qt::AlignLeft | Qt::AlignTop);
     mainView->setRenderHint(QPainter::Antialiasing, true);

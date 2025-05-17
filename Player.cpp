@@ -142,7 +142,7 @@ void Player::updatePosition() {
         setPixmap(spriteDown.scaled(40, 40, Qt::KeepAspectRatio, Qt::FastTransformation));
     }
 
-    QGraphicsView* myview = mainWindow->getView();
+    NoScrollGraphicsView* myview = mainWindow->getView();
     if (myview) {
         myview->centerOn(this);
     }

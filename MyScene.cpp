@@ -15,7 +15,7 @@ void MyScene::mousePressEvent(QGraphicsSceneMouseEvent* event) {
     player->setFocus();
 }
 
-MyScene::MyScene(QGraphicsView* mainView, MainWindow* mw, QObject* parent)
+MyScene::MyScene(NoScrollGraphicsView* mainView, MainWindow* mw, QObject* parent)
     : QGraphicsScene(parent), mainWindow(mw), map(nullptr), scoreManager(nullptr),
       healthbarTimer(nullptr), spawnTimer(nullptr), player(nullptr), playerInitialized(false), scoreTimer(nullptr) {
 

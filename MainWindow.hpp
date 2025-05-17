@@ -2,7 +2,6 @@
 #ifndef MAINWINDOW_H
 #define MAINWINDOW_H
 #include <QMainWindow>
-#include <QGraphicsView>
 #include <QMenu>
 #include <QMenuBar>
 #include <QAction>
@@ -23,7 +22,7 @@
 #include <QSoundEffect>
 #include <QResizeEvent>  // Pour resizeEvent
 #include <QSoundEffect>
-
+#include "NoScrollGraphicsView.hpp"
 #include "Player.hpp"
 class MyScene;
 
@@ -38,7 +37,7 @@ private :
     QGraphicsScene* gameOverScene;
     QVBoxLayout* gameOverLayout;
     QPushButton* Restart;
-    QGraphicsView* mainView;
+    NoScrollGraphicsView* mainView;
     QPushButton* restartGame;
     QToolBar* toolbar;
     QPushButton* Play;
@@ -52,7 +51,7 @@ private :
     void resizeEvent(QResizeEvent *event) override;
     bool launchGame;
 public:
-    QGraphicsView* getView();
+    NoScrollGraphicsView* getView();
     bool getLaunchGame();
     void adjustViewToScene();
     MyScene* getScene();
@@ -66,6 +65,7 @@ public:
         void slot_restartGame();
         void slot_launchGame();
 };
+
 
 
 #endif //MAINWINDOW_H
