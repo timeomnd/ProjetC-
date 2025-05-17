@@ -3,14 +3,16 @@
 #include <QDebug>
 
 void MyScene::mousePressEvent(QGraphicsSceneMouseEvent* event) {
+    if (!player || !player->isAlive()) return;
+
+    QPointF targetPos = event->scenePos();
+    QPointF playerCenter = player->pos() + QPointF(player->boundingRect().width() / 2, 
+                                                 player->boundingRect().height() / 2);
+
     if (event->button() == Qt::LeftButton) {
-        QPointF targetPos = event->scenePos();
-        player->gunShoot(targetPos);
+        player->getCurrentWeapon()->shoot(playerCenter, targetPos);
     }
-    if (event->button() == Qt::RightButton) {
-        QPointF targetPos = event->scenePos();
-        player->shotgunShoot(targetPos);
-    }
+    
     QGraphicsScene::mousePressEvent(event);
     player->setFocus();
 }

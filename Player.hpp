@@ -7,10 +7,9 @@
 #include <QTimer>
 #include <QPixmap>
 #include <QSet>
-#include <QSoundEffect>
 #include "HealthBar.hpp"
 #include "MainWindow.hpp"
-#include <QElapsedTimer>
+#include "Weapons.hpp"
 
 class MainWindow;
 class MyScene;
@@ -29,9 +28,10 @@ public:
     int getHP() const;
     bool isAlive() const;
     HealthBar* getHealthBar() const;
-    void gunShoot(const QPointF& targetPos);
-    void shotgunShoot(const QPointF& targetPos);
     virtual ~Player();
+
+    Weapon* getCurrentWeapon() const;
+    void switchWeapon(int weaponType);
 
 protected:
     void focusOutEvent(QFocusEvent* event) override;
@@ -45,10 +45,6 @@ private:
     int dx;
     int dy;
     bool alive = true;
-    QVector<QSoundEffect*> pompeSounds;  // Plusieurs instances pour éviter les bug de son
-    int currentSoundIndex = 0;
-    QElapsedTimer* shotgunTimer;
-    int shotgunCooldownMs = 600;
     HealthBar* healthBar;
     MainWindow* mainWindow = nullptr;
     MyScene* mainScene = nullptr;
@@ -58,6 +54,11 @@ private:
     QPixmap spriteDown;
     QPixmap spriteLeft;
     QPixmap spriteRight;
+    
+    // Armes
+    Weapon* currentWeapon;
+    Gun* gun;
+    Shotgun* shotgun;
 };
 
 #endif // PLAYER_HPP

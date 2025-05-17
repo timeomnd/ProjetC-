@@ -1,77 +1,16 @@
 #include "Player.hpp"
 #include <QDebug>
-#include "bullet.hpp"
 #include <cmath>
-#include <QLineF>
-#include <QtMath>
 #include "MyScene.hpp"
-
-void Player::gunShoot(const QPointF& targetPos) {
-    QPointF direction = targetPos - pos();
-    qreal length = std::hypot(direction.x(), direction.y());
-    if (length == 0) return;
-
-    const qreal projectileSpeed = 12.0;
-    QPointF velocity = direction * (projectileSpeed / length);
-
-    Projectile* projectile = new Projectile(velocity);
-    QPointF playerCenter = pos() + QPointF(boundingRect().width() / 2, boundingRect().height() / 2);
-    projectile->setPos(playerCenter);
-    scene()->addItem(projectile);
-}
-
-void Player::shotgunShoot(const QPointF& targetPos) {
-    if (shotgunTimer->elapsed() < shotgunCooldownMs)
-        return;
-
-    shotgunTimer->restart();
-
-    QPointF playerCenter = pos() + QPointF(boundingRect().width() / 2, boundingRect().height() / 2);
-    QLineF directionLine(playerCenter, targetPos);
-    qreal baseAngle = directionLine.angle();
-
-    const qreal projectileSpeed = 8.5;
-    const QList<qreal> angleOffsets = { -15, -5, 5, 15 };
-
-    // Lire le prochain son dans la liste
-    QSoundEffect* sound = pompeSounds[currentSoundIndex];
-    if (sound->status() == QSoundEffect::Ready) {
-        sound->stop();  // Nécessaire pour les instances multiples
-        sound->play();
-    }
-    currentSoundIndex = (currentSoundIndex + 1) % pompeSounds.size();
-
-    for (qreal offset : angleOffsets) {
-        qreal angle = baseAngle + offset;
-        qreal radian = qDegreesToRadians(-angle);
-
-        QPointF velocity(projectileSpeed * qCos(radian),
-                         projectileSpeed * qSin(radian));
-
-        Projectile* projectile = new Projectile(velocity);
-        projectile->setPos(playerCenter);
-        scene()->addItem(projectile);
-    }
-}
-
-
-
 
 Player::Player(MainWindow* mw, MyScene* scene, QGraphicsItem* parent)
     : QGraphicsPixmapItem(parent), speed(2), dx(0), dy(0), mainScene(scene), mainWindow(mw) {
     setHP(100);
-    shotgunTimer = new QElapsedTimer();
-    shotgunTimer->start();
-
-    // Charger plusieurs sons pour éviter les conflits
-    for (int i = 0; i < 5; ++i) {  // 5 instances suffisent
-        QSoundEffect* sound = new QSoundEffect(this);
-        sound->setSource(QUrl("qrc:/assets/pompe.wav"));
-        sound->setLoopCount(1);
-        sound->setVolume(0.2);
-        pompeSounds.append(sound);
-    }
-    shotgunTimer->start();
+    
+    // Initialisation des armes
+    gun = new Gun(mainScene);
+    shotgun = new Shotgun(mainScene);
+    currentWeapon = gun;
 
     spriteUp = QPixmap(":/assets/nils_rear.png");
     spriteDown = QPixmap(":/assets/nils_front.png");
@@ -94,9 +33,15 @@ Player::Player(MainWindow* mw, MyScene* scene, QGraphicsItem* parent)
     healthBar = new HealthBar(100, this);
 }
 
-
 void Player::keyPressEvent(QKeyEvent* event) {
     pressedKeys.insert(event->key());
+
+    // Gestion du changement d'arme
+    if (event->key() == Qt::Key_X) {
+        switchWeapon(1); // Gun
+    } else if (event->key() == Qt::Key_C) {
+        switchWeapon(2); // Shotgun
+    }
 
     dx = 0;
     dy = 0;
@@ -111,6 +56,19 @@ void Player::keyPressEvent(QKeyEvent* event) {
         dy *= 0.85;
     }
 }
+
+Weapon* Player::getCurrentWeapon() const {
+    return currentWeapon;
+}
+
+void Player::switchWeapon(int weaponType) {
+    if (weaponType == 1) {
+        currentWeapon = gun;
+    } else if (weaponType == 2) {
+        currentWeapon = shotgun;
+    }
+}
+
 
 void Player::keyReleaseEvent(QKeyEvent* event) {
     pressedKeys.remove(event->key());
