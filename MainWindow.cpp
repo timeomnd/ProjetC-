@@ -16,11 +16,6 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent),
     this->setPalette(QColorConstants::Svg::black);
     this->mainView->setDragMode(QGraphicsView::NoDrag);
 
-    //bouton restart
-    restartGame = new QPushButton(tr("Restart"));
-    QToolBar* toolbar = addToolBar(tr("Toolbar"));
-    toolbar->addWidget(restartGame);
-    connect(restartGame, &QPushButton::clicked, this, &MainWindow::slot_restartGame);
 
     //Création du bouton play
     mainLayout = new QVBoxLayout(mainView);

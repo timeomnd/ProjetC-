@@ -56,6 +56,17 @@ void Player::keyPressEvent(QKeyEvent* event) {
         dy *= 0.85;
     }
 }
+void Player::pause() {
+    if (movementTimer && movementTimer->isActive()) {
+        movementTimer->stop();
+    }
+}
+
+void Player::resume() {
+    if (movementTimer && !movementTimer->isActive()) {
+        movementTimer->start(16);
+    }
+}
 
 Weapon* Player::getCurrentWeapon() const {
     return currentWeapon;

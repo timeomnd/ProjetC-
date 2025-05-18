@@ -11,6 +11,7 @@
 #include "MainWindow.hpp"
 #include "Weapons.hpp"
 
+
 class MainWindow;
 class MyScene;
 
@@ -32,6 +33,8 @@ public:
 
     Weapon* getCurrentWeapon() const;
     void switchWeapon(int weaponType);
+    void pause();  // Ajout
+    void resume(); // Ajout
 
 protected:
     void focusOutEvent(QFocusEvent* event) override;

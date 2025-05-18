@@ -224,3 +224,15 @@ Monster::~Monster() {
     delete spriteRight;
     spriteRight = nullptr;
 }
+
+void Monster::pause() {
+    if (timer && timer->isActive()) {
+        timer->stop();
+    }
+}
+
+void Monster::resume() {
+    if (timer && !timer->isActive()) {
+        timer->start(50);
+    }
+}

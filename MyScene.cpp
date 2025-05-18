@@ -2,8 +2,57 @@
 #include <QGraphicsSceneMouseEvent>
 #include <QDebug>
 
+void MyScene::keyPressEvent(QKeyEvent* event) {
+
+    if (event->key() == Qt::Key_Escape) {
+        isPaused = !isPaused;
+        
+        // Gérer les timers
+        if (isPaused) {
+            if (healthbarTimer && healthbarTimer->isActive()) healthbarTimer->stop();
+            if (spawnTimer && spawnTimer->isActive()) spawnTimer->stop();
+            if (scoreTimer && scoreTimer->isActive()) scoreTimer->stop();
+
+            if (player) player->pause(); // Arrêter le joueur
+
+            for (Monster* monster : activeMonsters) {
+                monster->pause();
+            }
+            
+            // Ajouter un texte "PAUSE"
+            if (!pauseText) {
+                pauseText = new QGraphicsTextItem("PAUSE");
+                pauseText->setDefaultTextColor(Qt::black);
+                pauseText->setFont(QFont("Arial", 50, QFont::Bold));
+                addItem(pauseText);
+                pauseText->setPos(width()/2 - pauseText->boundingRect().width()/2, 
+                                height()/2 - pauseText->boundingRect().height()/2);
+            }
+        } 
+        else {
+            if (healthbarTimer) healthbarTimer->start(1);
+            if (spawnTimer) spawnTimer->start(5000);
+            if (scoreTimer) scoreTimer->start(1);
+
+            if (player) player->resume();
+            
+            // Supprimer le texte
+            if (pauseText) {
+                removeItem(pauseText);
+                delete pauseText;
+                pauseText = nullptr;
+            }
+
+            for (Monster* monster : activeMonsters) {
+                monster->resume();
+            }
+        }
+    }
+    QGraphicsScene::keyPressEvent(event);
+}
+
 void MyScene::mousePressEvent(QGraphicsSceneMouseEvent* event) {
-    if (!player || !player->isAlive()) return;
+    if (isPaused || !player || !player->isAlive()) return; 
 
     QPointF targetPos = event->scenePos();
     QPointF playerCenter = player->pos() + QPointF(player->boundingRect().width() / 2, 

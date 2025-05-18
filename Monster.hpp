@@ -37,6 +37,8 @@ public:
     void setDamage(int d);
     void setAttackCooldown(int c);
     void setSpriteSize(int size);
+    void pause();   
+    void resume();  
     virtual ~Monster();
 
     public slots:

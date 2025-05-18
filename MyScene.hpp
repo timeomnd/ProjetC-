@@ -47,9 +47,12 @@ private:
     Player* player = nullptr;
     bool playerInitialized = false;
     QList<Monster*> activeMonsters;
+    bool isPaused = false; // Ajout
+    QGraphicsTextItem* pauseText = nullptr;
 
 protected:
     void mousePressEvent(QGraphicsSceneMouseEvent* event) override;
+    void keyPressEvent(QKeyEvent* event) override;
 };
 
 #endif //MYSCENE_H

@@ -52,3 +52,4 @@ moc_Weapons.o
 moc_NoScrollGraphicsView.o
 moc_NoScrollGraphicsView.cpp
 moc_Weapons.cpp
+NoScrollGraphicsView.o
