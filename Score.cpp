@@ -28,7 +28,12 @@ int ScoreManager::getLastScore() const { return lastScore; }
 int ScoreManager::getBestScore() const { return bestScore; }
 
 void ScoreManager::addPoints(int points) {
-    currentScore += points;
+    if (currentScore + points < 0) {
+        currentScore = 0;
+    }
+    else {
+        currentScore += points;
+    }
     if (scoreText) {
         scoreText->setPlainText(QString("Score: %1").arg(currentScore));
         if (bestScoreText && bestScore < currentScore) {
