@@ -2,7 +2,8 @@
 class MyScene;
 
 
-Monster::Monster(Player* myPlayer, MyScene* mainScene, QObject* parent): QObject(parent), HP(1), speed(2), player(myPlayer), attackCooldown(1000), mainScene(mainScene){
+Monster::Monster(Player* myPlayer, MyScene* mainScene, QObject* parent): QObject(parent), HP(1), speed(2), player(myPlayer),
+attackCooldown(1000), mainScene(mainScene), currentFrameIndex(0), isMoving(false), idleSheet(nullptr), moveSheet(nullptr){
     for (int i = 0; i < 5; ++i) {
         QSoundEffect* sound = new QSoundEffect(this);
         sound->setSource(QUrl("qrc:/assets/hitMonster.wav"));
@@ -53,8 +54,6 @@ void Monster::setHP(int h) {
         HP = h;
     }
 }
-
-
 void Monster::setDamage(int d) {
     damage = d;
 }
@@ -65,43 +64,38 @@ void Monster::setSpriteSize(int size) {
     spriteSize = size;
 }
 void Monster::move() {
-    if (!player) {
-        return;
-    }
+    if (!player) return;
 
-    QPointF monsterPos = this->pos();  // position du monstre
-    QPointF playerPos = player->pos(); // position du joueur
-
-    qreal dx = playerPos.x() - monsterPos.x();  // différence en x
-    qreal dy = playerPos.y() - monsterPos.y();  // différence en y
-
-    // Calcul des distances horizontale et verticale
+    QPointF monsterPos = this->pos();
+    QPointF playerPos = player->pos();
+    qreal dx = playerPos.x() - monsterPos.x();
+    qreal dy = playerPos.y() - monsterPos.y();
     qreal absDx = qAbs(dx);
     qreal absDy = qAbs(dy);
 
-    // Choisir la direction la plus proche
+    QVector<QPixmap*>* currentAnimation = nullptr;
+    isMoving = true;
+
     if (absDx > absDy) {
-        // Déplacement horizontal (gauche/droite)
         if (dx > 0) {
-            // Aller à droite
-            setPixmap(spriteRight->scaled(spriteSize, spriteSize, Qt::KeepAspectRatio, Qt::FastTransformation));
-            this->moveBy(speed, 0);
+            moveBy(speed, 0);
+            currentAnimation = isMoving ? &animationRightMove : &animationRightIdle;
         } else {
-            // Aller à gauche
-            setPixmap(spriteLeft->scaled(spriteSize, spriteSize, Qt::KeepAspectRatio, Qt::FastTransformation));
-            this->moveBy(-speed, 0);
+            moveBy(-speed, 0);
+            currentAnimation = isMoving ? &animationLeftMove : &animationLeftIdle;
         }
     } else {
-        // Déplacement vertical (haut/bas)
         if (dy > 0) {
-            // Aller vers le bas
-            setPixmap(spriteDown->scaled(spriteSize, spriteSize, Qt::KeepAspectRatio, Qt::FastTransformation));
-            this->moveBy(0, speed);
+            moveBy(0, speed);
+            currentAnimation = isMoving ? &animationDownMove : &animationDownIdle;
         } else {
-            // Aller vers le haut
-            setPixmap(spriteUp->scaled(spriteSize, spriteSize, Qt::KeepAspectRatio, Qt::FastTransformation));
-            this->moveBy(0, -speed);
+            moveBy(0, -speed);
+            currentAnimation = isMoving ? &animationUpMove : &animationUpIdle;
         }
+    }
+
+    if (currentAnimation && !currentAnimation->isEmpty()) {
+        setPixmap(*(*currentAnimation)[currentFrameIndex]);
     }
 }
 
@@ -132,101 +126,10 @@ void Monster::attack() {
         }
     }
 }
-
-BigMonster::BigMonster(Player* myPlayer, MyScene* ms, QObject* parent)
-    : Monster(myPlayer, ms, parent)
-{
-    setSpeed(2);
-    setHP(90);
-    setValueScore(500);
-    setDamage(25);
-    setAttackCooldown(2500);
-    setSpriteSize(45);
-    spriteUp = new QPixmap(":/assets/BigMonster_rear.png");
-    spriteDown = new QPixmap(":/assets/BigMonster_front.png");
-    spriteLeft = new QPixmap(":/assets/BigMonster_left.png");
-    spriteRight = new QPixmap(":/assets/BigMonster_right.png");
-    // Vérification des sprites
-    if (spriteUp->isNull() || spriteDown->isNull() || spriteLeft->isNull() || spriteRight->isNull()) {
-        qWarning("Erreur : un ou plusieurs sprites sont introuvables !");
-    }
-    setPixmap(spriteUp->scaled(spriteSize, spriteSize, Qt::KeepAspectRatio, Qt::FastTransformation));
+void Monster::updateAnimationFrame() {
+    currentFrameIndex = (currentFrameIndex + 1) % 4;
 }
 
-SmallMonster::SmallMonster(Player* myPlayer, MyScene* ms, QObject* parent)
-    : Monster(myPlayer, ms, parent)
-{
-    setSpeed(3);
-    setHP(60);
-    setValueScore(250);
-    setDamage(15);
-    setSpriteSize(30);
-    spriteUp = new QPixmap(":/assets/SmallMonster_rear.png");
-    spriteDown = new QPixmap(":/assets/SmallMonster_front.png");
-    spriteLeft = new QPixmap(":/assets/SmallMonster_left.png");
-    spriteRight = new QPixmap(":/assets/SmallMonster_right.png");
-    // Vérification des sprites
-    if (spriteUp->isNull() || spriteDown->isNull() || spriteLeft->isNull() || spriteRight->isNull()) {
-        qWarning("Erreur : un ou plusieurs sprites sont introuvables !");
-    }
-    setPixmap(spriteUp->scaled(spriteSize, spriteSize, Qt::KeepAspectRatio, Qt::FastTransformation));
-}
-ShooterMonster::ShooterMonster(Player* player, MyScene* scene, QObject* parent)
-    : Monster(player, scene, parent)
-{
-    setSpeed(1);
-    setHP(40);
-    setDamage(10);
-    setAttackCooldown(2000);
-    setSpriteSize(35);
-
-    spriteUp = new QPixmap(":/assets/RangedMonster_up.png");
-    spriteDown = new QPixmap(":/assets/RangedMonster_down.png");
-    spriteLeft = new QPixmap(":/assets/RangedMonster_left.png");
-    spriteRight = new QPixmap(":/assets/RangedMonster_right.png");
-
-    if (spriteUp->isNull() || spriteDown->isNull() || spriteLeft->isNull() || spriteRight->isNull()) {
-        qWarning("Erreur : sprites manquants pour RangedMonster !");
-    }
-
-    setPixmap(spriteDown->scaled(spriteSize, spriteSize));
-}
-
-void ShooterMonster::attack() {
-    if (!player) return;
-    if (lastAttackTime.elapsed() >= attackCooldown) {
-        shootAtPlayer();
-        lastAttackTime.restart();
-    }
-}
-
-void ShooterMonster::shootAtPlayer() {
-    QPointF origin = this->pos();
-    QPointF target = player->pos();
-    QPointF direction = (target - origin);
-    qreal length = std::sqrt(direction.x() * direction.x() + direction.y() * direction.y());
-
-    if (length == 0) return;
-
-    QPointF velocity = (direction / length) * 5.0; // 5 pixels/frame
-
-    Projectile* proj = new Projectile(velocity);
-    proj->setPos(this->pos());
-
-    if (this->scene()) {
-        this->scene()->addItem(proj);
-    }
-}
-Monster::~Monster() {
-    delete spriteUp;
-    spriteUp = nullptr;
-    delete spriteDown;
-    spriteDown = nullptr;
-    delete spriteLeft;
-    spriteLeft = nullptr;
-    delete spriteRight;
-    spriteRight = nullptr;
-}
 
 void Monster::pause() {
     if (timer && timer->isActive()) {
@@ -239,3 +142,108 @@ void Monster::resume() {
         timer->start(50);
     }
 }
+
+void Monster::loadAnimations() {
+    if (idleSheet->isNull() || moveSheet->isNull()) {
+        qWarning("Erreur : sprites introuvables !");
+        return;
+    }
+
+    int frameWidth = idleSheet->width() / 4;
+    int frameHeight = idleSheet->height() / 4;
+
+    for (int i = 0; i < 4; ++i) {
+        animationDownIdle.append(new QPixmap(idleSheet->copy(i * frameWidth, 0 * frameHeight, frameWidth, frameHeight)));
+        animationLeftIdle.append(new QPixmap(idleSheet->copy(i * frameWidth, 1 * frameHeight, frameWidth, frameHeight)));
+        animationRightIdle.append(new QPixmap(idleSheet->copy(i * frameWidth, 2 * frameHeight, frameWidth, frameHeight)));
+        animationUpIdle.append(new QPixmap(idleSheet->copy(i * frameWidth, 3 * frameHeight, frameWidth, frameHeight)));
+
+        animationDownMove.append(new QPixmap(moveSheet->copy(i * frameWidth, 0 * frameHeight, frameWidth, frameHeight)));
+        animationLeftMove.append(new QPixmap(moveSheet->copy(i * frameWidth, 1 * frameHeight, frameWidth, frameHeight)));
+        animationRightMove.append(new QPixmap(moveSheet->copy(i * frameWidth, 2 * frameHeight, frameWidth, frameHeight)));
+        animationUpMove.append(new QPixmap(moveSheet->copy(i * frameWidth, 3 * frameHeight, frameWidth, frameHeight)));
+    }
+
+    setPixmap(*animationDownIdle[0]);
+}
+Monster::~Monster() {
+    // Supprimer tous les QPixmap* dans chaque QVector et vider les vecteurs
+    auto clearPixmaps = [](QVector<QPixmap*>& vec) {
+        for (QPixmap* pixmap : vec) {
+            delete pixmap;
+        }
+        vec.clear();
+    };
+
+    clearPixmaps(animationUpIdle);
+    clearPixmaps(animationDownIdle);
+    clearPixmaps(animationLeftIdle);
+    clearPixmaps(animationRightIdle);
+
+    clearPixmaps(animationUpMove);
+    clearPixmaps(animationDownMove);
+    clearPixmaps(animationLeftMove);
+    clearPixmaps(animationRightMove);
+
+    // Supprimer le timer si existant (Qt s'en occupe si parent est bien assigné, mais c'est plus safe)
+    if (animationTimer) {
+        animationTimer->stop();
+        delete animationTimer;
+        animationTimer = nullptr;
+    }
+}
+
+
+GhostMonster::GhostMonster(Player* myPlayer, MyScene* ms, QObject* parent)
+    : Monster(myPlayer, ms, parent)
+{
+    setSpeed(2);
+    setHP(50);
+    setDamage(10);
+    setAttackCooldown(1500);
+    setValueScore(300);
+    idleSheet = new QPixmap(":/assets/ghost_idle.png");
+    moveSheet = new QPixmap(":/assets/ghost_move.png");
+    loadAnimations();
+
+    animationTimer = new QTimer(this);
+    connect(animationTimer, &QTimer::timeout, this, &GhostMonster::updateAnimationFrame);
+    animationTimer->start(150); // 150 ms par frame
+}
+
+BirdMonster::BirdMonster(Player* myPlayer, MyScene* ms, QObject* parent)
+    : Monster(myPlayer, ms, parent)
+{
+    setSpeed(3);
+    setHP(60);
+    setDamage(15);
+    setAttackCooldown(1200);
+    setValueScore(250);
+    idleSheet = new QPixmap(":/assets/bird_idle.png");
+    moveSheet = new QPixmap(":/assets/bird_move.png");
+
+    loadAnimations();
+
+    animationTimer = new QTimer(this);
+    connect(animationTimer, &QTimer::timeout, this, &BirdMonster::updateAnimationFrame);
+    animationTimer->start(150);
+}
+
+DoctorMonster::DoctorMonster(Player* myPlayer, MyScene* ms, QObject* parent)
+    : Monster(myPlayer, ms, parent)
+{
+    setSpeed(3);
+    setHP(60);
+    setDamage(15);
+    setAttackCooldown(1200);
+    setValueScore(250);
+    idleSheet = new QPixmap(":/assets/doctor_idle.png");
+    moveSheet = new QPixmap(":/assets/doctor_move.png");
+
+    loadAnimations();
+
+    animationTimer = new QTimer(this);
+    connect(animationTimer, &QTimer::timeout, this, &DoctorMonster::updateAnimationFrame);
+    animationTimer->start(150);
+}
+

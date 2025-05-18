@@ -25,5 +25,11 @@
         <file>map/isen.tsx</file>
         <file>map/tileset.png</file>
         <file>map/house-furniture.png</file>
+        <file>ghost_idle.png</file>
+        <file>ghost_move.png</file>
+        <file>bird_idle.png</file>
+        <file>bird_move.png</file>
+        <file>doctor_idle.png</file>
+        <file>doctor_move.png</file>
     </qresource>
 </RCC>

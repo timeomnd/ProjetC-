@@ -17,75 +17,85 @@
 #include "bullet.hpp"
 
 class Player;
+class MyScene;
 
 class Monster : public QObject, public QGraphicsPixmapItem {
     Q_OBJECT
-
 public:
-    Monster(Player* myPlayer,MyScene* mainScene, QObject* parent = nullptr);
-
+    Monster(Player* myPlayer, MyScene* mainScene, QObject* parent = nullptr);
+    virtual ~Monster();
 
     int getSpeed() const;
+    int getValueScore() const;
+    void setValueScore(int s);
     int getHP() const;
     int getDamage() const;
     int getAttackCooldown() const;
     int getSpriteSize() const;
-    int getValueScore() const;
-    void setValueScore(int s);
+
     void setSpeed(int s);
     void setHP(int h);
     void setDamage(int d);
     void setAttackCooldown(int c);
     void setSpriteSize(int size);
-    void pause();   
-    void resume();  
-    virtual ~Monster();
 
-    public slots:
-        virtual void move();
-        virtual void attack();
+    virtual void move();
+    void attack();
+    void pause();
+    void resume();
+
 protected:
-    int spriteSize;
-    int HP;
+    Player* player;
     MyScene* mainScene;
-    Player* player; //pointeur vers le joueur
     QTimer* timer;
-    QPixmap* spriteUp;
-    QPixmap* spriteDown;
-    QPixmap* spriteLeft;
-    QPixmap* spriteRight;
-    QVector<QSoundEffect*> hitSounds;
-    int currentHitSoundIndex = 0;
-    QElapsedTimer lastAttackTime;
-    int attackCooldown; // en millisecondes
+
+    int HP;
     int speed;
     int damage;
-    int valueScore;
+    int attackCooldown;
+    int valueScore = 0;
+    int spriteSize = 64;
+
+    QElapsedTimer lastAttackTime;
+
+    QVector<QSoundEffect*> hitSounds;
+    int currentHitSoundIndex = 0;
+
+    QTimer* animationTimer = nullptr;
+    int currentFrameIndex = 0;
+    bool isMoving = false;
+    QPixmap* idleSheet;
+    QPixmap* moveSheet;
+
+    QVector<QPixmap*> animationUpIdle;
+    QVector<QPixmap*> animationDownIdle;
+    QVector<QPixmap*> animationLeftIdle;
+    QVector<QPixmap*> animationRightIdle;
+
+    QVector<QPixmap*> animationUpMove;
+    QVector<QPixmap*> animationDownMove;
+    QVector<QPixmap*> animationLeftMove;
+    QVector<QPixmap*> animationRightMove;
+
+    virtual void loadAnimations();
+    virtual void updateAnimationFrame();
+
+    void clearAnimations();
 };
 
-
-class BigMonster : public Monster {
+class DoctorMonster : public Monster {
 public:
-    BigMonster(Player* myPlayer, MyScene* ms, QObject* parent = nullptr);
+    DoctorMonster(Player* myPlayer, MyScene* ms, QObject* parent = nullptr);
 };
 
-
-class SmallMonster : public Monster {
+class GhostMonster : public Monster {
 public:
-    SmallMonster(Player* myPlayer, MyScene* ms, QObject* parent = nullptr);
+    GhostMonster(Player* myPlayer, MyScene* ms, QObject* parent = nullptr);
 };
 
-class ShooterMonster : public Monster {
+class BirdMonster : public Monster {
 public:
-    ShooterMonster(Player* myPlayer, MyScene* ms, QObject* parent = nullptr);
-
-public:
-    void attack() override;
-
-private:
-    int projectileSpeed = 5;
-    void shootAtPlayer();
+    BirdMonster(Player* myPlayer, MyScene* ms, QObject* parent = nullptr);
 };
 
-
-#endif //MONSTER_H
+#endif // MONSTER_H
