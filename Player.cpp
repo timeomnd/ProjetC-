@@ -14,19 +14,19 @@ Player::Player(MainWindow* mw, MyScene* scene, Map* map, QGraphicsItem* parent)
     : QGraphicsPixmapItem(parent), speed(2), dx(0), dy(0), 
       mainScene(scene), mainWindow(mw), map(map), alive(true) {
     
-    // Initialisation HP et état
-    setHP(INITIAL_HP);
-    healthBar = new HealthBar(INITIAL_HP, this); // Synchronisé avec HP initial
 
-    // Configuration des collisions
+    setHP(INITIAL_HP);
+    healthBar = new HealthBar(INITIAL_HP, this); 
+
+
     setBoundingRegionGranularity(0.85);
 
-    // Initialisation des armes
+
     gun = new Gun(mainScene);
     shotgun = new Shotgun(mainScene);
     currentWeapon = gun;
 
-    // Chargement et pré-redimensionnement des sprites
+
     spriteUp = QPixmap(":/assets/nils_rear.png").scaled(SPRITE_SIZE, SPRITE_SIZE, Qt::KeepAspectRatio, Qt::SmoothTransformation);
     spriteDown = QPixmap(":/assets/nils_front.png").scaled(SPRITE_SIZE, SPRITE_SIZE, Qt::KeepAspectRatio, Qt::SmoothTransformation);
     spriteLeft = QPixmap(":/assets/nils_left.png").scaled(SPRITE_SIZE, SPRITE_SIZE, Qt::KeepAspectRatio, Qt::SmoothTransformation);
@@ -36,17 +36,17 @@ Player::Player(MainWindow* mw, MyScene* scene, Map* map, QGraphicsItem* parent)
         qWarning("Erreur : un ou plusieurs sprites sont introuvables !");
     }
 
-    setPixmap(spriteDown); // Sprite initial
+    setPixmap(spriteDown);
     setFlag(QGraphicsItem::ItemIsFocusable);
     setFocus();
 
-    // Configuration du timer de mouvement
+
     movementTimer = new QTimer(this);
     connect(movementTimer, &QTimer::timeout, this, &Player::updatePosition);
     movementTimer->start(MOVEMENT_TIMER_INTERVAL_MS);
 }
 
-// --- Collisions ---
+
 QRectF Player::getCollisionBounds() const {
     const QRectF spriteBounds = boundingRect();
     const qreal offsetX = (spriteBounds.width() - COLLISION_BOX_SIZE) / 2;
@@ -58,7 +58,7 @@ QRectF Player::getCollisionBounds() const {
 bool Player::checkTileCollision(const QPointF& newPos) const {
     QRectF playerBounds = getCollisionBounds().translated(newPos - pos());
     
-    // Vérifie aussi le centre du joueur
+
     const QPointF centerPoint = playerBounds.center();
     const QPoint centerTile(floor(centerPoint.x() / 16), floor(centerPoint.y() / 16));
     
@@ -66,7 +66,7 @@ bool Player::checkTileCollision(const QPointF& newPos) const {
         return true;
     }
 
-    // Vérification des 4 coins
+
     const QPointF points[4] = {
         playerBounds.topLeft(),
         playerBounds.topRight(),
@@ -83,7 +83,7 @@ bool Player::checkTileCollision(const QPointF& newPos) const {
     return false;
 }
 
-// --- Gestion des inputs ---
+
 void Player::updateMovementVector() {
     dx = 0;
     dy = 0;
@@ -93,7 +93,7 @@ void Player::updateMovementVector() {
     if (pressedKeys.contains(Qt::Key_Z)) dy -= speed;
     if (pressedKeys.contains(Qt::Key_S)) dy += speed;
 
-    // Réduction diagonale
+
     if (dx != 0 && dy != 0) {
         dx *= DIAGONAL_SPEED_FACTOR;
         dy *= DIAGONAL_SPEED_FACTOR;
@@ -103,7 +103,7 @@ void Player::updateMovementVector() {
 void Player::keyPressEvent(QKeyEvent* event) {
     pressedKeys.insert(event->key());
 
-    // Changement d'arme
+
     switch(event->key()) {
         case Qt::Key_X: switchWeapon(1); break;
         case Qt::Key_C: switchWeapon(2); break;
@@ -118,39 +118,37 @@ void Player::keyReleaseEvent(QKeyEvent* event) {
     updateMovementVector();
 }
 
-// --- Mouvement et rendu ---
+
 void Player::updatePosition() {
     QPointF movement(dx, dy);
     QPointF newPos = pos() + movement;
 
-    // Vérification des collisions avec gestion du tunneling
     bool collisionX = checkTileCollision(QPointF(newPos.x(), pos().y()));
     bool collisionY = checkTileCollision(QPointF(pos().x(), newPos.y()));
 
-    // Déplacement pas-à-pas pour les diagonaux
     if(dx != 0 && dy != 0) {
-        // Mouvement horizontal d'abord
+
         QPointF tempPos = pos() + QPointF(dx, 0);
         if(!checkTileCollision(tempPos)) {
             setX(tempPos.x());
         }
 
-        // Mouvement vertical ensuite
+
         tempPos = pos() + QPointF(0, dy);
         if(!checkTileCollision(tempPos)) {
             setY(tempPos.y());
         }
     } else {
-        // Déplacement simple si mouvement axial
+
         if(!collisionX) setX(newPos.x());
         if(!collisionY) setY(newPos.y());
     }
 
 
-    if (dx < 0)       setPixmap(spriteLeft);
-    else if (dx > 0)  setPixmap(spriteRight);
-    else if (dy < 0)  setPixmap(spriteUp);
-    else if (dy > 0)  setPixmap(spriteDown);
+    if (dx < 0) setPixmap(spriteLeft);
+    else if (dx > 0) setPixmap(spriteRight);
+    else if (dy < 0) setPixmap(spriteUp);
+    else if (dy > 0) setPixmap(spriteDown);
 
 
     if (mainWindow->getView()) mainWindow->getView()->centerOn(this);
@@ -203,8 +201,6 @@ void Player::pause() {
 void Player::resume() { 
     if (movementTimer) movementTimer->start(MOVEMENT_TIMER_INTERVAL_MS); 
 }
-
-
 
 Player::~Player() {
     delete gun;
