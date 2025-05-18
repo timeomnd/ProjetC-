@@ -14,12 +14,13 @@
 
 class MainWindow;
 class MyScene;
+class Map; 
 
 class Player : public QObject, public QGraphicsPixmapItem {
     Q_OBJECT
 
 public:
-    Player(MainWindow* mw, MyScene* scene, QGraphicsItem* parent = nullptr);
+    Player(MainWindow* mw, MyScene* scene, Map* map, QGraphicsItem* parent = nullptr);
     void keyPressEvent(QKeyEvent* event) override;
     void keyReleaseEvent(QKeyEvent* event) override;
     void setSpeed(int s);
@@ -28,17 +29,22 @@ public:
     int getSpeed() const;
     int getHP() const;
     bool isAlive() const;
+    
     HealthBar* getHealthBar() const;
     virtual ~Player();
 
     Weapon* getCurrentWeapon() const;
     void switchWeapon(int weaponType);
-    void pause();  // Ajout
-    void resume(); // Ajout
+    void pause();  
+    void resume(); 
+
+    bool checkTileCollision(const QPointF& newPos) const;
+    QRectF getCollisionBounds() const;
+    void updateMovementVector();
 
 protected:
     void focusOutEvent(QFocusEvent* event) override;
-
+    
 private slots:
     void updatePosition();
 
@@ -57,6 +63,9 @@ private:
     QPixmap spriteDown;
     QPixmap spriteLeft;
     QPixmap spriteRight;
+    Map* map;
+    
+
     
     // Armes
     Weapon* currentWeapon;

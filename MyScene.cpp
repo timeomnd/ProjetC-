@@ -96,14 +96,13 @@ MyScene::MyScene(NoScrollGraphicsView* mainView, MainWindow* mw, QObject* parent
 
 void MyScene::initMap() {
     if (!map) {
-        map = new Map(this, ":/assets/map.json");
+        map = new Map(this, ":/assets/map/map.json");
     }
 }
 
 void MyScene::initPlayer() {
     if (!player) {
-        player = new Player(mainWindow, this);
-        player->setMainWindow(mainWindow);
+        player = new Player(mainWindow, this, map);
         addItem(player);
         player->setPos(sceneRect().center());
         addItem(player->getHealthBar());

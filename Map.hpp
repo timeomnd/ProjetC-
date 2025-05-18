@@ -12,6 +12,7 @@ class Map : public QObject {
 public:
     explicit Map(QGraphicsScene* scene, const QString& jsonPath, QObject* parent = nullptr);
     const QVector<QRectF>& getCollisionRects() const;
+    
 
 private:
     QGraphicsScene* scene;

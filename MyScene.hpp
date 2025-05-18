@@ -8,6 +8,7 @@
 #include <QPointF>
 #include "MainWindow.hpp"
 #include "Score.hpp"
+
 class MainWindow;
 class Player;
 class Monster;

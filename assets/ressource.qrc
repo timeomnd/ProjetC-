@@ -18,13 +18,12 @@
         <file>SmallMonster_right.png</file>
         <file>hitMonster.wav</file>
         <file>gameOverSound.wav</file>
-        <file>map.json</file>
-        <file>all_in_one.png</file>
-        <file>mega-pack_v1.0.1/mega-pack_v1.1/house-walls-floors.png</file>
-        <file>mega-pack_v1.0.1/mega-pack_v1.1/ceiling-border.png</file>
-        <file>mega-pack_v1.0.1/mega-pack_v1.1/house-furniture.png</file>
-        <file>mega-pack_v1.0.1/mega-pack_v1.1/house-objects.png</file>
         <file>GameOverBackground.png</file>
         <file>pompe.wav</file>
+        <file>map/map.json</file>
+        <file>map/house.tsx</file>
+        <file>map/isen.tsx</file>
+        <file>map/tileset.png</file>
+        <file>map/house-furniture.png</file>
     </qresource>
 </RCC>

@@ -125,6 +125,33 @@ void Map::loadMapFromJson(const QString& jsonPath) {
             item->setPos(x, y);
         }
     }
+
+    for (const QJsonValue& val : layers) {
+        QJsonObject layer = val.toObject();
+        
+        if (layer["type"].toString() == "objectgroup" && layer["name"].toString() == "coli") {
+            qDebug() << "🛑 Chargement des collisions";
+            QJsonArray objects = layer["objects"].toArray();
+            
+            for (const QJsonValue& objVal : objects) {
+                QJsonObject obj = objVal.toObject();
+                QRectF rect(
+                    obj["x"].toDouble(),
+                    obj["y"].toDouble(),
+                    obj["width"].toDouble(),
+                    obj["height"].toDouble()
+                );
+                collisionRects.append(rect);
+                
+                // Optionnel : Visualisation des collisions
+                auto collider = new QGraphicsRectItem(rect);
+                collider->setPen(QPen(Qt::red));
+                collider->setOpacity(0.3);
+                scene->addItem(collider);
+            }
+        }
+    }
+    
     qDebug() << "✅ Chargement de la map terminé.";
     scene->setSceneRect(0, 0, width * tileWidth, height * tileHeight);
 }
