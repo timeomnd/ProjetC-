@@ -116,6 +116,9 @@ void Monster::attack() {
                 if (player->getHealthBar()) {
                     player->getHealthBar()->updateHP(newHP);
                 }
+                if (mainScene->getScoreManager()) {
+                    mainScene->getScoreManager()->addPoints(-(this->getDamage())*20); // on enlève des points au score si on se fait toucher
+                }
                 qDebug() << "Attaque ! HP joueur :" << player->getHP();
                 QSoundEffect* currentSound = hitSounds[currentHitSoundIndex];
                 if (currentSound->status() == QSoundEffect::Ready) {
