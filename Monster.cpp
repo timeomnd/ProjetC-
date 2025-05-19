@@ -66,38 +66,42 @@ void Monster::setSpriteSize(int size) {
 void Monster::move() {
     if (!player) return;
 
-    QPointF monsterPos = this->pos();
-    QPointF playerPos = player->pos();
-    qreal dx = playerPos.x() - monsterPos.x();
-    qreal dy = playerPos.y() - monsterPos.y();
-    qreal absDx = qAbs(dx);
-    qreal absDy = qAbs(dy);
+    // Positions centrées (si sprites pas centrés, tu peux ajuster avec boundingRect()/2)
+    QPointF monsterCenter = this->sceneBoundingRect().center();
+    QPointF playerCenter = player->sceneBoundingRect().center();
 
+    qreal dx = playerCenter.x() - monsterCenter.x();
+    qreal dy = playerCenter.y() - monsterCenter.y();
+
+    qreal distance = std::sqrt(dx * dx + dy * dy);
+
+    // Si assez proche, on ne bouge plus
+    if (distance < 1.0) return;
+
+    // Normalisation du vecteur direction
+    qreal vx = dx / distance;
+    qreal vy = dy / distance;
+
+    // Déplacement
+    moveBy(vx * speed, vy * speed);
+
+    // Détermination de l'animation
     QVector<QPixmap*>* currentAnimation = nullptr;
-    isMoving = true;
-
-    if (absDx > absDy) {
-        if (dx > 0) {
-            moveBy(speed, 0);
-            currentAnimation = isMoving ? &animationRightMove : &animationRightIdle;
-        } else {
-            moveBy(-speed, 0);
-            currentAnimation = isMoving ? &animationLeftMove : &animationLeftIdle;
-        }
+    if (std::abs(dx) > std::abs(dy)) {
+        currentAnimation = dx > 0 ? &animationRightMove : &animationLeftMove;
     } else {
-        if (dy > 0) {
-            moveBy(0, speed);
-            currentAnimation = isMoving ? &animationDownMove : &animationDownIdle;
-        } else {
-            moveBy(0, -speed);
-            currentAnimation = isMoving ? &animationUpMove : &animationUpIdle;
-        }
+        currentAnimation = dy > 0 ? &animationDownMove : &animationUpMove;
     }
 
+    // Animation
     if (currentAnimation && !currentAnimation->isEmpty()) {
+        currentFrameIndex = (currentFrameIndex + 1) % currentAnimation->size();
         setPixmap(*(*currentAnimation)[currentFrameIndex]);
     }
 }
+
+
+
 
 
 void Monster::attack() {
@@ -258,9 +262,6 @@ void GhostMonster::resetSpeed() {
 QTimer* GhostMonster::getSlowTimer() const {
     return slowTimer;
 }
-
-
-
 BirdMonster::BirdMonster(Player* myPlayer, MyScene* ms, QObject* parent)
     : Monster(myPlayer, ms, parent)
 {

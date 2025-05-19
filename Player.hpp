@@ -14,7 +14,7 @@
 
 class MainWindow;
 class MyScene;
-class Map; 
+class Map;
 
 class Player : public QObject, public QGraphicsPixmapItem {
     Q_OBJECT
@@ -31,14 +31,14 @@ public:
     bool isAlive() const;
     void setInitalSpeed(int s);
     int getInitalSpeed() const;
-    
+
     HealthBar* getHealthBar() const;
     virtual ~Player();
 
     Weapon* getCurrentWeapon() const;
     void switchWeapon(int weaponType);
-    void pause();  
-    void resume(); 
+    void pause();
+    void resume();
 
     bool checkTileCollision(const QPointF& newPos) const;
     QRectF getCollisionBounds() const;
@@ -46,7 +46,7 @@ public:
 
 protected:
     void focusOutEvent(QFocusEvent* event) override;
-    
+
 private slots:
     void updatePosition();
 
@@ -67,9 +67,9 @@ private:
     QPixmap spriteLeft;
     QPixmap spriteRight;
     Map* map;
-    
 
-    
+
+
     // Armes
     Weapon* currentWeapon;
     Gun* gun;

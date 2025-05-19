@@ -11,12 +11,12 @@ const int COLLISION_BOX_SIZE = 4;
 const int MOVEMENT_TIMER_INTERVAL_MS = 16; // ~60 FPS
 
 Player::Player(MainWindow* mw, MyScene* scene, Map* map, QGraphicsItem* parent)
-    : QGraphicsPixmapItem(parent), speed(2), dx(0), dy(0), 
+    : QGraphicsPixmapItem(parent), speed(2), dx(0), dy(0),
       mainScene(scene), mainWindow(mw), map(map), alive(true), initialSpeed(speed) {
-    
+
 
     setHP(INITIAL_HP);
-    healthBar = new HealthBar(INITIAL_HP, this); 
+    healthBar = new HealthBar(INITIAL_HP, this);
 
 
     setBoundingRegionGranularity(0.85);
@@ -51,17 +51,17 @@ QRectF Player::getCollisionBounds() const {
     const QRectF spriteBounds = boundingRect();
     const qreal offsetX = (spriteBounds.width() - COLLISION_BOX_SIZE) / 2;
     const qreal offsetY = (spriteBounds.height() - COLLISION_BOX_SIZE) / 2;
-    
+
     return QRectF(pos().x() + offsetX, pos().y() + offsetY, COLLISION_BOX_SIZE, COLLISION_BOX_SIZE);
 }
 
 bool Player::checkTileCollision(const QPointF& newPos) const {
     QRectF playerBounds = getCollisionBounds().translated(newPos - pos());
-    
+
 
     const QPointF centerPoint = playerBounds.center();
     const QPoint centerTile(floor(centerPoint.x() / 16), floor(centerPoint.y() / 16));
-    
+
     if(map->getCollisionRects().contains(QRectF(centerTile.x() * 16, centerTile.y() * 16, 16, 16))) {
         return true;
     }
@@ -199,12 +199,12 @@ void Player::switchWeapon(int weaponType) {
 }
 
 
-void Player::pause() { 
-    if (movementTimer) movementTimer->stop(); 
+void Player::pause() {
+    if (movementTimer) movementTimer->stop();
 }
 
-void Player::resume() { 
-    if (movementTimer) movementTimer->start(MOVEMENT_TIMER_INTERVAL_MS); 
+void Player::resume() {
+    if (movementTimer) movementTimer->start(MOVEMENT_TIMER_INTERVAL_MS);
 }
 int Player::getSpeed() const {
     return speed;
