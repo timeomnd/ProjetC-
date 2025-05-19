@@ -49,10 +49,12 @@ void ScoreManager::saveScore() {
     lastScore = currentScore;
     if (currentScore > bestScore) {
         bestScore = currentScore;
-        writeBestScore();
     }
+    writeBestScore();  // toujours l'appeler
+    QCoreApplication::processEvents();
     resetCurrentScore();
 }
+
 void ScoreManager::loadBestScore() {
     QFile file("score.txt");
     if (file.open(QIODevice::ReadOnly)) {

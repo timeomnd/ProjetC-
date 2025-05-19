@@ -93,6 +93,7 @@ class GhostMonster : public Monster {
     Q_OBJECT
 public:
     GhostMonster(Player* myPlayer, MyScene* ms, QObject* parent = nullptr);
+    ~GhostMonster() override;
     void attack() override;
     void slow();
     QTimer* getSlowTimer() const;

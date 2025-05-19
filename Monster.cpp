@@ -111,7 +111,7 @@ void Monster::attack() {
                     player->getHealthBar()->updateHP(newHP);
                 }
                 if (mainScene->getScoreManager()) {
-                    mainScene->getScoreManager()->addPoints(-(this->getDamage())*20); // on enlève des points au score si on se fait toucher
+                    mainScene->getScoreManager()->addPoints(-(this->getDamage())*3); // on enlève des points au score si on se fait toucher
                 }
                 qDebug() << "Attaque ! HP joueur :" << player->getHP();
                 QSoundEffect* currentSound = hitSounds[currentHitSoundIndex];
@@ -211,6 +211,9 @@ GhostMonster::GhostMonster(Player* myPlayer, MyScene* ms, QObject* parent)
     connect(animationTimer, &QTimer::timeout, this, &GhostMonster::updateAnimationFrame);
     animationTimer->start(150); // 150 ms par frame
 }
+GhostMonster::~GhostMonster(){
+    resetSpeed();
+}
 void GhostMonster::attack(){
     if (!player) return;
     if (this->scene()) {
@@ -222,7 +225,7 @@ void GhostMonster::attack(){
                     player->getHealthBar()->updateHP(newHP);
                 }
                 if (mainScene->getScoreManager()) {
-                    mainScene->getScoreManager()->addPoints(-(this->getDamage())*20); // on enlève des points au score si on se fait toucher
+                    mainScene->getScoreManager()->addPoints(-(this->getDamage())*3); // on enlève des points au score si on se fait toucher
                 }
                 slow();
                 qDebug() << "Attaque ! HP joueur :" << player->getHP();
@@ -249,6 +252,7 @@ void GhostMonster::slow() {
 void GhostMonster::resetSpeed() {
     if (player->getSpeed()!=player->getInitalSpeed()) {
         player->setSpeed(player->getInitalSpeed());
+        slowTimer->stop();
     }
 }
 QTimer* GhostMonster::getSlowTimer() const {
