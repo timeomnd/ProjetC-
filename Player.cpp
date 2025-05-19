@@ -12,7 +12,7 @@ const int MOVEMENT_TIMER_INTERVAL_MS = 16; // ~60 FPS
 
 Player::Player(MainWindow* mw, MyScene* scene, Map* map, QGraphicsItem* parent)
     : QGraphicsPixmapItem(parent), speed(2), dx(0), dy(0), 
-      mainScene(scene), mainWindow(mw), map(map), alive(true) {
+      mainScene(scene), mainWindow(mw), map(map), alive(true), initialSpeed(speed) {
     
 
     setHP(INITIAL_HP);
@@ -165,7 +165,12 @@ void Player::setHP(int h) {
         if (mainWindow) mainWindow->die();
     }
 }
-
+void Player::setInitalSpeed(int s) {
+    initialSpeed = s;
+}
+int Player::getInitalSpeed() const {
+    return initialSpeed;
+}
 
 int Player::getHP() const {
     return HP;
@@ -200,6 +205,13 @@ void Player::pause() {
 
 void Player::resume() { 
     if (movementTimer) movementTimer->start(MOVEMENT_TIMER_INTERVAL_MS); 
+}
+int Player::getSpeed() const {
+    return speed;
+}
+
+void Player::setSpeed(int newSpeed) {
+    speed = newSpeed;
 }
 
 Player::~Player() {

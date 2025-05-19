@@ -29,6 +29,8 @@ public:
     int getSpeed() const;
     int getHP() const;
     bool isAlive() const;
+    void setInitalSpeed(int s);
+    int getInitalSpeed() const;
     
     HealthBar* getHealthBar() const;
     virtual ~Player();
@@ -50,6 +52,7 @@ private slots:
 
 private:
     int speed;
+    int initialSpeed;
     int HP;
     int dx;
     int dy;

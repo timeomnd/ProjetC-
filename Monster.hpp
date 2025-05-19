@@ -40,7 +40,7 @@ public:
     void setSpriteSize(int size);
 
     virtual void move();
-    void attack();
+    virtual void attack();
     void pause();
     void resume();
 
@@ -84,16 +84,26 @@ protected:
 };
 
 class DoctorMonster : public Monster {
+    Q_OBJECT
 public:
     DoctorMonster(Player* myPlayer, MyScene* ms, QObject* parent = nullptr);
 };
 
 class GhostMonster : public Monster {
+    Q_OBJECT
 public:
     GhostMonster(Player* myPlayer, MyScene* ms, QObject* parent = nullptr);
+    void attack() override;
+    void slow();
+    QTimer* getSlowTimer() const;
+    public slots :
+    void resetSpeed();
+private:
+    QTimer* slowTimer;
 };
 
 class BirdMonster : public Monster {
+    Q_OBJECT
 public:
     BirdMonster(Player* myPlayer, MyScene* ms, QObject* parent = nullptr);
 };

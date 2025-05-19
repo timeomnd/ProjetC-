@@ -199,9 +199,10 @@ GhostMonster::GhostMonster(Player* myPlayer, MyScene* ms, QObject* parent)
 {
     setSpeed(2);
     setHP(50);
-    setDamage(10);
+    setDamage(5);
     setAttackCooldown(1500);
     setValueScore(300);
+    slowTimer = new QTimer(this);
     idleSheet = new QPixmap(":/assets/ghost_idle.png");
     moveSheet = new QPixmap(":/assets/ghost_move.png");
     loadAnimations();
@@ -210,6 +211,51 @@ GhostMonster::GhostMonster(Player* myPlayer, MyScene* ms, QObject* parent)
     connect(animationTimer, &QTimer::timeout, this, &GhostMonster::updateAnimationFrame);
     animationTimer->start(150); // 150 ms par frame
 }
+void GhostMonster::attack(){
+    if (!player) return;
+    if (this->scene()) {
+        if (this->collidesWithItem(player)) {
+            if (lastAttackTime.elapsed() >= attackCooldown) {
+                int newHP = player->getHP() - damage;
+                player->setHP(newHP);
+                if (player->getHealthBar()) {
+                    player->getHealthBar()->updateHP(newHP);
+                }
+                if (mainScene->getScoreManager()) {
+                    mainScene->getScoreManager()->addPoints(-(this->getDamage())*20); // on enlève des points au score si on se fait toucher
+                }
+                slow();
+                qDebug() << "Attaque ! HP joueur :" << player->getHP();
+                QSoundEffect* currentSound = hitSounds[currentHitSoundIndex];
+                if (currentSound->status() == QSoundEffect::Ready) {
+                    currentSound->stop(); // redémarre depuis le début proprement
+                    currentSound->play();
+                }
+                currentHitSoundIndex = (currentHitSoundIndex + 1) % hitSounds.size();
+                lastAttackTime.restart(); // reset du cooldown
+            }
+        }
+    }
+}
+void GhostMonster::slow() {
+    if (player->getSpeed()!=player->getInitalSpeed()) {
+        return;
+    }
+    else {
+        player->setSpeed(player->getSpeed()*0.75);
+        slowTimer->start(3500); // 3.5 secondes de ralentissement
+        connect(slowTimer, &QTimer::timeout, this,&GhostMonster::resetSpeed);  }
+}
+void GhostMonster::resetSpeed() {
+    if (player->getSpeed()!=player->getInitalSpeed()) {
+        player->setSpeed(player->getInitalSpeed());
+    }
+}
+QTimer* GhostMonster::getSlowTimer() const {
+    return slowTimer;
+}
+
+
 
 BirdMonster::BirdMonster(Player* myPlayer, MyScene* ms, QObject* parent)
     : Monster(myPlayer, ms, parent)
