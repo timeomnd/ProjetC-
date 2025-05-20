@@ -224,7 +224,6 @@ void GhostMonster::attack() {
                 player->setHP(newHP);
                 disableShoot();
                 if (player->getCanShoot()) {
-
                 }
                 if (player->getHealthBar()) {
                     player->getHealthBar()->updateHP(newHP);
@@ -348,6 +347,18 @@ void SlimeMonster::loadAnimations() {
     } else {
         qWarning("Erreur : slime_jump introuvable !");
     }
+    // Chargement des sprites d'attaque
+    attackSheet = new QPixmap(":/assets/slime_attack.png");
+    if (!attackSheet->isNull()) {
+        int attackFrameWidth = attackSheet->width() / 4;
+        int attackFrameHeight = attackSheet->height();
+
+        for (int i = 0; i < 4; ++i) {
+            animationAttack.append(new QPixmap(attackSheet->copy(i * attackFrameWidth, 0, attackFrameWidth, attackFrameHeight)));
+        }
+    } else {
+        qWarning("Erreur : slime_attack introuvable !");
+    }
 
     setPixmap(*animationIdle[0]);
 }
@@ -417,27 +428,52 @@ void SlimeMonster::jump() {
 
     jumpTimer->start(100); // 100ms par frame → saut total ~800ms
 }
-void SlimeMonster::attack(){
+void SlimeMonster::attack() {
     if (!player) return;
     if (this->scene()) {
         if (this->collidesWithItem(player)) {
             if (lastAttackTime.elapsed() >= attackCooldown) {
+
+                // === Animation d'attaque ===
+                if (!animationAttack.isEmpty()) {
+                    QTimer* attackAnimationTimer = new QTimer(this);
+                    int* attackFrameIndex = new int(0); // index temporaire
+
+                    connect(attackAnimationTimer, &QTimer::timeout, this, [=]() mutable {
+                        if (*attackFrameIndex < animationAttack.size()) {
+                            setPixmap(*animationAttack[*attackFrameIndex]);
+                            (*attackFrameIndex)++;
+                        } else {
+                            attackAnimationTimer->stop();
+                            attackAnimationTimer->deleteLater();
+                            delete attackFrameIndex;
+                        }
+                    });
+
+                    attackAnimationTimer->start(100); // 100 ms par frame (0.4s total)
+                }
+
+                // === Infliger des dégâts ===
                 int newHP = player->getHP() - damage;
                 player->setHP(newHP);
                 if (player->getHealthBar()) {
                     player->getHealthBar()->updateHP(newHP);
                 }
                 if (mainScene->getScoreManager()) {
-                    mainScene->getScoreManager()->addPoints(-(this->getDamage())*3); // on enlève des points au score si on se fait toucher
+                    mainScene->getScoreManager()->addPoints(-(this->getDamage()) * 3);
                 }
-                slow();
+
+                slow(); // applique le ralentissement
                 qDebug() << "Attaque ! HP joueur :" << player->getHP();
+
+                // Jouer le son
                 QSoundEffect* currentSound = hitSounds[currentHitSoundIndex];
                 if (currentSound->status() == QSoundEffect::Ready) {
-                    currentSound->stop(); // redémarre depuis le début proprement
+                    currentSound->stop();
                     currentSound->play();
                 }
                 currentHitSoundIndex = (currentHitSoundIndex + 1) % hitSounds.size();
+
                 lastAttackTime.restart(); // reset du cooldown
             }
         }
@@ -480,5 +516,8 @@ SlimeMonster::~SlimeMonster() {
     if (jumpTimer) delete jumpTimer;
     if (jumpCooldownTimer) delete jumpCooldownTimer;
     if (slowTimer) delete slowTimer;
+    clearPixmaps(animationAttack);
+    if (attackSheet) delete attackSheet;
+
 }
 

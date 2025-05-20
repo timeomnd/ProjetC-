@@ -27,5 +27,6 @@
         <file>slime_move_left.png</file>
         <file>slime_move_right.png</file>
         <file>slime_jump.png</file>
+        <file>slime_attack.png</file>
     </qresource>
 </RCC>

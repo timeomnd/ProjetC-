@@ -120,6 +120,8 @@ private:
     QVector<QPixmap*> animationIdle;
     QPixmap* moveLeftSheet;
     QPixmap* moveRightSheet;
+    QPixmap* attackSheet;
+    QVector<QPixmap*> animationAttack;
     QVector<QPixmap*> animationJumpUp;
     QVector<QPixmap*> animationJumpDown;
     QPixmap* jumpSheet;
