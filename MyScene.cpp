@@ -59,7 +59,9 @@ void MyScene::mousePressEvent(QGraphicsSceneMouseEvent* event) {
                                                  player->boundingRect().height() / 2);
 
     if (event->button() == Qt::LeftButton) {
-        player->getCurrentWeapon()->shoot(playerCenter, targetPos);
+        if (player->getCanShoot()) {
+            player->getCurrentWeapon()->shoot(playerCenter, targetPos);
+        }
     }
     
     QGraphicsScene::mousePressEvent(event);
@@ -149,7 +151,7 @@ void MyScene::spawnMonster() {
     if (!valid) spawnPos = QPointF(0, 0);
 
     Monster* monster = nullptr;
-    int rand = QRandomGenerator::global()->bounded(1, 4);
+    int rand = QRandomGenerator::global()->bounded(1, 5);
     if (rand == 1) {
         monster = new DoctorMonster(player, this);
     } else if (rand == 2) {
@@ -157,6 +159,9 @@ void MyScene::spawnMonster() {
     }
     else if (rand == 3) {
         monster = new GhostMonster(player, this);
+    }
+    else if (rand == 4) {
+        monster = new SlimeMonster(player, this);
     }
     if (monster) {
         monster->setPos(spawnPos);

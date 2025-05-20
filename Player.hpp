@@ -43,6 +43,8 @@ public:
     bool checkTileCollision(const QPointF& newPos) const;
     QRectF getCollisionBounds() const;
     void updateMovementVector();
+    void setCanShoot(bool c);
+    bool getCanShoot() const;
 
     void toggleCollisionBox(bool show);
     void paint(QPainter* painter, const QStyleOptionGraphicsItem* option, QWidget* widget) override;
@@ -59,6 +61,7 @@ private:
     int HP;
     int dx;
     int dy;
+    bool canShoot = true;
     bool alive = true;
     HealthBar* healthBar;
     MainWindow* mainWindow = nullptr;

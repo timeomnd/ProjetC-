@@ -69,8 +69,6 @@ bool Player::checkTileCollision(const QPointF& newPos) const {
     }
     return false;
 }
-
-
 void Player::updateMovementVector() {
     dx = 0;
     dy = 0;
@@ -106,7 +104,6 @@ void Player::keyReleaseEvent(QKeyEvent* event) {
     pressedKeys.remove(event->key());
     updateMovementVector();
 }
-
 
 void Player::updatePosition() {
      QPointF newPos = pos() + QPointF(dx, dy);
@@ -210,6 +207,12 @@ void Player::setSpeed(int newSpeed) {
 Player::~Player() {
     delete gun;
     delete shotgun;
+}
+void Player::setCanShoot(bool c) {
+    canShoot = c;
+}
+bool Player::getCanShoot() const {
+    return canShoot;
 }
 
 

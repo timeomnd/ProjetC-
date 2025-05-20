@@ -7,15 +7,7 @@
         <file>nils_left.png</file>
         <file>nils_right.png</file>
         <file>nils_rear.png</file>
-        <file>BigMonster_front.png</file>
-        <file>BigMonster_rear.png</file>
-        <file>BigMonster_left.png</file>
-        <file>BigMonster_right.png</file>
         <file>bullet.png</file>
-        <file>SmallMonster_front.png</file>
-        <file>SmallMonster_rear.png</file>
-        <file>SmallMonster_left.png</file>
-        <file>SmallMonster_right.png</file>
         <file>hitMonster.wav</file>
         <file>gameOverSound.wav</file>
         <file>GameOverBackground.png</file>
@@ -31,5 +23,10 @@
         <file>bird_move.png</file>
         <file>doctor_idle.png</file>
         <file>doctor_move.png</file>
+        <file>slime_idle.png</file>
+        <file>slime_move_left.png</file>
+        <file>slime_move_right.png</file>
+        <file>slime_jump.png</file>
+        <file>slime_attack.png</file>
     </qresource>
 </RCC>
