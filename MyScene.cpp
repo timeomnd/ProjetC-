@@ -151,7 +151,7 @@ void MyScene::spawnMonster() {
     if (!valid) spawnPos = QPointF(0, 0);
 
     Monster* monster = nullptr;
-    int rand = QRandomGenerator::global()->bounded(1, 5);
+    int rand = QRandomGenerator::global()->bounded(1, 2);
     if (rand == 1) {
         monster = new DoctorMonster(player, this);
     } else if (rand == 2) {

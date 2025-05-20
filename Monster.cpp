@@ -298,6 +298,110 @@ DoctorMonster::DoctorMonster(Player* myPlayer, MyScene* ms, QObject* parent)
     connect(animationTimer, &QTimer::timeout, this, &DoctorMonster::updateAnimationFrame);
     animationTimer->start(150);
 }
+void DoctorMonster::setIsMoving(bool m) {
+    isMoving = m;
+}
+bool DoctorMonster::getIsMoving() const {
+    return isMoving;
+}
+void DoctorMonster::move() {
+    if (!player) return;
+    setIsMoving(true);
+    QPointF monsterCenter = this->sceneBoundingRect().center();
+    QPointF playerCenter = player->sceneBoundingRect().center();
+
+    qreal dx = playerCenter.x() - monsterCenter.x();
+    qreal dy = playerCenter.y() - monsterCenter.y();
+
+    qreal distance = std::sqrt(dx * dx + dy * dy);
+
+    const qreal minDistance = 125.0; // Distance à partir de laquelle le monstre s'arrête
+    if (distance > minDistance) {
+        setIsMoving(false);
+        // Normalisation du vecteur direction
+        qreal vx = dx / distance;
+        qreal vy = dy / distance;
+
+        moveBy(vx * speed, vy * speed);
+
+        // Détermination de l'animation en mouvement
+        QVector<QPixmap*>* currentAnimation = nullptr;
+        if (std::abs(dx) > std::abs(dy)) {
+            currentAnimation = dx > 0 ? &animationRightMove : &animationLeftMove;
+        } else {
+            currentAnimation = dy > 0 ? &animationDownMove : &animationUpMove;
+        }
+
+        // Animation de déplacement
+        if (currentAnimation && !currentAnimation->isEmpty()) {
+            currentFrameIndex = (currentFrameIndex + 1) % currentAnimation->size();
+            setPixmap(*(*currentAnimation)[currentFrameIndex]);
+        }
+    } else {
+        // Le joueur est à distance suffisante : ne bouge pas, animation idle
+        QVector<QPixmap*>* currentIdle = nullptr;
+        if (std::abs(dx) > std::abs(dy)) {
+            currentIdle = dx > 0 ? &animationRightIdle : &animationLeftIdle;
+        } else {
+            currentIdle = dy > 0 ? &animationDownIdle : &animationUpIdle;
+        }
+
+        if (currentIdle && !currentIdle->isEmpty()) {
+            currentFrameIndex = (currentFrameIndex + 1) % currentIdle->size();
+            setPixmap(*(*currentIdle)[currentFrameIndex]);
+        }
+    }
+}
+DoctorMonster::~DoctorMonster() {
+    auto clearPixmaps = [](QVector<QPixmap*>& vec) {
+        for (QPixmap* pixmap : vec) {
+            delete pixmap;
+        }
+        vec.clear();
+    };
+    clearPixmaps(animationLeftMove);
+    clearPixmaps(animationRightMove);
+    clearPixmaps(animationDownMove);
+    clearPixmaps(animationUpMove);
+    clearPixmaps(animationAttack);
+    if (attackSheet) delete attackSheet;
+}
+void DoctorMonster::loadAnimations() {
+    if (idleSheet->isNull() || moveSheet->isNull()) {
+        qWarning("Erreur : sprites introuvables !");
+        return;
+    }
+
+    int frameWidth = idleSheet->width() / 4;
+    int frameHeight = idleSheet->height() /4 ;
+
+    for (int i = 0; i < 4; ++i) {
+        animationDownIdle.append(new QPixmap(idleSheet->copy(i * frameWidth, 0 * frameHeight, frameWidth, frameHeight)));
+        animationLeftIdle.append(new QPixmap(idleSheet->copy(i * frameWidth, 1 * frameHeight, frameWidth, frameHeight)));
+        animationRightIdle.append(new QPixmap(idleSheet->copy(i * frameWidth, 2 * frameHeight, frameWidth, frameHeight)));
+        animationUpIdle.append(new QPixmap(idleSheet->copy(i * frameWidth, 3 * frameHeight, frameWidth, frameHeight)));
+
+        animationDownMove.append(new QPixmap(moveSheet->copy(i * frameWidth, 0 * frameHeight, frameWidth, frameHeight)));
+        animationLeftMove.append(new QPixmap(moveSheet->copy(i * frameWidth, 1 * frameHeight, frameWidth, frameHeight)));
+        animationRightMove.append(new QPixmap(moveSheet->copy(i * frameWidth, 2 * frameHeight, frameWidth, frameHeight)));
+        animationUpMove.append(new QPixmap(moveSheet->copy(i * frameWidth, 3 * frameHeight, frameWidth, frameHeight)));
+    }
+    // Chargement des sprites d'attaque
+    attackSheet = new QPixmap(":/assets/doctor_attack.png");
+    if (!attackSheet->isNull()) {
+        int attackFrameWidth = attackSheet->width() / 5;
+        int attackFrameHeight = attackSheet->height();
+
+        for (int i = 0; i < 4; ++i) {
+            animationAttack.append(new QPixmap(attackSheet->copy(i * attackFrameWidth, 0, attackFrameWidth, attackFrameHeight)));
+        }
+    } else {
+        qWarning("Erreur : doctor_attack introuvable !");
+    }
+
+
+    setPixmap(*animationDownIdle[0]);
+}
 SlimeMonster::SlimeMonster(Player* myPlayer, MyScene* ms, QObject* parent)
     : Monster(myPlayer, ms, parent)
 {
