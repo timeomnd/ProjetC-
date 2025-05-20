@@ -43,6 +43,8 @@ public:
     bool checkTileCollision(const QPointF& newPos) const;
     QRectF getCollisionBounds() const;
     void updateMovementVector();
+    void setCanShoot(bool c);
+    bool getCanShoot() const;
 
 protected:
     void focusOutEvent(QFocusEvent* event) override;
@@ -56,6 +58,7 @@ private:
     int HP;
     int dx;
     int dy;
+    bool canShoot = true;
     bool alive = true;
     HealthBar* healthBar;
     MainWindow* mainWindow = nullptr;

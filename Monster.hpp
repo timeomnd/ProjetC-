@@ -91,6 +91,11 @@ class GhostMonster : public Monster {
     Q_OBJECT
 public:
     GhostMonster(Player* myPlayer, MyScene* ms, QObject* parent = nullptr);
+    void attack() override;
+    void disableShoot();
+    void resetShoot();
+private:
+    QTimer* canShootTimer = nullptr;
 };
 
 class BirdMonster : public Monster {

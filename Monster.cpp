@@ -206,6 +206,7 @@ GhostMonster::GhostMonster(Player* myPlayer, MyScene* ms, QObject* parent)
     setDamage(5);
     setAttackCooldown(1500);
     setValueScore(300);
+    canShootTimer = new QTimer(this);
     idleSheet = new QPixmap(":/assets/ghost_idle.png");
     moveSheet = new QPixmap(":/assets/ghost_move.png");
     loadAnimations();
@@ -213,6 +214,53 @@ GhostMonster::GhostMonster(Player* myPlayer, MyScene* ms, QObject* parent)
     animationTimer = new QTimer(this);
     connect(animationTimer, &QTimer::timeout, this, &GhostMonster::updateAnimationFrame);
     animationTimer->start(150); // 150 ms par frame
+}
+void GhostMonster::attack() {
+    if (!player) return;
+    if (this->scene()) {
+        if (this->collidesWithItem(player)) {
+            if (lastAttackTime.elapsed() >= attackCooldown) {
+                int newHP = player->getHP() - damage;
+                player->setHP(newHP);
+                disableShoot();
+                if (player->getCanShoot()) {
+
+                }
+                if (player->getHealthBar()) {
+                    player->getHealthBar()->updateHP(newHP);
+                }
+                if (mainScene->getScoreManager()) {
+                    mainScene->getScoreManager()->addPoints(-(this->getDamage())*3); // on enlève des points au score si on se fait toucher
+                }
+                qDebug() << "Attaque ! HP joueur :" << player->getHP();
+                QSoundEffect* currentSound = hitSounds[currentHitSoundIndex];
+                if (currentSound->status() == QSoundEffect::Ready) {
+                    currentSound->stop(); // redémarre depuis le début proprement
+                    currentSound->play();
+                }
+                currentHitSoundIndex = (currentHitSoundIndex + 1) % hitSounds.size();
+
+                lastAttackTime.restart(); // reset du cooldown
+            }
+        }
+    }
+}
+void GhostMonster::disableShoot() {
+    if (player->getCanShoot()) {
+        canShootTimer->start(3500); // 3.5 secondes
+        player->setCanShoot(false);
+        connect(canShootTimer, &QTimer::timeout, this,&GhostMonster::resetShoot);
+    }
+    else {
+        canShootTimer->stop();
+        canShootTimer->start(3500);
+    }
+}
+void GhostMonster::resetShoot() {
+    if (player->getCanShoot() == false) {
+        player->setCanShoot(true);
+        canShootTimer->stop();
+    }
 }
 
 
@@ -404,7 +452,8 @@ void SlimeMonster::slow() {
     else {
         player->setSpeed(player->getSpeed()*0.95);
         slowTimer->start(3500); // 3.5 secondes de ralentissement
-        connect(slowTimer, &QTimer::timeout, this,&SlimeMonster::resetSpeed);  }
+        connect(slowTimer, &QTimer::timeout, this,&SlimeMonster::resetSpeed);
+    }
 }
 void SlimeMonster::resetSpeed() {
     if (player->getSpeed()!=player->getInitalSpeed()) {

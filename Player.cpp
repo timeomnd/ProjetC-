@@ -65,8 +65,6 @@ bool Player::checkTileCollision(const QPointF& newPos) const {
     if(map->getCollisionRects().contains(QRectF(centerTile.x() * 16, centerTile.y() * 16, 16, 16))) {
         return true;
     }
-
-
     const QPointF points[4] = {
         playerBounds.topLeft(),
         playerBounds.topRight(),
@@ -82,8 +80,6 @@ bool Player::checkTileCollision(const QPointF& newPos) const {
     }
     return false;
 }
-
-
 void Player::updateMovementVector() {
     dx = 0;
     dy = 0;
@@ -117,7 +113,6 @@ void Player::keyReleaseEvent(QKeyEvent* event) {
     pressedKeys.remove(event->key());
     updateMovementVector();
 }
-
 
 void Player::updatePosition() {
     QPointF movement(dx, dy);
@@ -217,4 +212,10 @@ void Player::setSpeed(int newSpeed) {
 Player::~Player() {
     delete gun;
     delete shotgun;
+}
+void Player::setCanShoot(bool c) {
+    canShoot = c;
+}
+bool Player::getCanShoot() const {
+    return canShoot;
 }
