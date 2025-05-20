@@ -75,6 +75,7 @@ void Map::loadMapFromJson(const QString& jsonPath) {
         }
 
         tilesets.append(tileset);
+
     }
 
     // --- Affichage des calques tilelayer ---

@@ -90,30 +90,29 @@ void MainWindow::slot_launchGame() {
     mainScene->initPlayer();
     mainScene->initScoreManager();
 
-    // Calculer la taille de la scène et de la vue
+
     QSizeF sceneSize = mainScene->sceneRect().size();
     QSize viewSize = this->size();
 
-    // Calculer un facteur de zoom pour que la scène remplisse complètement la vue
+
     double scaleFactorX = viewSize.width() / sceneSize.width();
     double scaleFactorY = viewSize.height() / sceneSize.height();
 
-    // Choisir le plus grand facteur de zoom pour que la scène remplisse toute la vue
+   
     double scaleFactor = qMax(scaleFactorX, scaleFactorY);
 
-    // Réinitialiser la transformation et appliquer le zoom
+
     mainView->resetTransform();
     mainView->scale(scaleFactor, scaleFactor);
 
-    // Centrer la vue sur le joueur
+
     mainView->centerOn(mainScene->getPlayer());
 
-    // Désactiver les barres de défilement
+
     mainView->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
     mainView->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
 
-    // Activer le mode de glissement pour naviguer dans la scène
-    // Empêcher tout scroll dans le jeu
+
     mainView->setDragMode(QGraphicsView::NoDrag);
     mainView->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
     mainView->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
@@ -127,6 +126,10 @@ void MainWindow::resizeEvent(QResizeEvent *event){
         adjustViewToScene();
     }
 }
+
+
+
+
 void MainWindow::updateBackground() {
     if (!launchGame) {
         if (gameOverScene) {
@@ -162,9 +165,9 @@ void MainWindow::updateBackground() {
 }
 
 void MainWindow::showEvent(QShowEvent *event) {
-    QMainWindow::showEvent(event); // Laisse Qt gérer son affichage
+    QMainWindow::showEvent(event);
 
-    // On redessine le background correctement ici
+
     if (!launchGame) {
         updateBackground();
     }
@@ -179,7 +182,7 @@ void MainWindow::adjustViewToScene() {
     if (!mainScene || !mainView) return;
 
     QSizeF sceneSize = mainScene->sceneRect().size();
-    QSize viewSize = mainView->size(); // Utiliser mainView->size() ici, pas this->size()
+    QSize viewSize = mainView->size(); 
 
     double scaleFactorX = viewSize.width() / sceneSize.width();
     double scaleFactorY = viewSize.height() / sceneSize.height();
@@ -203,7 +206,7 @@ void MainWindow::die() {
     mainScene = nullptr;
     isGameOver = true;
 
-    // 🔁 Reset le zoom avant de changer la scène
+
     mainView->resetTransform();
 
     gameOverScene = new QGraphicsScene(this);
@@ -217,8 +220,8 @@ void MainWindow::die() {
     mainView->setAlignment(Qt::AlignLeft | Qt::AlignTop);
     mainView->setRenderHint(QPainter::Antialiasing, true);
 
-    launchGame = false;  // 🔥 Avant le updateBackground() !
-    updateBackground();  // ✅ Applique le bon fond redimensionné
+    launchGame = false; 
+    updateBackground(); 
 
     QSoundEffect* gameOverSound = new QSoundEffect(this);
     gameOverSound->setSource(QUrl("qrc:/assets/gameOverSound.wav"));
@@ -249,9 +252,8 @@ void MainWindow::die() {
 
 
 MainWindow::~MainWindow() {
-    qDebug() << "🧹 Destruction de MainWindow";
 
-    // Par sécurité, mais normalement déjà supprimés dans slot_launchGame()
+
     mainScene->deleteLater();
     mainScene = nullptr;
     mainView->deleteLater();
@@ -262,7 +264,7 @@ MainWindow::~MainWindow() {
         gameOverScene = nullptr;
     }
 
-    // Pas besoin de delete les QPushButton ou QSoundEffect avec parent !
+
 }
 bool MainWindow::getLaunchGame() {
     return launchGame;

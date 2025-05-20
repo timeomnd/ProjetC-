@@ -44,6 +44,9 @@ public:
     QRectF getCollisionBounds() const;
     void updateMovementVector();
 
+    void toggleCollisionBox(bool show);
+    void paint(QPainter* painter, const QStyleOptionGraphicsItem* option, QWidget* widget) override;
+
 protected:
     void focusOutEvent(QFocusEvent* event) override;
 
@@ -67,6 +70,7 @@ private:
     QPixmap spriteLeft;
     QPixmap spriteRight;
     Map* map;
+    bool showCollisionBox = false;
 
 
 

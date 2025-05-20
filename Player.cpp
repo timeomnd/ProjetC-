@@ -6,7 +6,7 @@
 // Constantes
 const int INITIAL_HP = 100;
 const int SPRITE_SIZE = 40;
-const qreal DIAGONAL_SPEED_FACTOR = 0.7071; // 1/√2
+const qreal DIAGONAL_SPEED_FACTOR = 0.8; // 1/√2
 const int COLLISION_BOX_SIZE = 4;
 const int MOVEMENT_TIMER_INTERVAL_MS = 16; // ~60 FPS
 
@@ -27,10 +27,10 @@ Player::Player(MainWindow* mw, MyScene* scene, Map* map, QGraphicsItem* parent)
     currentWeapon = gun;
 
 
-    spriteUp = QPixmap(":/assets/nils_rear.png").scaled(SPRITE_SIZE, SPRITE_SIZE, Qt::KeepAspectRatio, Qt::SmoothTransformation);
-    spriteDown = QPixmap(":/assets/nils_front.png").scaled(SPRITE_SIZE, SPRITE_SIZE, Qt::KeepAspectRatio, Qt::SmoothTransformation);
-    spriteLeft = QPixmap(":/assets/nils_left.png").scaled(SPRITE_SIZE, SPRITE_SIZE, Qt::KeepAspectRatio, Qt::SmoothTransformation);
-    spriteRight = QPixmap(":/assets/nils_right.png").scaled(SPRITE_SIZE, SPRITE_SIZE, Qt::KeepAspectRatio, Qt::SmoothTransformation);
+    spriteUp = QPixmap(":/assets/nils_rear.png").scaled(49, 49, Qt::KeepAspectRatio, Qt::FastTransformation);
+    spriteDown = QPixmap(":/assets/nils_front.png").scaled(49, 49, Qt::KeepAspectRatio, Qt::FastTransformation);
+    spriteLeft = QPixmap(":/assets/nils_left.png").scaled(49, 49, Qt::KeepAspectRatio, Qt::FastTransformation);
+    spriteRight = QPixmap(":/assets/nils_right.png").scaled(49, 49, Qt::KeepAspectRatio, Qt::FastTransformation);
 
     if (spriteUp.isNull() || spriteDown.isNull() || spriteLeft.isNull() || spriteRight.isNull()) {
         qWarning("Erreur : un ou plusieurs sprites sont introuvables !");
@@ -48,35 +48,22 @@ Player::Player(MainWindow* mw, MyScene* scene, Map* map, QGraphicsItem* parent)
 
 
 QRectF Player::getCollisionBounds() const {
-    const QRectF spriteBounds = boundingRect();
-    const qreal offsetX = (spriteBounds.width() - COLLISION_BOX_SIZE) / 2;
-    const qreal offsetY = (spriteBounds.height() - COLLISION_BOX_SIZE) / 2;
 
-    return QRectF(pos().x() + offsetX, pos().y() + offsetY, COLLISION_BOX_SIZE, COLLISION_BOX_SIZE);
+    const QRectF spriteBounds = boundingRect();
+    const qreal offsetX = (spriteBounds.width()) / 2 - 5 ;
+    const qreal offsetY = (spriteBounds.height()) / 2 + 4;
+
+    return QRectF(offsetX, offsetY, 10, 14);
 }
 
 bool Player::checkTileCollision(const QPointF& newPos) const {
-    QRectF playerBounds = getCollisionBounds().translated(newPos - pos());
+    if (!map) return false;
 
+    QRectF playerBounds = getCollisionBounds().translated(newPos);
+    
 
-    const QPointF centerPoint = playerBounds.center();
-    const QPoint centerTile(floor(centerPoint.x() / 16), floor(centerPoint.y() / 16));
-
-    if(map->getCollisionRects().contains(QRectF(centerTile.x() * 16, centerTile.y() * 16, 16, 16))) {
-        return true;
-    }
-
-
-    const QPointF points[4] = {
-        playerBounds.topLeft(),
-        playerBounds.topRight(),
-        playerBounds.bottomLeft(),
-        playerBounds.bottomRight()
-    };
-
-    for(const QPointF& point : points) {
-        const QPoint tilePos(floor(point.x() / 16), floor(point.y() / 16)); // Précision améliorée
-        if(map->getCollisionRects().contains(QRectF(tilePos.x() * 16, tilePos.y() * 16, 16, 16))) {
+    for (const QRectF& rect : map->getCollisionRects()) {
+        if (playerBounds.intersects(rect)) {
             return true;
         }
     }
@@ -107,6 +94,8 @@ void Player::keyPressEvent(QKeyEvent* event) {
     switch(event->key()) {
         case Qt::Key_X: switchWeapon(1); break;
         case Qt::Key_C: switchWeapon(2); break;
+        case Qt::Key_A: toggleCollisionBox(!showCollisionBox); 
+        break;
         default: break;
     }
 
@@ -120,8 +109,12 @@ void Player::keyReleaseEvent(QKeyEvent* event) {
 
 
 void Player::updatePosition() {
-    QPointF movement(dx, dy);
-    QPointF newPos = pos() + movement;
+     QPointF newPos = pos() + QPointF(dx, dy);
+
+    if (!checkTileCollision(newPos)) {
+        setPos(newPos); 
+    }
+
 
     bool collisionX = checkTileCollision(QPointF(newPos.x(), pos().y()));
     bool collisionY = checkTileCollision(QPointF(pos().x(), newPos.y()));
@@ -217,4 +210,28 @@ void Player::setSpeed(int newSpeed) {
 Player::~Player() {
     delete gun;
     delete shotgun;
+}
+
+
+void Player::toggleCollisionBox(bool show) {
+    showCollisionBox = show;
+    update();
+}
+
+
+void Player::paint(QPainter* painter, const QStyleOptionGraphicsItem* option, QWidget* widget) {
+
+    QGraphicsPixmapItem::paint(painter, option, widget);
+
+    if(showCollisionBox) {
+
+        QRectF collisionRect = getCollisionBounds();
+        
+
+        painter->setPen(Qt::red);
+        painter->setBrush(Qt::NoBrush);
+        
+
+        painter->drawRect(collisionRect);
+    }
 }
