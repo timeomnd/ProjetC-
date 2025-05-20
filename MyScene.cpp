@@ -149,7 +149,7 @@ void MyScene::spawnMonster() {
     if (!valid) spawnPos = QPointF(0, 0);
 
     Monster* monster = nullptr;
-    int rand = QRandomGenerator::global()->bounded(1, 4);
+    int rand = QRandomGenerator::global()->bounded(4, 5);
     if (rand == 1) {
         monster = new DoctorMonster(player, this);
     } else if (rand == 2) {
@@ -157,6 +157,9 @@ void MyScene::spawnMonster() {
     }
     else if (rand == 3) {
         monster = new GhostMonster(player, this);
+    }
+    else if (rand == 4) {
+        monster = new SlimeMonster(player, this);
     }
     if (monster) {
         monster->setPos(spawnPos);

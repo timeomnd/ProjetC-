@@ -43,6 +43,8 @@ public:
     virtual void attack();
     void pause();
     void resume();
+    virtual void loadAnimations();
+    virtual void updateAnimationFrame();
 
 protected:
     Player* player;
@@ -77,10 +79,6 @@ protected:
     QVector<QPixmap*> animationLeftMove;
     QVector<QPixmap*> animationRightMove;
 
-    virtual void loadAnimations();
-    virtual void updateAnimationFrame();
-
-    void clearAnimations();
 };
 
 class DoctorMonster : public Monster {
@@ -93,20 +91,39 @@ class GhostMonster : public Monster {
     Q_OBJECT
 public:
     GhostMonster(Player* myPlayer, MyScene* ms, QObject* parent = nullptr);
-    ~GhostMonster() override;
-    void attack() override;
-    void slow();
-    QTimer* getSlowTimer() const;
-    public slots :
-    void resetSpeed();
-private:
-    QTimer* slowTimer;
 };
 
 class BirdMonster : public Monster {
     Q_OBJECT
 public:
     BirdMonster(Player* myPlayer, MyScene* ms, QObject* parent = nullptr);
+};
+class SlimeMonster : public Monster {
+    Q_OBJECT
+public :
+    SlimeMonster(Player* myPlayer, MyScene* ms, QObject* parent = nullptr);
+    ~SlimeMonster() override;
+    void jump();
+    void loadAnimations() override;
+    void move() override;
+    void attack() override;
+    void slow();
+    QTimer* getSlowTimer() const;
+    public slots :
+    void resetSpeed();
+private:
+    QVector<QPixmap*> animationIdle;
+    QPixmap* moveLeftSheet;
+    QPixmap* moveRightSheet;
+    QVector<QPixmap*> animationJumpUp;
+    QVector<QPixmap*> animationJumpDown;
+    QPixmap* jumpSheet;
+    QTimer* jumpTimer = nullptr;
+    QTimer* jumpCooldownTimer = nullptr;
+    QTimer* slowTimer;
+    bool isJumping = false;
+    int jumpFrameIndex = 0;
+    int currentFrameIndex = 0;
 };
 
 #endif // MONSTER_H

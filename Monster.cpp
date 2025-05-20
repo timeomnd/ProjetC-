@@ -206,7 +206,6 @@ GhostMonster::GhostMonster(Player* myPlayer, MyScene* ms, QObject* parent)
     setDamage(5);
     setAttackCooldown(1500);
     setValueScore(300);
-    slowTimer = new QTimer(this);
     idleSheet = new QPixmap(":/assets/ghost_idle.png");
     moveSheet = new QPixmap(":/assets/ghost_move.png");
     loadAnimations();
@@ -215,10 +214,162 @@ GhostMonster::GhostMonster(Player* myPlayer, MyScene* ms, QObject* parent)
     connect(animationTimer, &QTimer::timeout, this, &GhostMonster::updateAnimationFrame);
     animationTimer->start(150); // 150 ms par frame
 }
-GhostMonster::~GhostMonster(){
-    resetSpeed();
+
+
+BirdMonster::BirdMonster(Player* myPlayer, MyScene* ms, QObject* parent)
+    : Monster(myPlayer, ms, parent)
+{
+    setSpeed(3);
+    setHP(50);
+    setDamage(15);
+    setAttackCooldown(1200);
+    setValueScore(250);
+    idleSheet = new QPixmap(":/assets/bird_idle.png");
+    moveSheet = new QPixmap(":/assets/bird_move.png");
+
+    loadAnimations();
+
+    animationTimer = new QTimer(this);
+    connect(animationTimer, &QTimer::timeout, this, &BirdMonster::updateAnimationFrame);
+    animationTimer->start(150);
 }
-void GhostMonster::attack(){
+
+DoctorMonster::DoctorMonster(Player* myPlayer, MyScene* ms, QObject* parent)
+    : Monster(myPlayer, ms, parent)
+{
+    setSpeed(3);
+    setHP(80);
+    setDamage(20);
+    setAttackCooldown(1200);
+    setValueScore(250);
+    idleSheet = new QPixmap(":/assets/doctor_idle.png");
+    moveSheet = new QPixmap(":/assets/doctor_move.png");
+
+    loadAnimations();
+
+    animationTimer = new QTimer(this);
+    connect(animationTimer, &QTimer::timeout, this, &DoctorMonster::updateAnimationFrame);
+    animationTimer->start(150);
+}
+SlimeMonster::SlimeMonster(Player* myPlayer, MyScene* ms, QObject* parent)
+    : Monster(myPlayer, ms, parent)
+{
+    setSpeed(2);
+    setHP(40);
+    setDamage(10);
+    setAttackCooldown(1200);
+    setValueScore(250);
+    slowTimer = new QTimer(this);
+    idleSheet = new QPixmap(":/assets/slime_idle.png");
+    moveLeftSheet = new QPixmap(":/assets/slime_move_left.png");
+    moveRightSheet = new QPixmap(":/assets/slime_move_right.png");
+    this->loadAnimations();
+    // Timer pour déclencher un saut toutes les 2 secondes
+    jumpCooldownTimer = new QTimer(this);
+    connect(jumpCooldownTimer, &QTimer::timeout, this, &SlimeMonster::jump);
+    jumpCooldownTimer->start(2000); // toutes les 2 secondes
+
+    animationTimer = new QTimer(this);
+    connect(animationTimer, &QTimer::timeout, this, &SlimeMonster::updateAnimationFrame);
+    animationTimer->start(150);
+}
+void SlimeMonster::loadAnimations() {
+    if (idleSheet->isNull() || moveLeftSheet->isNull() || moveRightSheet->isNull()) {
+        qWarning("Erreur : sprites introuvables !");
+        return;
+    }
+
+    int frameWidth = idleSheet->width() / 4;
+    int frameHeight = idleSheet->height();
+
+    for (int i = 0; i < 4; ++i) {
+        animationIdle.append(new QPixmap(idleSheet->copy(i * frameWidth, 0, frameWidth, frameHeight)));
+        animationRightMove.append(new QPixmap(moveRightSheet->copy(i * frameWidth, 0, frameWidth, frameHeight)));
+        animationLeftMove.append(new QPixmap(moveLeftSheet->copy(i * frameWidth, 0, frameWidth, frameHeight)));
+    }
+    // Chargement des sprites de saut
+    jumpSheet = new QPixmap(":/assets/slime_jump.png");
+    if (!jumpSheet->isNull()) {
+        int jumpFrameWidth = jumpSheet->width() / 4;
+        int jumpFrameHeight = jumpSheet->height() / 2;
+
+        for (int i = 0; i < 4; ++i) {
+            animationJumpUp.append(new QPixmap(jumpSheet->copy(i * jumpFrameWidth, 0, jumpFrameWidth, jumpFrameHeight)));
+            animationJumpDown.append(new QPixmap(jumpSheet->copy(i * jumpFrameWidth, jumpFrameHeight, jumpFrameWidth, jumpFrameHeight)));
+        }
+    } else {
+        qWarning("Erreur : slime_jump introuvable !");
+    }
+
+    setPixmap(*animationIdle[0]);
+}
+
+void SlimeMonster::move() {
+    if (!player) return;
+
+    QPointF monsterCenter = this->sceneBoundingRect().center();
+    QPointF playerCenter = player->sceneBoundingRect().center();
+
+    qreal dx = playerCenter.x() - monsterCenter.x();
+    qreal dy = playerCenter.y() - monsterCenter.y();
+
+    qreal distance = std::sqrt(dx * dx + dy * dy);
+    if (distance < 1.0) return;
+
+    qreal vx = dx / distance;
+    qreal vy = dy / distance;
+
+    moveBy(vx * speed, vy * speed);
+
+    if (!isJumping) {
+        QVector<QPixmap*>* currentAnimation = nullptr;
+        if (std::abs(dx) > std::abs(dy)) {
+            currentAnimation = dx > 0 ? &animationRightMove : &animationLeftMove;
+        } else {
+            currentAnimation = dy > 0 ? &animationLeftMove : &animationRightMove;
+        }
+
+        if (currentAnimation && !currentAnimation->isEmpty()) {
+            currentFrameIndex = (currentFrameIndex + 1) % currentAnimation->size();
+            setPixmap(*(*currentAnimation)[currentFrameIndex]);
+        }
+    }
+}
+void SlimeMonster::jump() {
+    if (isJumping || animationJumpUp.isEmpty() || animationJumpDown.isEmpty()) return;
+
+    isJumping = true;
+    jumpFrameIndex = 0;
+
+    if (!jumpTimer) {
+        jumpTimer = new QTimer(this);
+        connect(jumpTimer, &QTimer::timeout, this, [=]() {
+            QVector<QPixmap*>* currentJump = nullptr;
+
+            // Phase montée (0 à 3), puis descente (4 à 7)
+            if (jumpFrameIndex < 4) {
+                currentJump = &animationJumpUp;
+            } else if (jumpFrameIndex < 8) {
+                currentJump = &animationJumpDown;
+            }
+            if (currentJump && !currentJump->isEmpty()) {
+                int index = jumpFrameIndex % 4;
+                setPixmap(*(*currentJump)[index]);
+            }
+
+            jumpFrameIndex++;
+
+            if (jumpFrameIndex >= 8) {
+                jumpTimer->stop();
+                isJumping = false;
+                jumpFrameIndex = 0;
+            }
+        });
+    }
+
+    jumpTimer->start(100); // 100ms par frame → saut total ~800ms
+}
+void SlimeMonster::attack(){
     if (!player) return;
     if (this->scene()) {
         if (this->collidesWithItem(player)) {
@@ -244,57 +395,41 @@ void GhostMonster::attack(){
         }
     }
 }
-void GhostMonster::slow() {
+void SlimeMonster::slow() {
     if (player->getSpeed()!=player->getInitalSpeed()) {
+        slowTimer->stop();
+        slowTimer->start(3500);
         return;
     }
     else {
-        player->setSpeed(player->getSpeed()*0.75);
+        player->setSpeed(player->getSpeed()*0.95);
         slowTimer->start(3500); // 3.5 secondes de ralentissement
-        connect(slowTimer, &QTimer::timeout, this,&GhostMonster::resetSpeed);  }
+        connect(slowTimer, &QTimer::timeout, this,&SlimeMonster::resetSpeed);  }
 }
-void GhostMonster::resetSpeed() {
+void SlimeMonster::resetSpeed() {
     if (player->getSpeed()!=player->getInitalSpeed()) {
         player->setSpeed(player->getInitalSpeed());
         slowTimer->stop();
     }
 }
-QTimer* GhostMonster::getSlowTimer() const {
+QTimer* SlimeMonster::getSlowTimer() const {
     return slowTimer;
 }
-BirdMonster::BirdMonster(Player* myPlayer, MyScene* ms, QObject* parent)
-    : Monster(myPlayer, ms, parent)
-{
-    setSpeed(3);
-    setHP(60);
-    setDamage(15);
-    setAttackCooldown(1200);
-    setValueScore(250);
-    idleSheet = new QPixmap(":/assets/bird_idle.png");
-    moveSheet = new QPixmap(":/assets/bird_move.png");
-
-    loadAnimations();
-
-    animationTimer = new QTimer(this);
-    connect(animationTimer, &QTimer::timeout, this, &BirdMonster::updateAnimationFrame);
-    animationTimer->start(150);
-}
-
-DoctorMonster::DoctorMonster(Player* myPlayer, MyScene* ms, QObject* parent)
-    : Monster(myPlayer, ms, parent)
-{
-    setSpeed(3);
-    setHP(60);
-    setDamage(15);
-    setAttackCooldown(1200);
-    setValueScore(250);
-    idleSheet = new QPixmap(":/assets/doctor_idle.png");
-    moveSheet = new QPixmap(":/assets/doctor_move.png");
-
-    loadAnimations();
-
-    animationTimer = new QTimer(this);
-    connect(animationTimer, &QTimer::timeout, this, &DoctorMonster::updateAnimationFrame);
-    animationTimer->start(150);
+SlimeMonster::~SlimeMonster() {
+    // Supprimer tous les QPixmap* dans chaque QVector et vider les vecteurs
+    resetSpeed();
+    auto clearPixmaps = [](QVector<QPixmap*>& vec) {
+        for (QPixmap* pixmap : vec) {
+            delete pixmap;
+        }
+        vec.clear();
+    };
+    clearPixmaps(animationLeftMove);
+    clearPixmaps(animationRightMove);
+    clearPixmaps(animationJumpUp);
+    clearPixmaps(animationJumpDown);
+    if (jumpTimer) delete jumpTimer;
+    if (jumpCooldownTimer) delete jumpCooldownTimer;
+    if (slowTimer) delete slowTimer;
 }
 
