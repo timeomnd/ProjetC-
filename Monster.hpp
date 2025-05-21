@@ -161,7 +161,6 @@ class Fireball : public QObject, public QGraphicsPixmapItem {
 public:
     Fireball(QPointF startPos, QPointF targetPos, QGraphicsScene* scene, QObject* parent = nullptr);
     ~Fireball();
-
     private slots:
         void moveAndAnimate();
 

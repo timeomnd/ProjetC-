@@ -294,9 +294,11 @@ DoctorMonster::DoctorMonster(Player* myPlayer, MyScene* ms, QObject* parent)
     moveSheet = new QPixmap(":/assets/doctor_move.png");
 
     loadAnimations();
-
+    //QGraphicsEllipseItem* debugHitbox = new QGraphicsEllipseItem(boundingRect(), this);
+    //debugHitbox->setPen(QPen(Qt::red));
     animationTimer = new QTimer(this);
     attackAnimationTimer = new QTimer(this);
+    qDebug() << this->boundingRect();
     connect(attackAnimationTimer, &QTimer::timeout, this, &DoctorMonster::updateAttackAnimation);
 
 }
@@ -316,12 +318,50 @@ void DoctorMonster::updateAttackAnimation() {
         attackAnimationTimer->stop();
         isAttacking = false;
 
-        // Retour à l'animation idle
         QPointF monsterCenter = this->sceneBoundingRect().center();
         QPointF playerCenter = player->sceneBoundingRect().center();
 
         qreal dx = playerCenter.x() - monsterCenter.x();
         qreal dy = playerCenter.y() - monsterCenter.y();
+
+        QPointF offset(0, 0);
+
+        if (std::abs(dx) > std::abs(dy)) {
+            if (dx > 0) {
+                // regarde à droite
+                offset = QPointF(15, -5);  // 15 pixels à droite, 5 pixels vers le haut
+            } else {
+                // regarde à gauche
+                offset = QPointF(-15, -5);
+            }
+        } else {
+            if (dy > 0) {
+                // regarde en bas
+                offset = QPointF(0, 15);
+            } else {
+                // regarde en haut
+                offset = QPointF(0, -15);
+            }
+        }
+
+        QPointF startPos = monsterCenter + offset;
+        QPointF targetPos = playerCenter;
+
+        Fireball* fb = new Fireball(startPos, targetPos, this->scene(), this);
+
+        // Centre la fireball par rapport à startPos
+        fb->setPos(startPos - QPointF(fb->boundingRect().width() / 2, fb->boundingRect().height() / 2));
+
+
+        // Mise à jour du cooldown
+        lastAttackTime.restart();
+
+        // Retour à l'animation idle
+        monsterCenter = this->sceneBoundingRect().center();
+        playerCenter = player->sceneBoundingRect().center();
+
+        dx = playerCenter.x() - monsterCenter.x();
+        dy = playerCenter.y() - monsterCenter.y();
 
         QVector<QPixmap*>* currentIdle = nullptr;
         if (std::abs(dx) > std::abs(dy)) {
@@ -359,10 +399,6 @@ void DoctorMonster::attack() {
         if (currentAttackAnimation && !currentAttackAnimation->isEmpty()) {
             attackAnimationTimer->start(100); // 100 ms entre chaque frame
         }
-        QCoreApplication::processEvents();
-        QPointF startPos = this->sceneBoundingRect().center();
-        QPointF targetPos = player->sceneBoundingRect().center();
-        Fireball* fb = new Fireball(startPos, targetPos, this->scene(), this);
 
         lastAttackTime.restart(); // reset du cooldown
     }
@@ -718,7 +754,6 @@ Fireball::Fireball(QPointF startPos, QPointF targetPos, QGraphicsScene* scene, Q
     setPixmap(*animationFrames[currentFrameIndex]);
     setPos(startPos);
     scene->addItem(this);
-
     qreal dx = targetPos.x() - startPos.x();
     qreal dy = targetPos.y() - startPos.y();
     qreal length = qSqrt(dx*dx + dy*dy);
@@ -743,4 +778,9 @@ void Fireball::moveAndAnimate() {
         deleteLater();
     }
 }
+
+
+
+
+
 
