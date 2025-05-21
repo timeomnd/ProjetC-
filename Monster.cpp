@@ -359,6 +359,7 @@ void DoctorMonster::attack() {
         if (currentAttackAnimation && !currentAttackAnimation->isEmpty()) {
             attackAnimationTimer->start(100); // 100 ms entre chaque frame
         }
+        QCoreApplication::processEvents();
         QPointF startPos = this->sceneBoundingRect().center();
         QPointF targetPos = player->sceneBoundingRect().center();
         Fireball* fb = new Fireball(startPos, targetPos, this->scene(), this);
@@ -438,7 +439,6 @@ DoctorMonster::~DoctorMonster() {
     clearPixmaps(*currentAttackAnimation);
     if (attackSheet) delete attackSheet;
     if (attackAnimationTimer) delete attackAnimationTimer;
-    if (attackSheet) delete attackSheet;
     if (animationTimer) delete animationTimer;
 }
 void DoctorMonster::loadAnimations() {
@@ -486,7 +486,7 @@ SlimeMonster::SlimeMonster(Player* myPlayer, MyScene* ms, QObject* parent)
     setSpeed(2);
     setHP(40);
     setDamage(10);
-    setAttackCooldown(1200);
+    setAttackCooldown(2000);
     setValueScore(250);
     slowTimer = new QTimer(this);
     idleSheet = new QPixmap(":/assets/slime_idle.png");
@@ -664,12 +664,12 @@ void SlimeMonster::attack() {
 void SlimeMonster::slow() {
     if (player->getSpeed()!=player->getInitalSpeed()) {
         slowTimer->stop();
-        slowTimer->start(3500);
+        slowTimer->start(2000);
         return;
     }
     else {
-        player->setSpeed(player->getSpeed()*0.95);
-        slowTimer->start(3500); // 3.5 secondes de ralentissement
+        player->setSpeed(player->getSpeed()*0.75);
+        slowTimer->start(2000); // 3.5 secondes de ralentissement
         connect(slowTimer, &QTimer::timeout, this,&SlimeMonster::resetSpeed);
     }
 }
@@ -709,10 +709,13 @@ Fireball::Fireball(QPointF startPos, QPointF targetPos, QGraphicsScene* scene, Q
         QPixmap* frame = new QPixmap(QString(":/assets/FB_%1.png").arg(i));
         if (frame->isNull()) {
             qDebug() << "[Fireball] Failed to load frame:" << i;
+        } else {
+            QPixmap* scaledFrame = new QPixmap(frame->scaled(32, 32, Qt::KeepAspectRatio, Qt::SmoothTransformation));
+            animationFrames.append(scaledFrame);
+            delete frame; // On libère l’original non redimensionné
         }
-        animationFrames.append(frame);
     }
-    setPixmap(animationFrames[0]->scaled(32, 32, Qt::KeepAspectRatio, Qt::SmoothTransformation));
+    setPixmap(*animationFrames[currentFrameIndex]);
     setPos(startPos);
     scene->addItem(this);
 
@@ -720,7 +723,6 @@ Fireball::Fireball(QPointF startPos, QPointF targetPos, QGraphicsScene* scene, Q
     qreal dy = targetPos.y() - startPos.y();
     qreal length = qSqrt(dx*dx + dy*dy);
     velocity = QPointF(dx / length * speed, dy / length * speed);
-    qDebug() << "[Fireball] Velocity:" << velocity;
 
     animationTimer = new QTimer(this);
     connect(animationTimer, &QTimer::timeout, this, &Fireball::moveAndAnimate);
