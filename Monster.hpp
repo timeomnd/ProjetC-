@@ -87,20 +87,26 @@ public:
     DoctorMonster(Player* myPlayer, MyScene* ms, QObject* parent = nullptr);
     ~DoctorMonster() override;
     void move() override;
-    //void attack() override;
+    void attack() override;
     void loadAnimations() override;
     void setIsMoving(bool m);
     bool getIsMoving() const;
-    //void setIsAttacking(bool a);
-    //bool getIsAttacking() const;
+    void setIsAttacking(bool a);
+    bool getIsAttacking() const;
+    void updateAttackAnimation();
 
 private:
     QPixmap* attackSheet;
-    QVector<QPixmap*> animationAttack;
+    QVector<QPixmap*> animationAttackLeft;
+    QVector<QPixmap*> animationAttackRight;
+    QVector<QPixmap*> animationAttackUp;
+    QVector<QPixmap*> animationAttackDown;
+    QVector<QPixmap*>* currentAttackAnimation = nullptr;
     QTimer* animationTimer = nullptr;
     int attackFrameIndex = 0;  // index pour animation attaque
     bool isMoving = false;
     bool isAttacking = false;
+    QTimer* attackAnimationTimer = nullptr;
 };
 
 class GhostMonster : public Monster {
