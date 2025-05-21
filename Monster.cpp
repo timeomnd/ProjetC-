@@ -359,6 +359,10 @@ void DoctorMonster::attack() {
         if (currentAttackAnimation && !currentAttackAnimation->isEmpty()) {
             attackAnimationTimer->start(100); // 100 ms entre chaque frame
         }
+        QPointF startPos = this->sceneBoundingRect().center();
+        QPointF targetPos = player->sceneBoundingRect().center();
+        Fireball* fb = new Fireball(startPos, targetPos, this->scene(), this);
+
         lastAttackTime.restart(); // reset du cooldown
     }
 }
@@ -427,10 +431,6 @@ DoctorMonster::~DoctorMonster() {
         }
         vec.clear();
     };
-    clearPixmaps(animationLeftMove);
-    clearPixmaps(animationRightMove);
-    clearPixmaps(animationDownMove);
-    clearPixmaps(animationUpMove);
     clearPixmaps(animationAttackLeft);
     clearPixmaps(animationAttackRight);
     clearPixmaps(animationAttackUp);
@@ -701,5 +701,44 @@ SlimeMonster::~SlimeMonster() {
     clearPixmaps(animationAttack);
     if (attackSheet) delete attackSheet;
 
+}
+Fireball::Fireball(QPointF startPos, QPointF targetPos, QGraphicsScene* scene, QObject* parent)
+    : QObject(parent), currentFrameIndex(0) {
+
+    for (int i = 1; i <= 8; ++i) {
+        QPixmap* frame = new QPixmap(QString(":/assets/FB_%1.png").arg(i));
+        if (frame->isNull()) {
+            qDebug() << "[Fireball] Failed to load frame:" << i;
+        }
+        animationFrames.append(frame);
+    }
+    setPixmap(animationFrames[0]->scaled(32, 32, Qt::KeepAspectRatio, Qt::SmoothTransformation));
+    setPos(startPos);
+    scene->addItem(this);
+
+    qreal dx = targetPos.x() - startPos.x();
+    qreal dy = targetPos.y() - startPos.y();
+    qreal length = qSqrt(dx*dx + dy*dy);
+    velocity = QPointF(dx / length * speed, dy / length * speed);
+    qDebug() << "[Fireball] Velocity:" << velocity;
+
+    animationTimer = new QTimer(this);
+    connect(animationTimer, &QTimer::timeout, this, &Fireball::moveAndAnimate);
+    animationTimer->start(50); // 20 FPS
+}
+
+Fireball::~Fireball() {
+    for (QPixmap* pix : animationFrames) delete pix;
+}
+
+void Fireball::moveAndAnimate() {
+    setPos(pos() + velocity);
+    currentFrameIndex = (currentFrameIndex + 1) % animationFrames.size();
+    setPixmap(*animationFrames[currentFrameIndex]);
+
+    if (!scene()->sceneRect().contains(pos())) {
+        scene()->removeItem(this);
+        deleteLater();
+    }
 }
 

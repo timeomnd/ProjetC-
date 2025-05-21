@@ -155,4 +155,22 @@ private:
     int currentFrameIndex = 0;
 };
 
+class Fireball : public QObject, public QGraphicsPixmapItem {
+    Q_OBJECT
+
+public:
+    Fireball(QPointF startPos, QPointF targetPos, QGraphicsScene* scene, QObject* parent = nullptr);
+    ~Fireball();
+
+    private slots:
+        void moveAndAnimate();
+
+private:
+    QVector<QPixmap*> animationFrames;
+    int currentFrameIndex;
+    QTimer* animationTimer;
+    QPointF velocity;
+    qreal speed = 8.0;
+};
+
 #endif // MONSTER_H

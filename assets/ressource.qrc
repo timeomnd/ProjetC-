@@ -29,5 +29,14 @@
         <file>slime_move_right.png</file>
         <file>slime_jump.png</file>
         <file>slime_attack.png</file>
+        <file>FB_1.png</file>
+        <file>FB_2.png</file>
+        <file>FB_1.png</file>
+        <file>FB_3.png</file>
+        <file>FB_4.png</file>
+        <file>FB_5.png</file>
+        <file>FB_6.png</file>
+        <file>FB_7.png</file>
+        <file>FB_8.png</file>
     </qresource>
 </RCC>
