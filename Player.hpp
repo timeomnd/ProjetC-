@@ -31,7 +31,7 @@ public:
     bool isAlive() const;
     void setInitalSpeed(int s);
     int getInitalSpeed() const;
-
+    MyScene* getMyScene() const;
     HealthBar* getHealthBar() const;
     virtual ~Player();
 

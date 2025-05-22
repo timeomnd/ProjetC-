@@ -220,7 +220,9 @@ void Player::toggleCollisionBox(bool show) {
     showCollisionBox = show;
     update();
 }
-
+MyScene* Player::getMyScene() const {
+    return mainScene;
+}
 
 void Player::paint(QPainter* painter, const QStyleOptionGraphicsItem* option, QWidget* widget) {
 

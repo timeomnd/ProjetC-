@@ -38,5 +38,6 @@
         <file>FB_6.png</file>
         <file>FB_7.png</file>
         <file>FB_8.png</file>
+        <file>fireball_sound.wav</file>
     </qresource>
 </RCC>

@@ -159,16 +159,23 @@ class Fireball : public QObject, public QGraphicsPixmapItem {
     Q_OBJECT
 
 public:
-    Fireball(QPointF startPos, QPointF targetPos, QGraphicsScene* scene, QObject* parent = nullptr);
+    Fireball(Player* player, QPointF startPos, QPointF targetPos, QGraphicsScene* scene, QObject* parent = nullptr);
     ~Fireball();
+    void setDamage (int d);
+    int getDamage();
     private slots:
         void moveAndAnimate();
+        void destroySelf();
 
 private:
     QVector<QPixmap*> animationFrames;
+    Player* player;
+    int damage;
+    int currentHitSoundIndex = 0;
     int currentFrameIndex;
     QTimer* animationTimer;
     QPointF velocity;
+    QVector<QSoundEffect*> hitSounds;
     qreal speed = 8.0;
 };
 

@@ -347,7 +347,7 @@ void DoctorMonster::updateAttackAnimation() {
         QPointF startPos = monsterCenter + offset;
         QPointF targetPos = playerCenter;
 
-        Fireball* fb = new Fireball(startPos, targetPos, this->scene(), this);
+        Fireball* fb = new Fireball(player, startPos, targetPos, this->scene(), this);
 
         // Centre la fireball par rapport à startPos
         fb->setPos(startPos - QPointF(fb->boundingRect().width() / 2, fb->boundingRect().height() / 2));
@@ -460,7 +460,6 @@ void DoctorMonster::move() {
         }
     }
 }
-
 DoctorMonster::~DoctorMonster() {
     auto clearPixmaps = [](QVector<QPixmap*>& vec) {
         for (QPixmap* pixmap : vec) {
@@ -468,15 +467,28 @@ DoctorMonster::~DoctorMonster() {
         }
         vec.clear();
     };
+
     clearPixmaps(animationAttackLeft);
     clearPixmaps(animationAttackRight);
     clearPixmaps(animationAttackUp);
     clearPixmaps(animationAttackDown);
-    clearPixmaps(*currentAttackAnimation);
-    if (attackSheet) delete attackSheet;
-    if (attackAnimationTimer) delete attackAnimationTimer;
-    if (animationTimer) delete animationTimer;
+
+    if (attackSheet) {
+        delete attackSheet;
+        attackSheet = nullptr;
+    }
+
+    if (attackAnimationTimer) {
+        delete attackAnimationTimer;
+        attackAnimationTimer = nullptr;
+    }
+
+    if (animationTimer) {
+        delete animationTimer;
+        animationTimer = nullptr;
+    }
 }
+
 void DoctorMonster::loadAnimations() {
     if (idleSheet->isNull() || moveSheet->isNull()) {
         qWarning("Erreur : sprites introuvables !");
@@ -738,8 +750,8 @@ SlimeMonster::~SlimeMonster() {
     if (attackSheet) delete attackSheet;
 
 }
-Fireball::Fireball(QPointF startPos, QPointF targetPos, QGraphicsScene* scene, QObject* parent)
-    : QObject(parent), currentFrameIndex(0) {
+Fireball::Fireball(Player* player, QPointF startPos, QPointF targetPos, QGraphicsScene* scene, QObject* parent)
+    : QObject(parent), currentFrameIndex(0), player(player), damage(10){
 
     for (int i = 1; i <= 8; ++i) {
         QPixmap* frame = new QPixmap(QString(":/assets/FB_%1.png").arg(i));
@@ -749,6 +761,13 @@ Fireball::Fireball(QPointF startPos, QPointF targetPos, QGraphicsScene* scene, Q
             QPixmap* scaledFrame = new QPixmap(frame->scaled(32, 32, Qt::KeepAspectRatio, Qt::SmoothTransformation));
             animationFrames.append(scaledFrame);
             delete frame; // On libère l’original non redimensionné
+        }
+        for (int i = 0; i < 5; ++i) {
+            QSoundEffect* sound = new QSoundEffect(this);
+            sound->setSource(QUrl("qrc:/assets/fireball_sound.wav"));
+            sound->setLoopCount(1);
+            sound->setVolume(0.2);
+            hitSounds.append(sound);
         }
     }
     setPixmap(*animationFrames[currentFrameIndex]);
@@ -765,18 +784,57 @@ Fireball::Fireball(QPointF startPos, QPointF targetPos, QGraphicsScene* scene, Q
 }
 
 Fireball::~Fireball() {
-    for (QPixmap* pix : animationFrames) delete pix;
+    qDeleteAll(animationFrames);
+    animationFrames.clear();
+    qDeleteAll(hitSounds);
+    hitSounds.clear();
 }
-
 void Fireball::moveAndAnimate() {
     setPos(pos() + velocity);
     currentFrameIndex = (currentFrameIndex + 1) % animationFrames.size();
     setPixmap(*animationFrames[currentFrameIndex]);
 
+    // Collision avec le joueur
+    if (this->collidesWithItem(player)) {
+        int newHP = player->getHP() - damage;
+        player->setHP(newHP);
+        if (player->getHealthBar()) {
+            player->getHealthBar()->updateHP(newHP);
+        }
+        if (player->getMyScene()->getScoreManager()) {
+            player->getMyScene()->getScoreManager()->addPoints(-(this->getDamage()) * 3);
+        }
+        qDebug() << "Attaque ! HP joueur :" << player->getHP();
+
+        QSoundEffect* currentSound = hitSounds[currentHitSoundIndex];
+        if (currentSound->status() == QSoundEffect::Ready) {
+            currentSound->stop();
+            currentSound->play();
+        }
+        currentHitSoundIndex = (currentHitSoundIndex + 1) % hitSounds.size();
+
+        if (animationTimer) animationTimer->stop();
+        scene()->removeItem(this);
+        QTimer::singleShot(700, this, SLOT(destroySelf()));
+        return;
+    }
+
+    // Sortie de la scène
     if (!scene()->sceneRect().contains(pos())) {
+        if (animationTimer) animationTimer->stop();
         scene()->removeItem(this);
         deleteLater();
     }
+}
+
+void Fireball::setDamage (int d) {
+    damage = d;
+}
+int Fireball::getDamage() {
+    return damage;
+}
+void Fireball::destroySelf() {
+    deleteLater();
 }
 
 
