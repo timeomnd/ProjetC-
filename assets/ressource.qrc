@@ -39,5 +39,7 @@
         <file>FB_7.png</file>
         <file>FB_8.png</file>
         <file>fireball_sound.wav</file>
+        <file>impact.wav</file>
+        <file>slime_impact.wav</file>
     </qresource>
 </RCC>

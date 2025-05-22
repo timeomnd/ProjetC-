@@ -168,6 +168,7 @@ public:
         void destroySelf();
 
 private:
+    bool initialAnimationDone = false;
     QVector<QPixmap*> animationFrames;
     Player* player;
     int damage;

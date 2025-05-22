@@ -6,7 +6,7 @@ Monster::Monster(Player* myPlayer, MyScene* mainScene, QObject* parent): QObject
 attackCooldown(1000), mainScene(mainScene), currentFrameIndex(0), isMoving(false), idleSheet(nullptr), moveSheet(nullptr){
     for (int i = 0; i < 5; ++i) {
         QSoundEffect* sound = new QSoundEffect(this);
-        sound->setSource(QUrl("qrc:/assets/hitMonster.wav"));
+        sound->setSource(QUrl("qrc:/assets/impact.wav"));
         sound->setLoopCount(1);
         sound->setVolume(0.2);
         hitSounds.append(sound);
@@ -536,6 +536,13 @@ SlimeMonster::SlimeMonster(Player* myPlayer, MyScene* ms, QObject* parent)
     setDamage(10);
     setAttackCooldown(2000);
     setValueScore(250);
+    for (int i = 0; i < 5; ++i) {
+        QSoundEffect* sound = new QSoundEffect(this);
+        sound->setSource(QUrl("qrc:/assets/slime_impact.wav"));
+        sound->setLoopCount(1);
+        sound->setVolume(0.2);
+        hitSounds.append(sound);
+    }
     slowTimer = new QTimer(this);
     idleSheet = new QPixmap(":/assets/slime_idle.png");
     moveLeftSheet = new QPixmap(":/assets/slime_move_left.png");
@@ -791,7 +798,23 @@ Fireball::~Fireball() {
 }
 void Fireball::moveAndAnimate() {
     setPos(pos() + velocity);
-    currentFrameIndex = (currentFrameIndex + 1) % animationFrames.size();
+
+    // Animation complète au début
+    if (!initialAnimationDone) {
+        currentFrameIndex++;
+        if (currentFrameIndex >= animationFrames.size()) {
+            initialAnimationDone = true;
+            currentFrameIndex = animationFrames.size() - 3; // on démarre à l'avant-dernière phase
+        }
+    } else {
+        // Boucle uniquement sur les 3 dernières frames
+        int loopStart = animationFrames.size() - 3;
+        currentFrameIndex++;
+        if (currentFrameIndex >= animationFrames.size()) {
+            currentFrameIndex = loopStart;
+        }
+    }
+
     setPixmap(*animationFrames[currentFrameIndex]);
 
     // Collision avec le joueur
