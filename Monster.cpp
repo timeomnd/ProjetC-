@@ -8,7 +8,7 @@ attackCooldown(1000), mainScene(mainScene), currentFrameIndex(0), isMoving(false
         QSoundEffect* sound = new QSoundEffect(this);
         sound->setSource(QUrl("qrc:/assets/impact.wav"));
         sound->setLoopCount(1);
-        sound->setVolume(0.2);
+        sound->setVolume(1);
         hitSounds.append(sound);
     }
     lastAttackTime.start();
@@ -18,6 +18,19 @@ attackCooldown(1000), mainScene(mainScene), currentFrameIndex(0), isMoving(false
     this->attack(); // attaque du monstre si collision
 });
     timer->start(50);//déplacement toute les 50ms
+}
+void Monster::showHitEffect() {
+    auto* effect = new QGraphicsColorizeEffect(this);
+    effect->setColor(Qt::red);
+    effect->setStrength(1.0);
+    setGraphicsEffect(effect);
+
+    QTimer::singleShot(100, this, [this, effect]() {
+        if (graphicsEffect() == effect) {
+            setGraphicsEffect(nullptr);
+        }
+        // Pas besoin de delete manuellement, Qt s'en occupe grâce au parent
+    });
 }
 int Monster::getSpeed() const {
     return speed;
@@ -105,6 +118,7 @@ void Monster::attack() {
         if (this->collidesWithItem(player)) {
             if (lastAttackTime.elapsed() >= attackCooldown) {
                 int newHP = player->getHP() - damage;
+
                 player->setHP(newHP);
                 if (player->getHealthBar()) {
                     player->getHealthBar()->updateHP(newHP);
@@ -115,8 +129,13 @@ void Monster::attack() {
                 qDebug() << "Attaque ! HP joueur :" << player->getHP();
                 QSoundEffect* currentSound = hitSounds[currentHitSoundIndex];
                 if (currentSound->status() == QSoundEffect::Ready) {
+                    qDebug() << "Source du son :" << currentSound->source();
+                    qDebug() << "Statut du son :" << currentSound->status();
                     currentSound->stop(); // redémarre depuis le début proprement
                     currentSound->play();
+                }
+                else {
+                    qDebug() << "Son non prêt :" << currentSound->status();
                 }
                 currentHitSoundIndex = (currentHitSoundIndex + 1) % hitSounds.size();
 
@@ -229,8 +248,13 @@ void GhostMonster::attack() {
                 qDebug() << "Attaque ! HP joueur :" << player->getHP();
                 QSoundEffect* currentSound = hitSounds[currentHitSoundIndex];
                 if (currentSound->status() == QSoundEffect::Ready) {
+                    qDebug() << "Source du son :" << currentSound->source();
+                    qDebug() << "Statut du son :" << currentSound->status();
                     currentSound->stop(); // redémarre depuis le début proprement
                     currentSound->play();
+                }
+                else {
+                    qDebug() << "Son non prêt :" << currentSound->status();
                 }
                 currentHitSoundIndex = (currentHitSoundIndex + 1) % hitSounds.size();
 
@@ -540,7 +564,7 @@ SlimeMonster::SlimeMonster(Player* myPlayer, MyScene* ms, QObject* parent)
         QSoundEffect* sound = new QSoundEffect(this);
         sound->setSource(QUrl("qrc:/assets/slime_impact.wav"));
         sound->setLoopCount(1);
-        sound->setVolume(0.2);
+        sound->setVolume(1);
         hitSounds.append(sound);
     }
     slowTimer = new QTimer(this);
@@ -706,8 +730,13 @@ void SlimeMonster::attack() {
                 // Jouer le son
                 QSoundEffect* currentSound = hitSounds[currentHitSoundIndex];
                 if (currentSound->status() == QSoundEffect::Ready) {
+                    qDebug() << "Source du son :" << currentSound->source();
+                    qDebug() << "Statut du son :" << currentSound->status();
                     currentSound->stop();
                     currentSound->play();
+                }
+                else {
+                    qDebug() << "Son non prêt :" << currentSound->status();
                 }
                 currentHitSoundIndex = (currentHitSoundIndex + 1) % hitSounds.size();
 
@@ -773,7 +802,7 @@ Fireball::Fireball(Player* player, QPointF startPos, QPointF targetPos, QGraphic
             QSoundEffect* sound = new QSoundEffect(this);
             sound->setSource(QUrl("qrc:/assets/fireball_sound.wav"));
             sound->setLoopCount(1);
-            sound->setVolume(0.2);
+            sound->setVolume(1);
             hitSounds.append(sound);
         }
     }
@@ -831,8 +860,13 @@ void Fireball::moveAndAnimate() {
 
         QSoundEffect* currentSound = hitSounds[currentHitSoundIndex];
         if (currentSound->status() == QSoundEffect::Ready) {
+            qDebug() << "Source du son :" << currentSound->source();
+            qDebug() << "Statut du son :" << currentSound->status();
             currentSound->stop();
             currentSound->play();
+        }
+        else {
+            qDebug() << "Son non prêt :" << currentSound->status();
         }
         currentHitSoundIndex = (currentHitSoundIndex + 1) % hitSounds.size();
 
