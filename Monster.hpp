@@ -104,7 +104,6 @@ private:
     QVector<QPixmap*> animationAttackUp;
     QVector<QPixmap*> animationAttackDown;
     QVector<QPixmap*>* currentAttackAnimation = nullptr;
-    QTimer* animationTimer = nullptr;
     int attackFrameIndex = 0;  // index pour animation attaque
     bool isMoving = false;
     bool isAttacking = false;
@@ -126,6 +125,21 @@ class BirdMonster : public Monster {
     Q_OBJECT
 public:
     BirdMonster(Player* myPlayer, MyScene* ms, QObject* parent = nullptr);
+    void attack() override;
+    void loadAnimations() override;
+    void updateAttackAnimation();
+private:
+    QPixmap* attackSheet;
+    QVector<QPixmap*> animationAttackLeft;
+    QVector<QPixmap*> animationAttackRight;
+    QVector<QPixmap*> animationAttackUp;
+    QVector<QPixmap*> animationAttackDown;
+    QVector<QPixmap*>* currentAttackAnimation = nullptr;
+    int attackFrameIndex = 0;  // index pour animation attaque
+    bool isMoving = false;
+    bool isAttacking = false;
+    QTimer* attackAnimationTimer = nullptr;
+
 };
 class SlimeMonster : public Monster {
     Q_OBJECT

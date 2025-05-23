@@ -24,6 +24,7 @@
         <file>ghost_move.png</file>
         <file>bird_idle.png</file>
         <file>bird_move.png</file>
+        <file>bird_attack.png</file>
         <file>doctor_idle.png</file>
         <file>doctor_move.png</file>
         <file>doctor_attack.png</file>

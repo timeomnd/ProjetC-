@@ -14,8 +14,8 @@ attackCooldown(1000), mainScene(mainScene), currentFrameIndex(0), isMoving(false
     lastAttackTime.start();
     timer = new QTimer(this);
     connect(timer, &QTimer::timeout, this, [this]() {
-    this->move();   // déplacement du monstre
-    this->attack(); // attaque du monstre si collision
+    move();   // déplacement du monstre
+    attack(); // attaque du monstre si collision
 });
     timer->start(50);//déplacement toute les 50ms
 }
@@ -276,17 +276,160 @@ BirdMonster::BirdMonster(Player* myPlayer, MyScene* ms, QObject* parent)
 {
     setSpeed(3);
     setHP(50);
-    setDamage(15);
+    setDamage(0);
     setAttackCooldown(1200);
     setValueScore(250);
     idleSheet = new QPixmap(":/assets/bird_idle.png");
     moveSheet = new QPixmap(":/assets/bird_move.png");
+    attackSheet = new QPixmap(":/assets/bird_attack.png");
 
     loadAnimations();
+    attackAnimationTimer = new QTimer(this);
+    connect(attackAnimationTimer, &QTimer::timeout, this, &BirdMonster::updateAttackAnimation);
+}
+void BirdMonster::updateAttackAnimation() {
+    if (!currentAttackAnimation || currentAttackAnimation->isEmpty()) return;
 
-    animationTimer = new QTimer(this);
-    connect(animationTimer, &QTimer::timeout, this, &BirdMonster::updateAnimationFrame);
-    animationTimer->start(150);
+    if (attackFrameIndex < currentAttackAnimation->size()) {
+        setPixmap(*(*currentAttackAnimation)[attackFrameIndex]);
+        attackFrameIndex++;
+    } else {
+        attackAnimationTimer->stop();
+        isAttacking = false;
+
+        QPointF monsterCenter = this->sceneBoundingRect().center();
+        QPointF playerCenter = player->sceneBoundingRect().center();
+
+        qreal dx = playerCenter.x() - monsterCenter.x();
+        qreal dy = playerCenter.y() - monsterCenter.y();
+
+        QPointF offset(0, 0);
+
+        if (std::abs(dx) > std::abs(dy)) {
+            if (dx > 0) {
+                // regarde à droite
+                offset = QPointF(15, -5);  // 15 pixels à droite, 5 pixels vers le haut
+            } else {
+                // regarde à gauche
+                offset = QPointF(-15, -5);
+            }
+        } else {
+            if (dy > 0) {
+                // regarde en bas
+                offset = QPointF(0, 15);
+            } else {
+                // regarde en haut
+                offset = QPointF(0, -15);
+            }
+        }
+
+        // Mise à jour du cooldown
+        lastAttackTime.restart();
+
+        // Retour à l'animation idle
+        monsterCenter = this->sceneBoundingRect().center();
+        playerCenter = player->sceneBoundingRect().center();
+
+        dx = playerCenter.x() - monsterCenter.x();
+        dy = playerCenter.y() - monsterCenter.y();
+
+        QVector<QPixmap*>* currentIdle = nullptr;
+        if (std::abs(dx) > std::abs(dy)) {
+            currentIdle = dx > 0 ? &animationRightIdle : &animationLeftIdle;
+        } else {
+            currentIdle = dy > 0 ? &animationDownIdle : &animationUpIdle;
+        }
+
+        if (currentIdle && !currentIdle->isEmpty()) {
+            currentFrameIndex = 0;
+            setPixmap(*(*currentIdle)[currentFrameIndex]);
+        }
+    }
+}
+void BirdMonster::attack() {
+    if (!player) return;
+    if (isAttacking) return;
+    if (this->scene()) {
+        if (this->collidesWithItem(player)) {
+            if (lastAttackTime.elapsed() >= attackCooldown) {
+                // === Animation d'attaque ===
+                isAttacking = true;
+                attackFrameIndex = 0;
+                QPointF monsterCenter = this->sceneBoundingRect().center();
+                QPointF playerCenter = player->sceneBoundingRect().center();
+
+                qreal dx = playerCenter.x() - monsterCenter.x();
+                qreal dy = playerCenter.y() - monsterCenter.y();
+
+                if (std::abs(dx) > std::abs(dy)) {
+                    currentAttackAnimation = dx > 0 ? &animationAttackRight : &animationAttackLeft;
+                } else {
+                    currentAttackAnimation = dy > 0 ? &animationAttackDown : &animationAttackUp;
+                }
+
+                if (currentAttackAnimation && !currentAttackAnimation->isEmpty()) {
+                    attackAnimationTimer->start(100); // 100 ms entre chaque frame
+                }
+                player->playRandomHitSound();
+                // === Infliger des dégâts ===
+                int newHP = player->getHP() - damage;
+                player->setHP(newHP);
+                if (player->getHealthBar()) {
+                    player->getHealthBar()->updateHP(newHP);
+                }
+                if (mainScene->getScoreManager()) {
+                    mainScene->getScoreManager()->addPoints(-(this->getDamage()) * 3);
+                }
+
+                // Jouer le son
+                QSoundEffect* currentSound = hitSounds[currentHitSoundIndex];
+                if (currentSound->status() == QSoundEffect::Ready) {
+                    currentSound->stop();
+                    currentSound->play();
+                }
+                currentHitSoundIndex = (currentHitSoundIndex + 1) % hitSounds.size();
+
+                lastAttackTime.restart(); // reset du cooldown
+            }
+        }
+    }
+}
+void BirdMonster::loadAnimations() {
+    if (idleSheet->isNull() || moveSheet->isNull()) {
+        qWarning("Erreur : sprites introuvables !");
+        return;
+    }
+
+    int frameWidth = idleSheet->width() / 4;
+    int frameHeight = idleSheet->height() /4 ;
+
+    for (int i = 0; i < 4; ++i) {
+        animationDownIdle.append(new QPixmap(idleSheet->copy(i * frameWidth, 0 * frameHeight, frameWidth, frameHeight)));
+        animationLeftIdle.append(new QPixmap(idleSheet->copy(i * frameWidth, 1 * frameHeight, frameWidth, frameHeight)));
+        animationRightIdle.append(new QPixmap(idleSheet->copy(i * frameWidth, 2 * frameHeight, frameWidth, frameHeight)));
+        animationUpIdle.append(new QPixmap(idleSheet->copy(i * frameWidth, 3 * frameHeight, frameWidth, frameHeight)));
+
+        animationDownMove.append(new QPixmap(moveSheet->copy(i * frameWidth, 0 * frameHeight, frameWidth, frameHeight)));
+        animationLeftMove.append(new QPixmap(moveSheet->copy(i * frameWidth, 1 * frameHeight, frameWidth, frameHeight)));
+        animationRightMove.append(new QPixmap(moveSheet->copy(i * frameWidth, 2 * frameHeight, frameWidth, frameHeight)));
+        animationUpMove.append(new QPixmap(moveSheet->copy(i * frameWidth, 3 * frameHeight, frameWidth, frameHeight)));
+    }
+    if (!attackSheet->isNull()) {
+        int attackFrameWidth = attackSheet->width() / 6;
+        int attackFrameHeight = attackSheet->height() / 4;
+
+        for (int i = 0; i < 6; ++i) {
+            animationAttackDown.append(new QPixmap(attackSheet->copy(i * attackFrameWidth, 0 * attackFrameHeight, attackFrameWidth, attackFrameHeight)));
+            animationAttackLeft.append(new QPixmap(attackSheet->copy(i * attackFrameWidth, 1 * attackFrameHeight, attackFrameWidth, attackFrameHeight)));
+            animationAttackRight.append(new QPixmap(attackSheet->copy(i * attackFrameWidth, 2 * attackFrameHeight, attackFrameWidth, attackFrameHeight)));
+            animationAttackUp.append(new QPixmap(attackSheet->copy(i * attackFrameWidth, 3 * attackFrameHeight, attackFrameWidth, attackFrameHeight)));
+        }
+    } else {
+        qWarning("Erreur : bird_attack introuvable !");
+    }
+
+
+    setPixmap(*animationDownIdle[0]);
 }
 void DoctorMonster::setIsAttacking(bool a) {
     isAttacking = a;
@@ -307,9 +450,6 @@ DoctorMonster::DoctorMonster(Player* myPlayer, MyScene* ms, QObject* parent)
     moveSheet = new QPixmap(":/assets/doctor_move.png");
 
     loadAnimations();
-    //QGraphicsEllipseItem* debugHitbox = new QGraphicsEllipseItem(boundingRect(), this);
-    //debugHitbox->setPen(QPen(Qt::red));
-    animationTimer = new QTimer(this);
     attackAnimationTimer = new QTimer(this);
     connect(attackAnimationTimer, &QTimer::timeout, this, &DoctorMonster::updateAttackAnimation);
 
