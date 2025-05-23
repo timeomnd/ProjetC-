@@ -8,9 +8,11 @@
         <file>nils_right.png</file>
         <file>nils_rear.png</file>
         <file>bullet.png</file>
-        <file>hitMonster.wav</file>
         <file>gameOverSound.wav</file>
         <file>GameOverBackground.png</file>
+        <file>fireball_sound.wav</file>
+        <file>impact.wav</file>
+        <file>slime_impact.wav</file>
         <file>pompe.wav</file>
         <file>map/map.json</file>
         <file>map/house.tsx</file>
@@ -31,15 +33,11 @@
         <file>slime_attack.png</file>
         <file>FB_1.png</file>
         <file>FB_2.png</file>
-        <file>FB_1.png</file>
         <file>FB_3.png</file>
         <file>FB_4.png</file>
         <file>FB_5.png</file>
         <file>FB_6.png</file>
         <file>FB_7.png</file>
         <file>FB_8.png</file>
-        <file>fireball_sound.wav</file>
-        <file>impact.wav</file>
-        <file>slime_impact.wav</file>
     </qresource>
 </RCC>

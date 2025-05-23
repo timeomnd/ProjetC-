@@ -15,6 +15,7 @@
 #include "HealthBar.hpp"
 #include "MyScene.hpp"
 #include "bullet.hpp"
+#include <QGraphicsColorizeEffect>
 
 class Player;
 class MyScene;
@@ -45,6 +46,7 @@ public:
     void resume();
     virtual void loadAnimations();
     virtual void updateAnimationFrame();
+    void showHitEffect();
 
 protected:
     Player* player;

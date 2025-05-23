@@ -44,9 +44,7 @@ void Projectile::move() {
         Monster* monster = dynamic_cast<Monster*>(item);
         if (monster) {
             monster->setHP(monster->getHP() - getDamage());
-            if (monster->getHP() <= 0 && scene()) {
-                scene()->removeItem(monster);
-            }
+            monster->showHitEffect();
             destroy();
             return;
         }
