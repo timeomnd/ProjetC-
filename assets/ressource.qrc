@@ -8,6 +8,8 @@
         <file>nils_right.png</file>
         <file>nils_rear.png</file>
         <file>bullet.png</file>
+        <file>pompe_bullet.png</file>
+        <file>gun.wav</file>
         <file>gameOverSound.wav</file>
         <file>GameOverBackground.png</file>
         <file>fireball_sound.wav</file>

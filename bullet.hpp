@@ -11,7 +11,7 @@ class Projectile : public QGraphicsObject {
     Q_OBJECT
 
 public:
-    Projectile(const QPointF& velocity, QGraphicsItem* parent = nullptr);
+    Projectile(QPixmap sprite, const QPointF& velocity, QGraphicsItem* parent = nullptr);
     virtual ~Projectile();
 
     void setDamage(int d);

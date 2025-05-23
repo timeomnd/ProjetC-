@@ -5,13 +5,18 @@
 #include <QtMath>
 
 Weapon::Weapon(QGraphicsScene* scene, QObject* parent) 
-    : QObject(parent), scene(scene), cooldownTimer(nullptr), cooldownMs(0) {
+    : QObject(parent), scene(scene), cooldownTimer(nullptr), cooldownMs(0), currentSoundIndex(0) {
     cooldownTimer = new QElapsedTimer();
     cooldownTimer->start();
 }
 
 Weapon::~Weapon() {
     delete cooldownTimer;
+    if (!sounds.isEmpty()) {
+        for (QSoundEffect* sound : sounds) {
+            delete sound;
+        }
+    }
 }
 
 void Weapon::setScene(QGraphicsScene* scene) {
@@ -20,7 +25,13 @@ void Weapon::setScene(QGraphicsScene* scene) {
 
 Gun::Gun(QGraphicsScene* scene, QObject* parent) 
     : Weapon(scene, parent) {
-    // Le gun n'a pas de cooldown
+    for (int i = 0; i < SOUND_INSTANCES; ++i) {
+        QSoundEffect* sound = new QSoundEffect(this);
+        sound->setSource(QUrl("qrc:/assets/gun.wav"));
+        sound->setLoopCount(1);
+        sound->setVolume(0.2);
+        sounds.append(sound);
+    }
 }
 
 void Gun::shoot(const QPointF& sourcePos, const QPointF& targetPos) {
@@ -30,16 +41,23 @@ void Gun::shoot(const QPointF& sourcePos, const QPointF& targetPos) {
 
     const qreal projectileSpeed = 12.0;
     QPointF velocity = direction * (projectileSpeed / length);
-
-    Projectile* projectile = new Projectile(velocity);
+    // Jouer le son
+    QSoundEffect* sound = sounds[currentSoundIndex];
+    if (sound->status() == QSoundEffect::Ready) {
+        sound->stop();
+        sound->play();
+    }
+    currentSoundIndex = (currentSoundIndex + 1) % sounds.size();
+    QPixmap* sprite = new QPixmap(":/assets/bullet.png");
+    Projectile* projectile = new Projectile(*sprite, velocity);
     projectile->setPos(sourcePos);
     scene->addItem(projectile);
 }
 
-Shotgun::Shotgun(QGraphicsScene* scene, QObject* parent) 
-    : Weapon(scene, parent), currentSoundIndex(0) {
+Shotgun::Shotgun(QGraphicsScene* scene, QObject* parent)
+    : Weapon(scene, parent) {
     cooldownMs = 600;
-    
+
     // Charger plusieurs sons pour éviter les conflits
     for (int i = 0; i < SOUND_INSTANCES; ++i) {
         QSoundEffect* sound = new QSoundEffect(this);
@@ -78,8 +96,8 @@ void Shotgun::shoot(const QPointF& sourcePos, const QPointF& targetPos) {
 
         QPointF velocity(projectileSpeed * qCos(radian),
                          projectileSpeed * qSin(radian));
-
-        Projectile* projectile = new Projectile(velocity);
+        QPixmap* sprite = new QPixmap(":/assets/pompe_bullet.png");
+        Projectile* projectile = new Projectile(*sprite,velocity);
         projectile->setPos(sourcePos);
         scene->addItem(projectile);
     }

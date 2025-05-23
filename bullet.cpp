@@ -3,7 +3,7 @@
 #include <QtMath>
 #include <QPainter>
 
-Projectile::Projectile(const QPointF& velocity, QGraphicsItem* parent)
+Projectile::Projectile(QPixmap sprite, const QPointF& velocity, QGraphicsItem* parent)
     : QGraphicsObject(parent), velocity(velocity), sprite(":/assets/bullet.png") {
 
     setDamage(7);
@@ -25,11 +25,11 @@ void Projectile::applyRotation() {
 }
 
 QRectF Projectile::boundingRect() const {
-    return QRectF(-sprite.width() / 2, -sprite.height() / 2, sprite.width(), sprite.height());
+    return QRectF(-5, -5, 10, 10); // Centré sur (0,0), taille 10x10
 }
 
 void Projectile::paint(QPainter* painter, const QStyleOptionGraphicsItem*, QWidget*) {
-    painter->drawPixmap(boundingRect().topLeft(), sprite.scaled(10, 10, Qt::KeepAspectRatio, Qt::FastTransformation));
+    painter->drawPixmap(boundingRect().topLeft(), sprite.scaled(20, 20, Qt::KeepAspectRatio, Qt::FastTransformation));
 }
 
 void Projectile::move() {
