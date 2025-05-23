@@ -14,18 +14,14 @@ Player::Player(MainWindow* mw, MyScene* scene, Map* map, QGraphicsItem* parent)
     : QGraphicsPixmapItem(parent), speed(2), dx(0), dy(0),
       mainScene(scene), mainWindow(mw), map(map), alive(true), initialSpeed(speed) {
 
-
     setHP(INITIAL_HP);
     healthBar = new HealthBar(INITIAL_HP, this);
 
-
     setBoundingRegionGranularity(0.85);
-
 
     gun = new Gun(mainScene);
     shotgun = new Shotgun(mainScene);
     currentWeapon = gun;
-
 
     spriteUp = QPixmap(":/assets/nils_rear.png").scaled(49, 49, Qt::KeepAspectRatio, Qt::FastTransformation);
     spriteDown = QPixmap(":/assets/nils_front.png").scaled(49, 49, Qt::KeepAspectRatio, Qt::FastTransformation);
@@ -40,11 +36,20 @@ Player::Player(MainWindow* mw, MyScene* scene, Map* map, QGraphicsItem* parent)
     setFlag(QGraphicsItem::ItemIsFocusable);
     setFocus();
 
+    // Chargement des sons de dégâts (damage1.wav à damage5.wav)
+    for (int i = 1; i <= 5; ++i) {
+        QSoundEffect* sound = new QSoundEffect(this);
+        sound->setSource(QUrl(QString("qrc:/assets/damage%1.wav").arg(i)));
+        sound->setLoopCount(1);
+        sound->setVolume(0.2);
+        hitSounds.append(sound);
+    }
 
     movementTimer = new QTimer(this);
     connect(movementTimer, &QTimer::timeout, this, &Player::updatePosition);
     movementTimer->start(MOVEMENT_TIMER_INTERVAL_MS);
 }
+
 
 
 QRectF Player::getCollisionBounds() const {
@@ -143,7 +148,12 @@ void Player::updatePosition() {
 
     if (mainWindow->getView()) mainWindow->getView()->centerOn(this);
 }
-
+void Player::playRandomHitSound() {
+    if (!hitSounds.isEmpty()) {
+        int index = QRandomGenerator::global()->bounded(hitSounds.size());
+        hitSounds[index]->play();
+    }
+}
 
 void Player::setHP(int h) {
     HP = qBound(0, h, INITIAL_HP);
@@ -161,6 +171,7 @@ void Player::setInitalSpeed(int s) {
 int Player::getInitalSpeed() const {
     return initialSpeed;
 }
+
 
 int Player::getHP() const {
     return HP;

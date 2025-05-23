@@ -25,6 +25,7 @@ public:
     void keyReleaseEvent(QKeyEvent* event) override;
     void setSpeed(int s);
     void setHP(int h);
+    void playRandomHitSound();
     void setMainWindow(MainWindow* mw);
     int getSpeed() const;
     int getHP() const;
@@ -66,6 +67,7 @@ private:
     HealthBar* healthBar;
     MainWindow* mainWindow = nullptr;
     MyScene* mainScene = nullptr;
+    QVector<QSoundEffect*> hitSounds;
     QTimer* movementTimer;
     QSet<int> pressedKeys;
     QPixmap spriteUp;

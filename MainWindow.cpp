@@ -41,7 +41,7 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent),
     }
     sound = new QSoundEffect(this);
     sound->setSource(QUrl("qrc:/assets/GameMusic.wav"));
-    sound->setVolume(0.5);
+    sound->setVolume(0.2);
     sound->setLoopCount(QSoundEffect::Infinite);
     sound->play();
 }
@@ -225,7 +225,7 @@ void MainWindow::die() {
 
     QSoundEffect* gameOverSound = new QSoundEffect(this);
     gameOverSound->setSource(QUrl("qrc:/assets/gameOverSound.wav"));
-    gameOverSound->setVolume(0.5);
+    gameOverSound->setVolume(0.2);
     gameOverSound->play();
 
     if (mainView->layout()) {
