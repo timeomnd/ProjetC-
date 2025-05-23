@@ -45,5 +45,6 @@
         <file>damage3.wav</file>
         <file>damage4.wav</file>
         <file>damage5.wav</file>
+        <file>InGameSound.wav</file>
     </qresource>
 </RCC>

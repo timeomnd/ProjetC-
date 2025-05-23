@@ -71,7 +71,6 @@ void MyScene::mousePressEvent(QGraphicsSceneMouseEvent* event) {
 MyScene::MyScene(NoScrollGraphicsView* mainView, MainWindow* mw, QObject* parent)
     : QGraphicsScene(parent), mainWindow(mw), map(nullptr), scoreManager(nullptr),
       healthbarTimer(nullptr), spawnTimer(nullptr), player(nullptr), playerInitialized(false), scoreTimer(nullptr) {
-
     setBackgroundBrush(Qt::black);
 
     healthbarTimer = new QTimer(this);
@@ -94,6 +93,7 @@ MyScene::MyScene(NoScrollGraphicsView* mainView, MainWindow* mw, QObject* parent
         monster->deleteLater();
     });
     setFocus();
+
 }
 
 void MyScene::initMap() {
@@ -127,7 +127,13 @@ void MyScene::initScoreManager() {
         scoreTimer->start(1);
     }
 }
-
+void MyScene::initSound() {
+    sound = new QSoundEffect(this);
+    sound->setSource(QUrl("qrc:/assets/InGameSound.wav"));
+    sound->setVolume(0.1);
+    sound->setLoopCount(QSoundEffect::Infinite);
+    sound->play();
+}
 void MyScene::spawnMonster() {
     if (!player || !playerInitialized) return;
 
@@ -211,6 +217,11 @@ MyScene::~MyScene() {
         };
         player->deleteLater();
         player = nullptr;
+    }
+    if (sound) {
+        sound->stop();
+        sound->deleteLater();
+        sound = nullptr;
     }
 }
 

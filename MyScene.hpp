@@ -33,6 +33,7 @@ public:
     void setSpawnTimer(QTimer* timer);
     void initScoreManager();
     void destroyMonster(Monster* monster);
+    void initSound();
 
 
     signals:
@@ -50,6 +51,7 @@ private:
     QList<Monster*> activeMonsters;
     bool isPaused = false; // Ajout
     QGraphicsTextItem* pauseText = nullptr;
+    QSoundEffect* sound = nullptr;
 
 protected:
     void mousePressEvent(QGraphicsSceneMouseEvent* event) override;

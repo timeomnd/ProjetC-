@@ -89,6 +89,7 @@ void MainWindow::slot_launchGame() {
     mainScene->initMap();
     mainScene->initPlayer();
     mainScene->initScoreManager();
+    mainScene->initSound();
 
 
     QSizeF sceneSize = mainScene->sceneRect().size();
