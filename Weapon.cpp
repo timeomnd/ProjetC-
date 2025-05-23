@@ -4,7 +4,7 @@
 #include <QLineF>
 #include <QtMath>
 
-Weapon::Weapon(QGraphicsScene* scene, QObject* parent) 
+Weapon::Weapon(QGraphicsScene* scene, QObject* parent)
     : QObject(parent), scene(scene), cooldownTimer(nullptr), cooldownMs(0), currentSoundIndex(0) {
     cooldownTimer = new QElapsedTimer();
     cooldownTimer->start();
@@ -23,8 +23,9 @@ void Weapon::setScene(QGraphicsScene* scene) {
     this->scene = scene;
 }
 
-Gun::Gun(QGraphicsScene* scene, QObject* parent) 
+Gun::Gun(QGraphicsScene* scene, QObject* parent)
     : Weapon(scene, parent) {
+    cooldownMs = 200;
     for (int i = 0; i < SOUND_INSTANCES; ++i) {
         QSoundEffect* sound = new QSoundEffect(this);
         sound->setSource(QUrl("qrc:/assets/gun.wav"));
@@ -35,6 +36,8 @@ Gun::Gun(QGraphicsScene* scene, QObject* parent)
 }
 
 void Gun::shoot(const QPointF& sourcePos, const QPointF& targetPos) {
+    if (!canShoot()) return;
+    cooldownTimer->restart();
     QPointF direction = targetPos - sourcePos;
     qreal length = std::hypot(direction.x(), direction.y());
     if (length == 0) return;
@@ -56,7 +59,7 @@ void Gun::shoot(const QPointF& sourcePos, const QPointF& targetPos) {
 
 Shotgun::Shotgun(QGraphicsScene* scene, QObject* parent)
     : Weapon(scene, parent) {
-    cooldownMs = 600;
+    cooldownMs = 1000;
 
     // Charger plusieurs sons pour éviter les conflits
     for (int i = 0; i < SOUND_INSTANCES; ++i) {
@@ -68,7 +71,7 @@ Shotgun::Shotgun(QGraphicsScene* scene, QObject* parent)
     }
 }
 
-bool Shotgun::canShoot() const {
+bool Weapon::canShoot() const {
     return cooldownTimer->elapsed() >= cooldownMs;
 }
 
@@ -98,6 +101,7 @@ void Shotgun::shoot(const QPointF& sourcePos, const QPointF& targetPos) {
                          projectileSpeed * qSin(radian));
         QPixmap* sprite = new QPixmap(":/assets/pompe_bullet.png");
         Projectile* projectile = new Projectile(*sprite,velocity);
+        projectile->setDamage(12);
         projectile->setPos(sourcePos);
         scene->addItem(projectile);
     }

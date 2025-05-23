@@ -16,7 +16,7 @@ public:
     Weapon(QGraphicsScene* scene, QObject* parent = nullptr);
     virtual ~Weapon();
     virtual void shoot(const QPointF& sourcePos, const QPointF& targetPos) = 0;
-    virtual bool canShoot() const = 0;
+    bool canShoot() const;
     void setScene(QGraphicsScene* scene);
 
 protected:
@@ -25,14 +25,13 @@ protected:
     int cooldownMs;
     QVector<QSoundEffect*> sounds;
     int currentSoundIndex;
-    static const int SOUND_INSTANCES = 5;
+    static const int SOUND_INSTANCES = 10;
 };
 
 class Gun : public Weapon {
 public:
     Gun(QGraphicsScene* scene, QObject* parent = nullptr);
     void shoot(const QPointF& sourcePos, const QPointF& targetPos) override;
-    bool canShoot() const override { return true; } // Pas de cooldown pour le gun
 
 };
 
@@ -40,7 +39,6 @@ class Shotgun : public Weapon {
 public:
     Shotgun(QGraphicsScene* scene, QObject* parent = nullptr);
     void shoot(const QPointF& sourcePos, const QPointF& targetPos) override;
-    bool canShoot() const override;
 };
 
 #endif // WEAPONS_HPP
