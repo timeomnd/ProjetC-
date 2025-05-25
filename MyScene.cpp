@@ -144,25 +144,54 @@ void MyScene::spawnMonster() {
     QPointF playerPos = player->pos();
     QPointF spawnPos;
     const int minDistance = 100;
-    const int maxAttempts = 50;
+    const int maxAttempts = 100;
+
+    const int tileSize = 16;
+    const int mapWidthInTiles = 40;
+    const int mapHeightInTiles = 62;
+    const int mapPixelWidth = mapWidthInTiles * tileSize;
+    const int mapPixelHeight = mapHeightInTiles * tileSize;
+
+    int monsterType = QRandomGenerator::global()->bounded(1, 5);
+
+    QRectF sceneRect = this->sceneRect();
+
     bool valid = false;
-    int rand = QRandomGenerator::global()->bounded(1, 5); // Déterminer le type en premier
 
     for (int i = 0; i < maxAttempts; ++i) {
-        int x = QRandomGenerator::global()->bounded(0, int(width()));
-        int y = QRandomGenerator::global()->bounded(0, int(height()));
-        QPointF pos(x, y);
+        // Générer une position aléatoire sécurisée à l'intérieur des bornes
+        int xTile = QRandomGenerator::global()->bounded(0, mapWidthInTiles);
+        int yTile = QRandomGenerator::global()->bounded(0, mapHeightInTiles);
+
+        QPointF pos(xTile * tileSize + tileSize / 2, yTile * tileSize + tileSize / 2);
+
+        // Vérifie la distance au joueur
         if (QLineF(playerPos, pos).length() < minDistance) continue;
 
-        // Créer un monstre temporaire pour vérifier la collision
+        // Crée temporairement un monstre pour tester la collision et la position
         Monster* tempMonster = nullptr;
-        switch (rand) {
+        switch (monsterType) {
             case 1: tempMonster = new BirdMonster(player, this, map, true); break;
             case 2: tempMonster = new DoctorMonster(player, this, map, true); break;
             case 3: tempMonster = new GhostMonster(player, this, map, true); break;
             case 4: tempMonster = new SlimeMonster(player, this, map, true); break;
         }
+
+        if (!tempMonster) continue;
+
         tempMonster->setPos(pos);
+
+        // Calculer le rectangle du monstre dans la scène (centré sur pos)
+        QRectF monsterRect = tempMonster->boundingRect();
+        QRectF monsterSceneRect = monsterRect.translated(pos.x() - monsterRect.width()/2, pos.y() - monsterRect.height()/2);
+
+        // Vérifie si le monstre dépasse la map
+        if (!sceneRect.contains(monsterSceneRect)) {
+            delete tempMonster;
+            continue;
+        }
+
+        // Vérifie s’il y a collision avec les tuiles bloquantes
         bool collision = tempMonster->checkTileCollision(pos);
         delete tempMonster;
 
@@ -173,10 +202,14 @@ void MyScene::spawnMonster() {
         }
     }
 
-    if (!valid) spawnPos = QPointF(0, 0);
+    if (!valid) {
+        qWarning() << "⚠️ Aucun emplacement valide trouvé pour spawn un monstre après" << maxAttempts << "tentatives.";
+        spawnPos = QPointF(tileSize, tileSize); // zone sûre en haut à gauche
+    }
 
+    // Création réelle du monstre
     Monster* monster = nullptr;
-    switch (rand) {
+    switch (monsterType) {
         case 1: monster = new BirdMonster(player, this, map); break;
         case 2: monster = new DoctorMonster(player, this, map); break;
         case 3: monster = new GhostMonster(player, this, map); break;
@@ -189,7 +222,6 @@ void MyScene::spawnMonster() {
         activeMonsters.append(monster);
     }
 }
-
 
 //  Méthode à appeler quand un monstre meurt
 void MyScene::destroyMonster(Monster* monster) {
