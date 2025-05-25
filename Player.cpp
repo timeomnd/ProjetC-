@@ -74,6 +74,7 @@ bool Player::checkTileCollision(const QPointF& newPos) const {
     }
     return false;
 }
+
 void Player::updateMovementVector() {
     dx = 0;
     dy = 0;
@@ -97,7 +98,6 @@ void Player::keyPressEvent(QKeyEvent* event) {
     switch(event->key()) {
         case Qt::Key_X: switchWeapon(1); break;
         case Qt::Key_C: switchWeapon(2); break;
-        case Qt::Key_A: toggleCollisionBox(!showCollisionBox); 
         break;
         default: break;
     }
@@ -148,6 +148,7 @@ void Player::updatePosition() {
 
     if (mainWindow->getView()) mainWindow->getView()->centerOn(this);
 }
+
 void Player::playRandomHitSound() {
     if (!hitSounds.isEmpty()) {
         int index = QRandomGenerator::global()->bounded(hitSounds.size());
@@ -165,6 +166,7 @@ void Player::setHP(int h) {
         if (mainWindow) mainWindow->die();
     }
 }
+
 void Player::setInitalSpeed(int s) {
     initialSpeed = s;
 }
@@ -227,27 +229,7 @@ bool Player::getCanShoot() const {
 }
 
 
-void Player::toggleCollisionBox(bool show) {
-    showCollisionBox = show;
-    update();
-}
+
 MyScene* Player::getMyScene() const {
     return mainScene;
-}
-
-void Player::paint(QPainter* painter, const QStyleOptionGraphicsItem* option, QWidget* widget) {
-
-    QGraphicsPixmapItem::paint(painter, option, widget);
-
-    if(showCollisionBox) {
-
-        QRectF collisionRect = getCollisionBounds();
-        
-
-        painter->setPen(Qt::red);
-        painter->setBrush(Qt::NoBrush);
-        
-
-        painter->drawRect(collisionRect);
-    }
 }

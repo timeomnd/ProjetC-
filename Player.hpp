@@ -47,9 +47,6 @@ public:
     void setCanShoot(bool c);
     bool getCanShoot() const;
 
-    void toggleCollisionBox(bool show);
-    void paint(QPainter* painter, const QStyleOptionGraphicsItem* option, QWidget* widget) override;
-
 protected:
     void focusOutEvent(QFocusEvent* event) override;
 
@@ -75,7 +72,6 @@ private:
     QPixmap spriteLeft;
     QPixmap spriteRight;
     Map* map;
-    bool showCollisionBox = false;
 
 
 

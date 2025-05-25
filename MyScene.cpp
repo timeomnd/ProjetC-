@@ -1,6 +1,7 @@
 #include "MyScene.hpp"
 #include <QGraphicsSceneMouseEvent>
 #include <QDebug>
+#include <QKeyEvent>
 
 void MyScene::keyPressEvent(QKeyEvent* event) {
 
@@ -55,8 +56,7 @@ void MyScene::mousePressEvent(QGraphicsSceneMouseEvent* event) {
     if (isPaused || !player || !player->isAlive()) return; 
 
     QPointF targetPos = event->scenePos();
-    QPointF playerCenter = player->pos() + QPointF(player->boundingRect().width() / 2, 
-                                                 player->boundingRect().height() / 2);
+    QPointF playerCenter = player->pos() + QPointF(player->boundingRect().width() / 2, player->boundingRect().height() / 2);
 
     if (event->button() == Qt::LeftButton) {
         if (player->getCanShoot()) {
@@ -68,11 +68,8 @@ void MyScene::mousePressEvent(QGraphicsSceneMouseEvent* event) {
     player->setFocus();
 }
 
-MyScene::MyScene(NoScrollGraphicsView* mainView, MainWindow* mw, QObject* parent)
-    : QGraphicsScene(parent), mainWindow(mw), map(nullptr), scoreManager(nullptr),
-      healthbarTimer(nullptr), spawnTimer(nullptr), player(nullptr), playerInitialized(false), scoreTimer(nullptr) {
+MyScene::MyScene(NoScrollGraphicsView* mainView, MainWindow* mw, QObject* parent): QGraphicsScene(parent), mainWindow(mw), map(nullptr), scoreManager(nullptr),healthbarTimer(nullptr), spawnTimer(nullptr), player(nullptr), playerInitialized(false), scoreTimer(nullptr) {
     setBackgroundBrush(Qt::black);
-
     healthbarTimer = new QTimer(this);
     connect(healthbarTimer, &QTimer::timeout, [this]() {
         if (player && player->getHealthBar()) {
@@ -134,6 +131,7 @@ void MyScene::initSound() {
     sound->setLoopCount(QSoundEffect::Infinite);
     sound->play();
 }
+
 void MyScene::spawnMonster() {
     if (!player || !playerInitialized) return;
 
@@ -142,12 +140,27 @@ void MyScene::spawnMonster() {
     const int minDistance = 100;
     const int maxAttempts = 50;
     bool valid = false;
+    int rand = QRandomGenerator::global()->bounded(1, 5); // Déterminer le type en premier
 
     for (int i = 0; i < maxAttempts; ++i) {
         int x = QRandomGenerator::global()->bounded(0, int(width()));
         int y = QRandomGenerator::global()->bounded(0, int(height()));
         QPointF pos(x, y);
-        if (QLineF(playerPos, pos).length() >= minDistance) {
+        if (QLineF(playerPos, pos).length() < minDistance) continue;
+
+        // Créer un monstre temporaire pour vérifier la collision
+        Monster* tempMonster = nullptr;
+        switch (rand) {
+            case 1: tempMonster = new BirdMonster(player, this, map, true); break;
+            case 2: tempMonster = new DoctorMonster(player, this, map, true); break;
+            case 3: tempMonster = new GhostMonster(player, this, map, true); break;
+            case 4: tempMonster = new SlimeMonster(player, this, map, true); break;
+        }
+        tempMonster->setPos(pos);
+        bool collision = tempMonster->checkTileCollision(pos);
+        delete tempMonster;
+
+        if (!collision) {
             spawnPos = pos;
             valid = true;
             break;
@@ -157,24 +170,21 @@ void MyScene::spawnMonster() {
     if (!valid) spawnPos = QPointF(0, 0);
 
     Monster* monster = nullptr;
-    int rand = QRandomGenerator::global()->bounded(1, 5);
-    if (rand == 1) {
-        monster = new DoctorMonster(player, this);
-    } else if (rand == 2) {
-        monster = new BirdMonster(player, this);
+    switch (rand) {
+        case 1: monster = new BirdMonster(player, this, map); break;
+        case 2: monster = new DoctorMonster(player, this, map); break;
+        case 3: monster = new GhostMonster(player, this, map); break;
+        case 4: monster = new SlimeMonster(player, this, map); break;
     }
-    else if (rand == 3) {
-        monster = new GhostMonster(player, this);
-    }
-    else if (rand == 4) {
-        monster = new SlimeMonster(player, this);
-    }
+
     if (monster) {
         monster->setPos(spawnPos);
         addItem(monster);
         activeMonsters.append(monster);
     }
 }
+
+
 //  Méthode à appeler quand un monstre meurt
 void MyScene::destroyMonster(Monster* monster) {
     if (!monster) return;

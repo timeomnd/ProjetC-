@@ -2,8 +2,9 @@
 class MyScene;
 
 
-Monster::Monster(Player* myPlayer, MyScene* mainScene, QObject* parent): QObject(parent), HP(1), speed(2), player(myPlayer),
-attackCooldown(1000), mainScene(mainScene), currentFrameIndex(0), isMoving(false), idleSheet(nullptr), moveSheet(nullptr){
+Monster::Monster(Player* myPlayer, MyScene* mainScene, Map* map, bool isTemporary, QObject* parent): QObject(parent), HP(1), speed(2), player(myPlayer),attackCooldown(1000), mainScene(mainScene), currentFrameIndex(0), isMoving(false), idleSheet(nullptr), moveSheet(nullptr), map(map){
+    
+    
     for (int i = 0; i < 5; ++i) {
         QSoundEffect* sound = new QSoundEffect(this);
         sound->setSource(QUrl("qrc:/assets/hit_sound.wav"));
@@ -12,13 +13,17 @@ attackCooldown(1000), mainScene(mainScene), currentFrameIndex(0), isMoving(false
         hitSounds.append(sound);
     }
     lastAttackTime.start();
-    timer = new QTimer(this);
-    connect(timer, &QTimer::timeout, this, [this]() {
-    move();   // déplacement du monstre
-    attack(); // attaque du monstre si collision
-});
-    timer->start(50);//déplacement toute les 50ms
+
+
+    if (!isTemporary) {
+        timer = new QTimer(this);
+        connect(timer, &QTimer::timeout, this, [this]() { move(); attack(); });
+        timer->start(50);
+    }
 }
+
+
+
 void Monster::showHitEffect() {
     auto* effect = new QGraphicsColorizeEffect(this);
     effect->setColor(Qt::red);
@@ -29,9 +34,74 @@ void Monster::showHitEffect() {
         if (graphicsEffect() == effect) {
             setGraphicsEffect(nullptr);
         }
-        // Pas besoin de delete manuellement, Qt s'en occupe grâce au parent
     });
 }
+
+QRectF Monster::getCollisionBounds() const {
+    return sceneBoundingRect();
+}
+
+QRectF SlimeMonster::getCollisionBounds() const {
+    return mapToScene(boundingRect().adjusted(26, 37, -26, -15)).boundingRect();
+}
+
+QRectF DoctorMonster::getCollisionBounds() const {
+    return mapToScene(boundingRect().adjusted(59, 60, -59, -50)).boundingRect();
+}
+
+QRectF BirdMonster::getCollisionBounds() const {
+    return mapToScene(boundingRect().adjusted(57, 53, -59, -63)).boundingRect();
+}
+
+
+bool SlimeMonster::checkTileCollision(const QPointF& newPos) const {
+    if (!map) {
+        return false;
+    }
+
+    QRectF monsterBounds = boundingRect().adjusted(26, 37, -26, -15);
+    monsterBounds.translate(newPos); 
+    for (const QRectF& rect : map->getCollisionRects()) {
+        if (monsterBounds.intersects(rect)) {
+            return true;
+        }
+    }
+    return false;
+}
+
+bool DoctorMonster::checkTileCollision(const QPointF& newPos) const {
+    if (!map) {
+        return false;
+    }
+
+    QRectF monsterBounds = boundingRect().adjusted(59, 60, -59, -50);
+    monsterBounds.translate(newPos); 
+    for (const QRectF& rect : map->getCollisionRects()) {
+        if (monsterBounds.intersects(rect)) {
+            return true;
+        }
+    }
+    return false;
+}
+
+bool BirdMonster::checkTileCollision(const QPointF& newPos) const {
+    if (!map) {
+        return false;
+    }
+
+    QRectF monsterBounds = boundingRect().adjusted(57, 53, -59, -63);
+    monsterBounds.translate(newPos); 
+    for (const QRectF& rect : map->getCollisionRects()) {
+        if (monsterBounds.intersects(rect)) {
+            return true;
+        }
+    }
+    return false;
+}
+
+
+
+
 int Monster::getSpeed() const {
     return speed;
 }
@@ -79,7 +149,7 @@ void Monster::setSpriteSize(int size) {
 void Monster::move() {
     if (!player) return;
 
-    // Positions centrées (si sprites pas centrés, tu peux ajuster avec boundingRect()/2)
+
     QPointF monsterCenter = this->sceneBoundingRect().center();
     QPointF playerCenter = player->sceneBoundingRect().center();
 
@@ -88,17 +158,13 @@ void Monster::move() {
 
     qreal distance = std::sqrt(dx * dx + dy * dy);
 
-    // Si assez proche, on ne bouge plus
     if (distance < 1.0) return;
 
-    // Normalisation du vecteur direction
     qreal vx = dx / distance;
     qreal vy = dy / distance;
 
-    // Déplacement
     moveBy(vx * speed, vy * speed);
 
-    // Détermination de l'animation
     QVector<QPixmap*>* currentAnimation = nullptr;
     if (std::abs(dx) > std::abs(dy)) {
         currentAnimation = dx > 0 ? &animationRightMove : &animationLeftMove;
@@ -207,12 +273,11 @@ Monster::~Monster() {
 }
 
 
-GhostMonster::GhostMonster(Player* myPlayer, MyScene* ms, QObject* parent)
-    : Monster(myPlayer, ms, parent)
+GhostMonster::GhostMonster(Player* myPlayer, MyScene* ms, Map* map, bool isTemporary, QObject* parent): Monster(myPlayer, ms, map, parent)
 {
     setSpeed(2);
     setHP(50);
-    setDamage(5);
+    setDamage(0);
     setAttackCooldown(1500);
     setValueScore(300);
     canShootTimer = new QTimer(this);
@@ -220,10 +285,15 @@ GhostMonster::GhostMonster(Player* myPlayer, MyScene* ms, QObject* parent)
     moveSheet = new QPixmap(":/assets/ghost_move.png");
     loadAnimations();
 
-    animationTimer = new QTimer(this);
-    connect(animationTimer, &QTimer::timeout, this, &GhostMonster::updateAnimationFrame);
-    animationTimer->start(150); // 150 ms par frame
+    if (!isTemporary) {
+        animationTimer = new QTimer(this);
+        connect(animationTimer, &QTimer::timeout, this, &GhostMonster::updateAnimationFrame);
+        animationTimer->start(150); // 150 ms par frame
+
+    }
 }
+
+
 void GhostMonster::attack() {
     if (!player) return;
     if (this->scene()) {
@@ -252,6 +322,12 @@ void GhostMonster::attack() {
         }
     }
 }
+
+bool GhostMonster::checkTileCollision(const QPointF& newPos) const {
+    return false;
+}
+
+
 void GhostMonster::disableShoot() {
     if (player->getCanShoot()) {
         canShootTimer->start(3500); // 3.5 secondes
@@ -271,29 +347,94 @@ void GhostMonster::resetShoot() {
 }
 
 
-BirdMonster::BirdMonster(Player* myPlayer, MyScene* ms, QObject* parent)
-    : Monster(myPlayer, ms, parent)
-{
+
+
+
+
+BirdMonster::BirdMonster(Player* myPlayer, MyScene* ms, Map* map, bool isTemporary, QObject* parent): Monster(myPlayer, ms, map, parent){
+
     setSpeed(3);
     setHP(50);
-    setDamage(0);
+    setDamage(5);
     setAttackCooldown(1200);
     setValueScore(250);
     idleSheet = new QPixmap(":/assets/bird_idle.png");
     moveSheet = new QPixmap(":/assets/bird_move.png");
     attackSheet = new QPixmap(":/assets/bird_attack.png");
-
     loadAnimations();
-    attackAnimationTimer = new QTimer(this);
-    connect(attackAnimationTimer, &QTimer::timeout, this, &BirdMonster::updateAttackAnimation);
+  
+    if (!isTemporary) {
+        attackAnimationTimer = new QTimer(this);
+        connect(attackAnimationTimer, &QTimer::timeout, this, &BirdMonster::updateAttackAnimation);
+        attackAnimationTimer->start(150);
+    }
 }
+
+
+
+void BirdMonster::move() {
+    if (!player) return;
+    if (isAttacking) return;
+
+    QPointF monsterCenter = sceneBoundingRect().center();
+    QPointF playerCenter = player->sceneBoundingRect().center();
+
+    qreal dx = playerCenter.x() - monsterCenter.x();
+    qreal dy = playerCenter.y() - monsterCenter.y();
+    qreal distance = std::sqrt(dx * dx + dy * dy);
+
+    if (distance < 1.0) return;
+
+    qreal vx = (dx / distance) * speed;
+    qreal vy = (dy / distance) * speed;
+
+    QPointF mainMove = pos() + QPointF(vx, vy);
+
+    QList<QPointF> directions = {
+        mainMove,
+        pos() + QPointF(vx, 0),
+        pos() + QPointF(0, vy),
+        pos() + QPointF(vx * 0.5, vy),
+        pos() + QPointF(vx, vy * 0.5),
+        pos() + QPointF(-vx, vy),
+        pos() + QPointF(vx, -vy)
+    };
+
+    for (const QPointF& tryPos : directions) {
+        if (!checkTileCollision(tryPos)) {
+            setPos(tryPos);
+            break;
+        }
+    }
+
+    // Animation de déplacement
+    QVector<QPixmap*>* currentAnimation = nullptr;
+    if (std::abs(dx) > std::abs(dy)) {
+        currentAnimation = dx > 0 ? &animationRightMove : &animationLeftMove;
+    } else {
+        currentAnimation = dy > 0 ? &animationDownMove : &animationUpMove;
+    }
+
+    if (currentAnimation && !currentAnimation->isEmpty()) {
+        currentFrameIndex = (currentFrameIndex + 1) % currentAnimation->size();
+        setPixmap(*(*currentAnimation)[currentFrameIndex]);
+    }
+}
+
+
+
+
+
+
+
 void BirdMonster::updateAttackAnimation() {
     if (!currentAttackAnimation || currentAttackAnimation->isEmpty()) return;
 
     if (attackFrameIndex < currentAttackAnimation->size()) {
         setPixmap(*(*currentAttackAnimation)[attackFrameIndex]);
         attackFrameIndex++;
-    } else {
+    } 
+    else {
         attackAnimationTimer->stop();
         isAttacking = false;
 
@@ -346,6 +487,10 @@ void BirdMonster::updateAttackAnimation() {
         }
     }
 }
+
+
+
+
 void BirdMonster::attack() {
     if (!player) return;
     if (isAttacking) return;
@@ -394,6 +539,9 @@ void BirdMonster::attack() {
         }
     }
 }
+
+
+
 void BirdMonster::loadAnimations() {
     if (idleSheet->isNull() || moveSheet->isNull()) {
         qWarning("Erreur : sprites introuvables !");
@@ -431,6 +579,21 @@ void BirdMonster::loadAnimations() {
 
     setPixmap(*animationDownIdle[0]);
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 void DoctorMonster::setIsAttacking(bool a) {
     isAttacking = a;
 }
@@ -438,9 +601,7 @@ bool DoctorMonster::getIsAttacking() const {
     return isAttacking;
 }
 
-DoctorMonster::DoctorMonster(Player* myPlayer, MyScene* ms, QObject* parent)
-    : Monster(myPlayer, ms, parent)
-{
+DoctorMonster::DoctorMonster(Player* myPlayer, MyScene* ms, Map* map, bool isTemporary, QObject* parent): Monster(myPlayer, ms, map, parent){
     setSpeed(3);
     setHP(80);
     setDamage(20);
@@ -448,12 +609,19 @@ DoctorMonster::DoctorMonster(Player* myPlayer, MyScene* ms, QObject* parent)
     setValueScore(250);
     idleSheet = new QPixmap(":/assets/doctor_idle.png");
     moveSheet = new QPixmap(":/assets/doctor_move.png");
-
     loadAnimations();
-    attackAnimationTimer = new QTimer(this);
-    connect(attackAnimationTimer, &QTimer::timeout, this, &DoctorMonster::updateAttackAnimation);
 
+
+    if (!isTemporary) {
+        attackAnimationTimer = new QTimer(this);
+        connect(attackAnimationTimer, &QTimer::timeout, this, &DoctorMonster::updateAttackAnimation);
+        attackAnimationTimer->start(150);
+    }
+
+    
 }
+
+
 void DoctorMonster::setIsMoving(bool m) {
     isMoving = m;
 }
@@ -560,25 +728,40 @@ void DoctorMonster::move() {
     if (isAttacking) return;
     if (!player) return;
 
-    QPointF monsterCenter = this->sceneBoundingRect().center();
-    QPointF playerCenter = player->sceneBoundingRect().center();
+    QPointF monsterPos = pos();
+    QPointF playerPos = player->pos();
 
-    qreal dx = playerCenter.x() - monsterCenter.x();
-    qreal dy = playerCenter.y() - monsterCenter.y();
-
+    qreal dx = playerPos.x() - monsterPos.x();
+    qreal dy = playerPos.y() - monsterPos.y();
     qreal distance = std::sqrt(dx * dx + dy * dy);
 
-    const qreal minDistance = 125.0; // Distance à partir de laquelle le monstre s'arrête
+    const qreal minDistance = 125.0;
 
     if (distance > minDistance) {
         setIsMoving(true);
-        // Normalisation du vecteur direction
-        qreal vx = dx / distance;
-        qreal vy = dy / distance;
 
-        moveBy(vx * speed, vy * speed);
+        qreal vx = (dx / distance) * speed;
+        qreal vy = (dy / distance) * speed;
 
-        // Animation de déplacement
+        QPointF mainMove = monsterPos + QPointF(vx, vy);
+
+        QList<QPointF> directions = {
+            mainMove,
+            monsterPos + QPointF(vx, 0),
+            monsterPos + QPointF(0, vy),
+            monsterPos + QPointF(vx * 0.5, vy),
+            monsterPos + QPointF(vx, vy * 0.5),
+            monsterPos + QPointF(-vx, vy),
+            monsterPos + QPointF(vx, -vy)
+        };
+
+        for (const QPointF& tryPos : directions) {
+            if (!checkTileCollision(tryPos)) {
+                setPos(tryPos);
+                break;
+            }
+        }
+
         QVector<QPixmap*>* currentAnimation = nullptr;
         if (std::abs(dx) > std::abs(dy)) {
             currentAnimation = dx > 0 ? &animationRightMove : &animationLeftMove;
@@ -592,10 +775,8 @@ void DoctorMonster::move() {
         }
     } else {
         setIsMoving(false);
-
-        // Le joueur est à portée → lancer l'attaque
         attack();
-        // Si on ne peut pas attaquer (déjà en train de le faire), alors idle
+
         if (!isAttacking) {
             QVector<QPixmap*>* currentIdle = nullptr;
             if (std::abs(dx) > std::abs(dy)) {
@@ -611,6 +792,9 @@ void DoctorMonster::move() {
         }
     }
 }
+
+
+
 DoctorMonster::~DoctorMonster() {
     auto clearPixmaps = [](QVector<QPixmap*>& vec) {
         for (QPixmap* pixmap : vec) {
@@ -679,9 +863,13 @@ void DoctorMonster::loadAnimations() {
 
     setPixmap(*animationDownIdle[0]);
 }
-SlimeMonster::SlimeMonster(Player* myPlayer, MyScene* ms, QObject* parent)
-    : Monster(myPlayer, ms, parent)
-{
+
+
+
+
+
+SlimeMonster::SlimeMonster(Player* myPlayer, MyScene* ms, Map* map, bool isTemporary, QObject* parent): Monster(myPlayer, ms, map, parent){
+
     setSpeed(2);
     setHP(40);
     setDamage(10);
@@ -696,10 +884,13 @@ SlimeMonster::SlimeMonster(Player* myPlayer, MyScene* ms, QObject* parent)
     jumpCooldownTimer = new QTimer(this);
     connect(jumpCooldownTimer, &QTimer::timeout, this, &SlimeMonster::jump);
     jumpCooldownTimer->start(2000); // toutes les 2 secondes
+    
+    if (!isTemporary) {
+        animationTimer = new QTimer(this);
+        connect(animationTimer, &QTimer::timeout, this, &SlimeMonster::updateAnimationFrame);
+        animationTimer->start(150);
+    }
 
-    animationTimer = new QTimer(this);
-    connect(animationTimer, &QTimer::timeout, this, &SlimeMonster::updateAnimationFrame);
-    animationTimer->start(150);
 }
 void SlimeMonster::loadAnimations() {
     if (idleSheet->isNull() || moveLeftSheet->isNull() || moveRightSheet->isNull()) {
@@ -744,23 +935,46 @@ void SlimeMonster::loadAnimations() {
     setPixmap(*animationIdle[0]);
 }
 
+
+
+
+
 void SlimeMonster::move() {
     if (!player) return;
 
-    QPointF monsterCenter = this->sceneBoundingRect().center();
-    QPointF playerCenter = player->sceneBoundingRect().center();
+    QPointF monsterPos = pos();
+    QPointF playerPos = player->pos();
 
-    qreal dx = playerCenter.x() - monsterCenter.x();
-    qreal dy = playerCenter.y() - monsterCenter.y();
-
+    qreal dx = playerPos.x() - monsterPos.x();
+    qreal dy = playerPos.y() - monsterPos.y();
     qreal distance = std::sqrt(dx * dx + dy * dy);
-    if (distance < 1.0) return;
 
-    qreal vx = dx / distance;
-    qreal vy = dy / distance;
+    if (distance < 10.0) return;
 
-    moveBy(vx * speed, vy * speed);
+    qreal vx = (dx / distance) * speed;
+    qreal vy = (dy / distance) * speed;
 
+    QPointF mainMove = monsterPos + QPointF(vx, vy);
+
+    // Liste de directions à tester (priorité à la diagonale, puis X seul, Y seul, puis variantes)
+    QList<QPointF> directions = {
+        mainMove,
+        monsterPos + QPointF(vx, 0),
+        monsterPos + QPointF(0, vy),
+        monsterPos + QPointF(vx * 0.5, vy),
+        monsterPos + QPointF(vx, vy * 0.5),
+        monsterPos + QPointF(-vx, vy),
+        monsterPos + QPointF(vx, -vy)
+    };
+
+    for (const QPointF& tryPos : directions) {
+        if (!checkTileCollision(tryPos)) {
+            setPos(tryPos);
+            break;
+        }
+    }
+
+    // Animation
     if (!isJumping) {
         QVector<QPixmap*>* currentAnimation = nullptr;
         if (std::abs(dx) > std::abs(dy)) {
@@ -775,6 +989,10 @@ void SlimeMonster::move() {
         }
     }
 }
+
+
+
+
 void SlimeMonster::jump() {
     if (isJumping || animationJumpUp.isEmpty() || animationJumpDown.isEmpty()) return;
 

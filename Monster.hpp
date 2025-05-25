@@ -23,7 +23,7 @@ class MyScene;
 class Monster : public QObject, public QGraphicsPixmapItem {
     Q_OBJECT
 public:
-    Monster(Player* myPlayer, MyScene* mainScene, QObject* parent = nullptr);
+    Monster(Player* myPlayer, MyScene* mainScene, Map* map, bool isTemporary = false, QObject* parent = nullptr);
     virtual ~Monster();
 
     int getSpeed() const;
@@ -47,6 +47,10 @@ public:
     virtual void loadAnimations();
     virtual void updateAnimationFrame();
     void showHitEffect();
+    virtual QRectF getCollisionBounds() const;
+
+    virtual bool checkTileCollision(const QPointF& newPos) const = 0;
+
 
 protected:
     Player* player;
@@ -80,13 +84,26 @@ protected:
     QVector<QPixmap*> animationDownMove;
     QVector<QPixmap*> animationLeftMove;
     QVector<QPixmap*> animationRightMove;
+    
+    Map* map; 
+    
+    
+
 
 };
+
+
+
+
+
+
+
+
 
 class DoctorMonster : public Monster {
     Q_OBJECT
 public:
-    DoctorMonster(Player* myPlayer, MyScene* ms, QObject* parent = nullptr);
+    DoctorMonster(Player* myPlayer, MyScene* ms, Map* map, bool isTemporary = false, QObject* parent = nullptr);
     ~DoctorMonster() override;
     void move() override;
     void attack() override;
@@ -96,6 +113,8 @@ public:
     void setIsAttacking(bool a);
     bool getIsAttacking() const;
     void updateAttackAnimation();
+    QRectF getCollisionBounds() const;
+    bool checkTileCollision(const QPointF& newPos) const; 
 
 private:
     QPixmap* attackSheet;
@@ -109,25 +128,37 @@ private:
     bool isAttacking = false;
     QTimer* attackAnimationTimer = nullptr;
 };
+
+
+
+
+
 
 class GhostMonster : public Monster {
     Q_OBJECT
 public:
-    GhostMonster(Player* myPlayer, MyScene* ms, QObject* parent = nullptr);
+    GhostMonster(Player* myPlayer, MyScene* ms, Map* map, bool isTemporary = false, QObject* parent = nullptr);
     void attack() override;
     void disableShoot();
     void resetShoot();
+    bool checkTileCollision(const QPointF& newPos) const override;
 private:
     QTimer* canShootTimer = nullptr;
 };
 
+
+
+
 class BirdMonster : public Monster {
     Q_OBJECT
 public:
-    BirdMonster(Player* myPlayer, MyScene* ms, QObject* parent = nullptr);
+    BirdMonster(Player* myPlayer, MyScene* ms, Map* map, bool isTemporary = false, QObject* parent = nullptr);
     void attack() override;
     void loadAnimations() override;
+    void move() override;
     void updateAttackAnimation();
+    QRectF getCollisionBounds() const;
+    bool checkTileCollision(const QPointF& newPos) const; 
 private:
     QPixmap* attackSheet;
     QVector<QPixmap*> animationAttackLeft;
@@ -141,10 +172,15 @@ private:
     QTimer* attackAnimationTimer = nullptr;
 
 };
+
+
+
+
+
 class SlimeMonster : public Monster {
     Q_OBJECT
 public :
-    SlimeMonster(Player* myPlayer, MyScene* ms, QObject* parent = nullptr);
+    SlimeMonster(Player* myPlayer, MyScene* ms, Map* map, bool isTemporary = false, QObject* parent = nullptr);
     ~SlimeMonster() override;
     void jump();
     void loadAnimations() override;
@@ -154,6 +190,9 @@ public :
     QTimer* getSlowTimer() const;
     public slots :
     void resetSpeed();
+    QRectF getCollisionBounds() const;
+    bool checkTileCollision(const QPointF& newPos) const; 
+    
 private:
     QVector<QPixmap*> animationIdle;
     QPixmap* moveLeftSheet;
@@ -170,6 +209,9 @@ private:
     int jumpFrameIndex = 0;
     int currentFrameIndex = 0;
 };
+
+
+
 
 class Fireball : public QObject, public QGraphicsPixmapItem {
     Q_OBJECT
