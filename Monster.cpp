@@ -581,19 +581,6 @@ void BirdMonster::loadAnimations() {
 }
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
 void DoctorMonster::setIsAttacking(bool a) {
     isAttacking = a;
 }
@@ -606,7 +593,7 @@ DoctorMonster::DoctorMonster(Player* myPlayer, MyScene* ms, Map* map, bool isTem
     setHP(80);
     setDamage(20);
     setAttackCooldown(2000);
-    setValueScore(250);
+    setValueScore(400);
     idleSheet = new QPixmap(":/assets/doctor_idle.png");
     moveSheet = new QPixmap(":/assets/doctor_move.png");
     loadAnimations();
