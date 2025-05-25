@@ -3,11 +3,8 @@
         <file>Creepster-Regular.ttf</file>
         <file>backgroundMenu.png</file>
         <file>GameMusic.wav</file>
-        <file>nils_front.png</file>
-        <file>nils_left.png</file>
-        <file>nils_right.png</file>
-        <file>nils_rear.png</file>
         <file>bullet.png</file>
+        <file>nils_run.png</file>
         <file>pompe_bullet.png</file>
         <file>gun.wav</file>
         <file>gameOverSound.wav</file>

@@ -274,9 +274,9 @@ void GhostMonster::resetShoot() {
 BirdMonster::BirdMonster(Player* myPlayer, MyScene* ms, QObject* parent)
     : Monster(myPlayer, ms, parent)
 {
-    setSpeed(3);
+    setSpeed(2.5);
     setHP(50);
-    setDamage(0);
+    setDamage(10);
     setAttackCooldown(1200);
     setValueScore(250);
     idleSheet = new QPixmap(":/assets/bird_idle.png");
@@ -441,7 +441,7 @@ bool DoctorMonster::getIsAttacking() const {
 DoctorMonster::DoctorMonster(Player* myPlayer, MyScene* ms, QObject* parent)
     : Monster(myPlayer, ms, parent)
 {
-    setSpeed(3);
+    setSpeed(2.5);
     setHP(80);
     setDamage(20);
     setAttackCooldown(2000);
@@ -682,7 +682,7 @@ void DoctorMonster::loadAnimations() {
 SlimeMonster::SlimeMonster(Player* myPlayer, MyScene* ms, QObject* parent)
     : Monster(myPlayer, ms, parent)
 {
-    setSpeed(2);
+    setSpeed(1.75);
     setHP(40);
     setDamage(10);
     setAttackCooldown(2000);
