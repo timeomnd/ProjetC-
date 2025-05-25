@@ -56,14 +56,20 @@ void MyScene::mousePressEvent(QGraphicsSceneMouseEvent* event) {
     if (isPaused || !player || !player->isAlive()) return; 
 
     QPointF targetPos = event->scenePos();
-    QPointF playerCenter = player->pos() + QPointF(player->boundingRect().width() / 2, player->boundingRect().height() / 2);
+
+    QPointF playerPos = player->pos();
+    qreal spriteWidth = player->boundingRect().width();
+    qreal spriteHeight = player->boundingRect().height();
+
+    // Lancer depuis les yeux (environ 40% de la hauteur)
+    QPointF eyeLevel = playerPos + QPointF(spriteWidth / 2, spriteHeight * 0.4);
 
     if (event->button() == Qt::LeftButton) {
         if (player->getCanShoot()) {
-            player->getCurrentWeapon()->shoot(playerCenter, targetPos);
+            player->getCurrentWeapon()->shoot(eyeLevel, targetPos);
         }
     }
-    
+
     QGraphicsScene::mousePressEvent(event);
     player->setFocus();
 }

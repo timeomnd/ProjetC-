@@ -11,7 +11,7 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent),
     this->mainScene = new MyScene(mainView,this);
     this->mainView->setScene(mainScene);
     this->setCentralWidget(mainView);
-    this->setWindowTitle("The Cursed ISEN");
+    this->setWindowTitle("SuperNils");
     this->resize(1200, 800);
     this->setPalette(QColorConstants::Svg::black);
     this->mainView->setDragMode(QGraphicsView::NoDrag);

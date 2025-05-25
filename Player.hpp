@@ -26,6 +26,7 @@ public:
     void setSpeed(int s);
     void setHP(int h);
     void playRandomHitSound();
+    void loadAnimations();
     void setMainWindow(MainWindow* mw);
     int getSpeed() const;
     int getHP() const;
@@ -59,7 +60,11 @@ private:
     int HP;
     int dx;
     int dy;
+    int frameIndex = 0;
+    int frameCounter = 0;
+    const int frameDelay = 10;
     bool canShoot = true;
+    QString lastDirection = "down"; // Pour savoir dans quel sens regarder quand le joueur s'arrête
     bool alive = true;
     HealthBar* healthBar;
     MainWindow* mainWindow = nullptr;
@@ -67,10 +72,15 @@ private:
     QVector<QSoundEffect*> hitSounds;
     QTimer* movementTimer;
     QSet<int> pressedKeys;
-    QPixmap spriteUp;
-    QPixmap spriteDown;
-    QPixmap spriteLeft;
-    QPixmap spriteRight;
+    QPixmap* spriteUp;
+    QPixmap* spriteDown;
+    QPixmap* spriteLeft;
+    QPixmap* spriteRight;
+
+    QVector<QPixmap*> animationUpMove;
+    QVector<QPixmap*> animationDownMove;
+    QVector<QPixmap*> animationLeftMove;
+    QVector<QPixmap*> animationRightMove;
     Map* map;
 
 

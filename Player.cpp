@@ -8,12 +8,12 @@ const int INITIAL_HP = 100;
 const int SPRITE_SIZE = 40;
 const qreal DIAGONAL_SPEED_FACTOR = 0.8; // 1/√2
 const int COLLISION_BOX_SIZE = 4;
-const int MOVEMENT_TIMER_INTERVAL_MS = 16; // ~60 FPS
+const int MOVEMENT_TIMER_INTERVAL_MS =15; // ~60 FPS
 
 Player::Player(MainWindow* mw, MyScene* scene, Map* map, QGraphicsItem* parent)
     : QGraphicsPixmapItem(parent), speed(2), dx(0), dy(0),
       mainScene(scene), mainWindow(mw), map(map), alive(true), initialSpeed(speed) {
-
+    loadAnimations();
     setHP(INITIAL_HP);
     healthBar = new HealthBar(INITIAL_HP, this);
 
@@ -22,17 +22,6 @@ Player::Player(MainWindow* mw, MyScene* scene, Map* map, QGraphicsItem* parent)
     gun = new Gun(mainScene);
     shotgun = new Shotgun(mainScene);
     currentWeapon = gun;
-
-    spriteUp = QPixmap(":/assets/nils_rear.png").scaled(49, 49, Qt::KeepAspectRatio, Qt::FastTransformation);
-    spriteDown = QPixmap(":/assets/nils_front.png").scaled(49, 49, Qt::KeepAspectRatio, Qt::FastTransformation);
-    spriteLeft = QPixmap(":/assets/nils_left.png").scaled(49, 49, Qt::KeepAspectRatio, Qt::FastTransformation);
-    spriteRight = QPixmap(":/assets/nils_right.png").scaled(49, 49, Qt::KeepAspectRatio, Qt::FastTransformation);
-
-    if (spriteUp.isNull() || spriteDown.isNull() || spriteLeft.isNull() || spriteRight.isNull()) {
-        qWarning("Erreur : un ou plusieurs sprites sont introuvables !");
-    }
-
-    setPixmap(spriteDown);
     setFlag(QGraphicsItem::ItemIsFocusable);
     setFocus();
 
@@ -49,6 +38,38 @@ Player::Player(MainWindow* mw, MyScene* scene, Map* map, QGraphicsItem* parent)
     connect(movementTimer, &QTimer::timeout, this, &Player::updatePosition);
     movementTimer->start(MOVEMENT_TIMER_INTERVAL_MS);
 }
+void Player::loadAnimations() {
+    QPixmap spriteSheet(":/assets/nils_run.png");
+
+    if (spriteSheet.isNull()) {
+        qWarning("Erreur : spritesheet introuvable !");
+        return;
+    }
+
+    int frameWidth = spriteSheet.width() / 4;   // 4 colonnes
+    int frameHeight = spriteSheet.height() / 4; // 4 lignes
+
+    // Chargement des frames de déplacement (4 frames par ligne)
+    for (int i = 0; i < 4; ++i) {
+        animationDownMove.append(new QPixmap(spriteSheet.copy(i * frameWidth, 0 * frameHeight, frameWidth, frameHeight))); // ligne 0 : vers le bas
+        animationLeftMove.append(new QPixmap(spriteSheet.copy(i * frameWidth, 1 * frameHeight, frameWidth, frameHeight))); // ligne 1 : gauche
+        animationRightMove.append(new QPixmap(spriteSheet.copy(i * frameWidth, 2 * frameHeight, frameWidth, frameHeight))); // ligne 2 : droite
+        animationUpMove.append(new QPixmap(spriteSheet.copy(i * frameWidth, 3 * frameHeight, frameWidth, frameHeight)));   // ligne 3 : haut
+    }
+
+    // Chargement des sprites idle (colonne 1, index 1)
+    spriteDown  = new QPixmap(spriteSheet.copy(1 * frameWidth, 0 * frameHeight, frameWidth, frameHeight));
+    spriteLeft  = new QPixmap(spriteSheet.copy(1 * frameWidth, 1 * frameHeight, frameWidth, frameHeight));
+    spriteRight = new QPixmap(spriteSheet.copy(1 * frameWidth, 2 * frameHeight, frameWidth, frameHeight));
+    spriteUp    = new QPixmap(spriteSheet.copy(1 * frameWidth, 3 * frameHeight, frameWidth, frameHeight));
+
+    // Sprite par défaut au lancement (idle face)
+    setPixmap(*spriteDown);
+}
+
+
+
+
 
 
 
@@ -111,42 +132,60 @@ void Player::keyReleaseEvent(QKeyEvent* event) {
 }
 
 void Player::updatePosition() {
-     QPointF newPos = pos() + QPointF(dx, dy);
+    // Calcul des nouvelles positions
+    QPointF newPosX = pos() + QPointF(dx, 0);
+    QPointF newPosY = pos() + QPointF(0, dy);
+    QPointF newPosXY = pos() + QPointF(dx, dy);
 
-    if (!checkTileCollision(newPos)) {
-        setPos(newPos); 
+    bool collisionX = checkTileCollision(newPosX);
+    bool collisionY = checkTileCollision(newPosY);
+    bool collisionXY = checkTileCollision(newPosXY);
+
+    if (!collisionXY) {
+        setPos(newPosXY);
+    } else {
+        if (!collisionX) setPos(newPosX);
+        if (!collisionY) setPos(newPosY);
     }
 
+    bool isMoving = (dx != 0 || dy != 0);
 
-    bool collisionX = checkTileCollision(QPointF(newPos.x(), pos().y()));
-    bool collisionY = checkTileCollision(QPointF(pos().x(), newPos.y()));
-
-    if(dx != 0 && dy != 0) {
-
-        QPointF tempPos = pos() + QPointF(dx, 0);
-        if(!checkTileCollision(tempPos)) {
-            setX(tempPos.x());
+    if (isMoving) {
+        frameCounter++;
+        if (frameCounter >= frameDelay) {
+            frameCounter = 0;
+            frameIndex = (frameIndex + 1) % 4; // ← car maintenant il y a 4 frames
         }
 
-
-        tempPos = pos() + QPointF(0, dy);
-        if(!checkTileCollision(tempPos)) {
-            setY(tempPos.y());
+        if (dx != 0) {
+            if (dx < 0) {
+                setPixmap(*animationLeftMove[frameIndex]);
+                lastDirection = "left";
+            } else {
+                setPixmap(*animationRightMove[frameIndex]);
+                lastDirection = "right";
+            }
+        } else if (dy != 0) {
+            if (dy < 0) {
+                setPixmap(*animationUpMove[frameIndex]);
+                lastDirection = "up";
+            } else {
+                setPixmap(*animationDownMove[frameIndex]);
+                lastDirection = "down";
+            }
         }
     } else {
+        // Idle selon la dernière direction
+        if (lastDirection == "left")       setPixmap(*spriteLeft);
+        else if (lastDirection == "right") setPixmap(*spriteRight);
+        else if (lastDirection == "up")    setPixmap(*spriteUp);
+        else if (lastDirection == "down")  setPixmap(*spriteDown);
 
-        if(!collisionX) setX(newPos.x());
-        if(!collisionY) setY(newPos.y());
+        frameCounter = 0;
     }
 
-
-    if (dx < 0) setPixmap(spriteLeft);
-    else if (dx > 0) setPixmap(spriteRight);
-    else if (dy < 0) setPixmap(spriteUp);
-    else if (dy > 0) setPixmap(spriteDown);
-
-
-    if (mainWindow->getView()) mainWindow->getView()->centerOn(this);
+    if (mainWindow->getView())
+        mainWindow->getView()->centerOn(this);
 }
 
 void Player::playRandomHitSound() {
