@@ -26,9 +26,10 @@ void MyScene::keyPressEvent(QKeyEvent* event) {
                 pauseText->setDefaultTextColor(Qt::black);
                 pauseText->setFont(QFont("Arial", 50, QFont::Bold));
                 addItem(pauseText);
-                pauseText->setPos(width()/2 - pauseText->boundingRect().width()/2, 
-                                height()/2 - pauseText->boundingRect().height()/2);
             }
+            // Positionner au centre de la vue visible
+            QRectF viewRect = views().first()->mapToScene(views().first()->viewport()->rect()).boundingRect();
+            pauseText->setPos(viewRect.center().x() - pauseText->boundingRect().width() / 2, viewRect.center().y() - pauseText->boundingRect().height() / 2);
         } 
         else {
             if (healthbarTimer) healthbarTimer->start(1);
