@@ -67,12 +67,6 @@ void Player::loadAnimations() {
     setPixmap(*spriteDown);
 }
 
-
-
-
-
-
-
 QRectF Player::getCollisionBounds() const {
 
     const QRectF spriteBounds = boundingRect();
