@@ -143,12 +143,6 @@ void Map::loadMapFromJson(const QString& jsonPath) {
                     obj["height"].toDouble()
                 );
                 collisionRects.append(rect);
-                
-                // Optionnel : Visualisation des collisions
-                auto collider = new QGraphicsRectItem(rect);
-                collider->setPen(QPen(Qt::red));
-                collider->setOpacity(0.3);
-                scene->addItem(collider);
             }
         }
     }
